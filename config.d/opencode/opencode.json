@@ -11,6 +11,10 @@
         "gemma4:26b": {
           "name": "gemma4",
           "maxTokens": 16384
+        },
+        "qwen3.6:27b": {
+          "name": "qwen3.6",
+          "maxTokens": 16384
         }
       }
     }

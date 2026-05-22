@@ -9,6 +9,6 @@
       }
     ];
   };
-  networking.defaultGateway = "10.12.255.254";
+  networking.defaultGateway = "10.12.255.255";
   networking.nameservers = [ "192.168.11.81" ];
 }

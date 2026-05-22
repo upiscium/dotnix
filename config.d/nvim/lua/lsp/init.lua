@@ -16,6 +16,7 @@ local lsp_names = {
 	"lua_ls",
 	"mdx_analyzer",
 	"basedpyright",
+  "ruff",
 	"omnisharp",
 	"rust_analyzer",
 	"taplo",

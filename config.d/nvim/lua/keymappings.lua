@@ -48,7 +48,10 @@ keymap.set("n", "gm", "<cmd>lua vim.lsp.buf.format()<CR>", { silent = true }) --
 keymap.set("n", "GE", vim.diagnostic.goto_prev, { silent = true }) -- go to previous diagnostic
 keymap.set("n", "gE", vim.diagnostic.goto_prev, { silent = true }) -- go to previous diagnostic
 keymap.set("n", "ge", vim.diagnostic.goto_next, { silent = true }) -- go to next diagnostic
-keymap.set("n", "gd", require("telescope.builtin").lsp_definitions, { silent = true }) -- go to definition
+keymap.set("n", "gd", function()
+	vim.cmd("vsplit")
+	require("telescope.builtin").lsp_definitions()
+end, { silent = true }) -- go to definition
 keymap.set("n", "gt", require("telescope.builtin").lsp_type_definitions, { silent = true }) -- go to type definition
 
 -- markdown-preview

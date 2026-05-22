@@ -31,6 +31,7 @@
       nil
       nixpkgs-fmt
       nixpkgs-lint
+      vscode-langservers-extracted
       typescript-language-server 
       omnisharp-roslyn 
       basedpyright

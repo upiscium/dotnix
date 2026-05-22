@@ -9,6 +9,10 @@
           # capslock = "esc";
           muhenkan = "leftalt";
         };
+        # control = {
+        #   h = "backspace";
+        #   j = "enter";
+        # };
       };
     };
   };
