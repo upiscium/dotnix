@@ -1,6 +1,6 @@
 { pkgs, ... }: {
-  home.file.".ssh/config" = {
-    source = ../../config.d/.ssh/config;
-    recursive = false;
+  home.file.".ssh" = {
+    source = ../../config.d/.ssh;
+    recursive = true;
   };
 }

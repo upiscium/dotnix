@@ -16,18 +16,35 @@
 
   programs.hyprland = {
     enable = true;
-    # withUWSM = true;
+    xwayland.enable = true;
+    withUWSM = true;
     # withUWSM = false;
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
   };
 
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --user-menu --cmd start-hyprland";
+        user = "greeter";
+      };
+    };
+  };
+
+  services.displayManager = {
+    sddm.enable = false;
+    gdm.enable = false;
+  };
+
   # services.displayManager.sddm = {
   #   enable = false;
-  #   theme = "astronaut";
   #   wayland.enable = true;
   # };
 
-  services.displayManager.gdm = {
-    enable = true;
-  };
+  # services.displayManager.defaultSession = "hyprland";
+
+  # services.displayManager.gdm = {
+  #   enable = true;
+  # };
 }
