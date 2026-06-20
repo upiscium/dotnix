@@ -3,11 +3,11 @@
   networking.wg-quick.interfaces = {
     wg0 = {
       address = [ "10.255.255.2/32" ];
-      dns = [ "192.168.11.81" ];
+      dns = [ "192.168.100.31" ];
       mtu = 1420;
       privateKeyFile = "/home/upiscium/secrets/wireguard/Michael.key";
       postUp = ''
-        resolvectl dns wg0 192.168.11.81 && resolvectl domain wg0 '~.'
+        resolvectl dns wg0 192.168.100.31 && resolvectl domain wg0 '~.'
       '';
       postDown = ''
         resolvectl revert wg0
