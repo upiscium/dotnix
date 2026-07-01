@@ -16,7 +16,7 @@ local lsp_names = {
 	"lua_ls",
 	"mdx_analyzer",
 	"basedpyright",
-  "ruff",
+	"ruff",
 	"omnisharp",
 	"rust_analyzer",
 	"taplo",
@@ -65,8 +65,8 @@ for _, server_name in ipairs(lsp_names) do
 			"--clang-tidy",
 			"--background-index",
 			"--query-driver=/nix/store/**/*",
-			"--compile-commands-dir=build",
 			"--log=error",
+      -- "--compile-commands-dir=.",
 			-- "--index=x86_64-unknown-linux-gnu",
 		}
 		opts.filetypes = { "c", "cpp", "objc", "objcpp", "hpp", "h" }

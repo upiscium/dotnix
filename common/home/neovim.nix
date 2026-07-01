@@ -63,5 +63,5 @@
   };
 
   home.file.".clang-tidy".source = ../../config.d/clangd/.clang-tidy;
-  home.file.".config/clangd/config.yaml".source = ../../config.d/clangd/config.yaml;
+  # home.file.".config/clangd/config.yaml".source = ../../config.d/clangd/config.yaml;
 }
