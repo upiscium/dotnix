@@ -40,7 +40,7 @@
       rust-analyzer
       glsl_analyzer
       shellcheck
-      stylelint-lsp
+      # stylelint-lsp
       stylua
       taplo
       tinymist
