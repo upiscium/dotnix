@@ -1,7 +1,7 @@
 ---
-description: エージェント設計の品質をレビューする。役割の曖昧さ、責務の重複、過剰な複雑さ、情報境界の破綻を検出する。
+description: エージェント設計の品質をレビューする．役割の曖昧さ，責務の重複，過剰な複雑さ，情報境界の破綻を検出する．
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: openai/GPT-5.6-Sol-Pro
 temperature: 0.1
 tools:
   write: false
@@ -58,5 +58,5 @@ Analyze the agent definition and its intended workflow. Check for overlap with o
 - [agents/foo.md:12] 説明...
 
 ### 問題なし
-（問題がなければこのセクションのみ）
+(問題がなければこのセクションのみ)
 ```

@@ -1,7 +1,7 @@
 ---
-description: コード変更の設計品質をレビューする。YAGNI/KISS/DRY 違反、既存パターンとの不一致、過剰な複雑さを検出する。
+description: コード変更の設計品質をレビューする．YAGNI/KISS/DRY 違反，既存パターンとの不一致，過剰な複雑さを検出する．
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: openai/GPT-5.6-Sol-Pro
 temperature: 0.1
 tools:
   write: false
@@ -60,5 +60,5 @@ Analyze the git diff provided by the caller. Inspect surrounding code, dependenc
 - [src/foo/bar.ts:42] 説明...
 
 ### 問題なし
-（問題がなければこのセクションのみ）
+(問題がなければこのセクションのみ)
 ```

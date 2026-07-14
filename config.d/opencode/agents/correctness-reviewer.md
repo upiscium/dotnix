@@ -1,7 +1,7 @@
 ---
 description: コード変更の正確性をレビューする．バグ，型安全性の問題，ロジックエラー，エッジケースの未処理を検出する．
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: openai/GPT-5.6-Sol-Pro
 temperature: 0.1
 tools:
   write: false

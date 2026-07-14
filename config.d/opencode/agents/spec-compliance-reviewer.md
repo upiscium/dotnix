@@ -1,7 +1,7 @@
 ---
-description: コード変更が README.md の仕様や仕様テストと整合しているかをレビューする。
+description: コード変更が README.md の仕様や仕様テストと整合しているかをレビューする．
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: openai/GPT-5.6-Sol-Pro
 temperature: 0.1
 tools:
   write: false
@@ -61,8 +61,8 @@ Analyze the git diff provided by the caller. Inspect `README.md` and related spe
 - [src/foo/bar.ts] — 関連する spec が存在しない
 
 ### spec テスト結果
-- spec/foo/bar.spec.ts: PASS / FAIL（失敗内容）
+- spec/foo/bar.spec.ts: PASS / FAIL(失敗内容)
 
 ### 整合性確認済み
-（問題がなければこのセクションのみ）
+(問題がなければこのセクションのみ)
 ```
