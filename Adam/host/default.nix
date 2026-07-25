@@ -12,6 +12,7 @@
       ./ipfix.nix
       ./ollama.nix
       # ./sunshine.nix
+      ./wireguard.nix
 
       ../../common/host
       ../../module/host/proxmox.nix
