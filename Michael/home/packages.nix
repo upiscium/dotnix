@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     # antigravity
+    atlauncher
     bambu-studio
     blender
     # discord
