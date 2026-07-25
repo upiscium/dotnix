@@ -41,6 +41,7 @@
       glsl_analyzer
       shellcheck
       # stylelint-lsp
+      shader-slang
       stylua
       taplo
       tinymist

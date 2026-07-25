@@ -1,5 +1,6 @@
 require("lspconfig")
 local lsp_names = {
+	"basedpyright",
 	"bashls",
 	"clangd",
 	"cmake",
@@ -12,13 +13,13 @@ local lsp_names = {
 	"html",
 	"hyprls",
 	"jsonls",
-	"nil_ls",
 	"lua_ls",
 	"mdx_analyzer",
-	"basedpyright",
-	"ruff",
+	"nil_ls",
 	"omnisharp",
+	"ruff",
 	"rust_analyzer",
+	"slangd",
 	"taplo",
 	"terraformls",
 	"tinymist",
@@ -66,7 +67,7 @@ for _, server_name in ipairs(lsp_names) do
 			"--background-index",
 			"--query-driver=/nix/store/**/*",
 			"--log=error",
-      -- "--compile-commands-dir=.",
+			-- "--compile-commands-dir=.",
 			-- "--index=x86_64-unknown-linux-gnu",
 		}
 		opts.filetypes = { "c", "cpp", "objc", "objcpp", "hpp", "h" }
@@ -89,6 +90,15 @@ for _, server_name in ipairs(lsp_names) do
 			local root_files = { "*.sln", "*.csproj", "omnisharp.json", "function.json" }
 			return vim.fs.root(0, root_files) or vim.fn.getcwd()
 		end
+  elseif server_name == "slangd" then
+    opts.cmd = { "slangd" }
+    opts.filetypes = { "shaderslang", "hlsl" }
+    opts.root_dir = function(fname)
+      return vim.fs.root(fname, {
+        "slangdconfig.json",
+        ".git",
+      }) or vim.fn.getcwd()
+    end
 	elseif server_name == "yamlls" then
 		opts.settings = {
 			yaml = {
