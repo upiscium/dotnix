@@ -93,6 +93,9 @@
           _git-add "$@"
         fi
       }
+      ssht() {
+        TERM=xterm-256color ssh "$@"
+      }
     '';
   };
 
