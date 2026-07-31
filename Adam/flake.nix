@@ -13,7 +13,7 @@
     let
       mkNixosSystem = (import ../utils.nix { inherit inputs; }).mkNixosSystem;
       mkHomeManagerConfiguration = (import ../utils.nix { inherit inputs; }).mkHomeManagerConfiguration;
-      hostname = "Balthazar";
+      hostname = "Adam";
       username = "upiscium";
     in
     {

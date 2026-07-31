@@ -3,7 +3,7 @@
     asusctl
   ];
 
-  services.supergfxd.enable = true;
+  services.supergfxd.enable = false;
   services.asusd = {
     enable = true;
     # enableUserService = true;

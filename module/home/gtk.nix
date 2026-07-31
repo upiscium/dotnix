@@ -9,6 +9,6 @@
   # gtk.cursorTheme.name = "Volantes";
 
   qt.enable = true;
-  qt.platformTheme.name = "gtk";
+  qt.platformTheme.name = "gtk3";
   qt.style.package = pkgs.stilo-themes;
 }

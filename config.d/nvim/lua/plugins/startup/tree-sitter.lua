@@ -6,6 +6,7 @@ return {
 			if not ok then
 				return
 			end
+      vim.treesitter.language.register("hlsl", "shaderslang")
 			ts.setup({
 				event = "BufRead",
 				ensure_installed = {

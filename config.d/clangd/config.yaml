@@ -4,6 +4,6 @@ If:
 CompileFlags:
   Add:
     - -Wall
-    - stdlib=glibc++
+    # - stdlib=glibc++
     - --driver-mode=g++
   Compiler: ~/.nix-profile/bin/g++

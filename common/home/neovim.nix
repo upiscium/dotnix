@@ -40,7 +40,8 @@
       rust-analyzer
       glsl_analyzer
       shellcheck
-      stylelint-lsp
+      # stylelint-lsp
+      shader-slang
       stylua
       taplo
       tinymist
@@ -63,5 +64,5 @@
   };
 
   home.file.".clang-tidy".source = ../../config.d/clangd/.clang-tidy;
-  home.file.".config/clangd/config.yaml".source = ../../config.d/clangd/config.yaml;
+  # home.file.".config/clangd/config.yaml".source = ../../config.d/clangd/config.yaml;
 }

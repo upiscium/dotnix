@@ -5,15 +5,19 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "Ollama",
       "options": {
-        "baseURL": "https://ollama-caspar.arc.upiscium.dev/v1"
+        "baseURL": "https://ollama.arc.upiscium.dev/v1"
       },
       "models": {
         "gemma4:26b": {
-          "name": "gemma4",
+          "name": "gemma4:26b",
+          "maxTokens": 16384
+        },
+        "gemma4:12b": {
+          "name": "gemma4:12b",
           "maxTokens": 16384
         },
         "qwen3.6:27b": {
-          "name": "qwen3.6",
+          "name": "qwen3.6:27b",
           "maxTokens": 16384
         }
       }

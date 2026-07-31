@@ -20,6 +20,13 @@ api.nvim_create_autocmd({ "BufWritePre" }, {
 	command = "silent! %s/。/．/g | silent! %s/、/，/g | silent! %s/（/(/g | silent! %s/）/)/g | silent! %s/「/\"/g | silent! %s/」/\"/g",
 })
 
+vim.filetype.add({
+	extension = {
+		slang = "shaderslang",
+		slangh = "shaderslang",
+	},
+})
+
 api.nvim_create_autocmd("LspAttach", {
 	group = api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
