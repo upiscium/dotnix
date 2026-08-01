@@ -22,7 +22,7 @@ Use Luna for clear bounded work, Terra for analysis spanning files or modules, a
 
 ## Permissions
 
-Reading is generally allowed, while environment files require confirmation. Shell commands ask by default. `git status`, `git diff`, `git log`, and common project test-runner commands are automatically allowed with arguments. Common spellings of destructive filesystem and Git operations, history rewriting, force-push, direct pushes to common default-branch names, and privilege escalation are denied. Bash permissions are approval gates rather than a complete sandbox; repository-local configuration can override these global defaults and is therefore trusted.
+Reading is generally allowed, while environment files require confirmation. Shell commands ask by default. Git inspection, staging, fetch and pull; read-only GitHub queries; selected GitHub PR and repository writes; and common project test-runner commands are automatically allowed with arguments. Common spellings of destructive filesystem and Git operations, history rewriting, force-push, direct pushes to common default-branch names, and privilege escalation are denied. Bash permissions are approval gates rather than a complete sandbox; repository-local configuration can override these global defaults and is therefore trusted.
 
 Only `build` and `general` edit the worktree. Only primary agents (`build` and `plan`) may start subagents. `subagent_depth` is one, so subagents cannot create another generation. Commits, pushes, remote publication, and merges require an explicit user workflow and applicable permission approval. No workflow merges automatically.
 
