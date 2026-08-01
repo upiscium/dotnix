@@ -15,7 +15,11 @@
     "lsp": "allow",
     "edit": "deny",
     "task": "deny",
-    "external_directory": "deny",
+    "external_directory": {
+      "*": "deny",
+      "/tmp/opencode": "allow",
+      "/tmp/opencode/**": "allow"
+    },
     "webfetch": "ask",
     "websearch": "ask",
     "bash": {
@@ -110,6 +114,32 @@
       "opencode debug agent*": "allow",
       "opencode debug skill*": "allow",
       "opencode debug paths*": "allow",
+      ":": "allow",
+      "true *": "allow",
+      "false *": "allow",
+      "pwd *": "allow",
+      "ls *": "allow",
+      "tree *": "allow",
+      "which *": "allow",
+      "command -v *": "allow",
+      "type *": "allow",
+      "file *": "allow",
+      "stat *": "allow",
+      "basename *": "allow",
+      "dirname *": "allow",
+      "realpath *": "allow",
+      "wc *": "allow",
+      "sort *": "allow",
+      "uniq *": "allow",
+      "cut *": "allow",
+      "tr *": "allow",
+      "grep *": "allow",
+      "rg *": "allow",
+      "jq *": "allow",
+      "yq *": "allow",
+      "sed *": "allow",
+      "test *": "allow",
+      "[ * ]": "allow",
       "npm test*": "allow",
       "npm run test*": "allow",
       "npm run lint*": "allow",
@@ -201,7 +231,11 @@
       "permission": {
         "edit": "allow",
         "task": "allow",
-        "external_directory": "deny"
+        "external_directory": {
+          "*": "deny",
+          "/tmp/opencode": "allow",
+          "/tmp/opencode/**": "allow"
+        }
       },
       "prompt": "You are the primary implementation agent. Establish repository conventions before changing code, decompose substantial work, delegate independent and non-overlapping workstreams to subagents in parallel, inspect every returned diff, integrate changes, request independent verification, and report evidence. Keep final design and integration decisions with yourself. Never let workers edit the same file concurrently. Do not commit, push, merge, create or modify remote issues, or create pull requests unless the user explicitly requests that operation. Before pushing, detect the current and default branches and proceed only from a non-default branch or a user-approved dedicated worktree. A merge additionally requires an explicit merge instruction. Never write outside the active worktree."
     },
@@ -215,7 +249,11 @@
           "*": "allow",
           "general": "deny"
         },
-        "external_directory": "deny",
+        "external_directory": {
+          "*": "deny",
+          "/tmp/opencode": "allow",
+          "/tmp/opencode/**": "allow"
+        },
         "webfetch": "deny",
         "websearch": "deny",
         "bash": {
@@ -240,7 +278,11 @@
       "permission": {
         "edit": "allow",
         "task": "deny",
-        "external_directory": "deny",
+        "external_directory": {
+          "*": "deny",
+          "/tmp/opencode": "allow",
+          "/tmp/opencode/**": "allow"
+        },
         "webfetch": "deny",
         "websearch": "deny",
         "bash": {
@@ -274,7 +316,11 @@
       "permission": {
         "edit": "deny",
         "task": "deny",
-        "external_directory": "deny",
+        "external_directory": {
+          "*": "deny",
+          "/tmp/opencode": "allow",
+          "/tmp/opencode/**": "allow"
+        },
         "webfetch": "deny",
         "websearch": "deny",
         "bash": {

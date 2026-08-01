@@ -5,7 +5,10 @@ model: openai/gpt-5.6-luna
 permission:
   edit: deny
   task: deny
-  external_directory: deny
+  external_directory:
+    "*": deny
+    "/tmp/opencode": allow
+    "/tmp/opencode/**": allow
   webfetch: allow
   websearch: allow
   bash:
