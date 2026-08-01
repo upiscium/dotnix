@@ -58,9 +58,9 @@
     fontDir.enable = true;
     fontconfig = {
       defaultFonts = {
-        serif = [ "Source Han Serif" "Noto Color Emoji" ];
-        sansSerif = [ "Source Han Sans" "Noto Color Emoji" ];
-        monospace = [ "Caskaydia Cove Nerd Font" ];
+        serif = [ "Noto Serif CJK JP" "Noto Color Emoji" ];
+        sansSerif = [ "Noto Sans CJK JP" "Noto Color Emoji" ];
+        monospace = [ "Caskaydia Cove Nerd Font" "Noto Sans Mono CJK JP" "Noto Color Emoji" ];
         emoji = [ "Noto Color Emoji" ];
       };
     };
