@@ -10,13 +10,9 @@ permission:
   webfetch: deny
   websearch: deny
   bash:
-    "*": deny
-    "git status": allow
-    "git status --short": allow
-    "git diff": allow
-    "git diff --stat": allow
-    "git log": allow
-    "git log --oneline": allow
+    "git status*": allow
+    "git diff*": allow
+    "git log*": allow
     "git rev-parse --show-toplevel": allow
     "git ls-files": allow
 ---

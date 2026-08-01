@@ -9,11 +9,9 @@ permission:
   webfetch: allow
   websearch: allow
   bash:
-    "*": deny
-    "git status": allow
-    "git status --short": allow
-    "git log": allow
-    "git log --oneline": allow
+    "git status*": allow
+    "git diff*": allow
+    "git log*": allow
     "git remote": allow
     "git remote -v": allow
     "git rev-parse --show-toplevel": allow
