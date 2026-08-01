@@ -59,8 +59,8 @@ for i = 1, 10 do
     hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
 end
 
-hl.bind(subMod .. " + l", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(subMod .. " + h", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(subMod .. " + l", hl.dsp.focus({ workspace = "+1" }))
+hl.bind(subMod .. " + h", hl.dsp.focus({ workspace = "-1" }))
 
 -- Move window across workspace
 for i = 1, 10 do
@@ -68,8 +68,8 @@ for i = 1, 10 do
     hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
 
-hl.bind(mainMod .. " + " .. subMod .. " + l", hl.dsp.window.move({ workspace = "e+1" }))
-hl.bind(mainMod .. " + " .. subMod .. " + h", hl.dsp.window.move({ workspace = "e-1" }))
+hl.bind(mainMod .. " + " .. subMod .. " + l", hl.dsp.window.move({ workspace = "+1" }))
+hl.bind(mainMod .. " + " .. subMod .. " + h", hl.dsp.window.move({ workspace = "-1" }))
 
 
 -- Functional Keys

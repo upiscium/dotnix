@@ -63,8 +63,8 @@ for i = 1, 9 do
 end
 hl.bind(mainMod .. "+0", hl.dsp.focus({ workspace = 10 }))
 
-hl.bind(subMod .. "+L", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(subMod .. "+H", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(subMod .. "+L", hl.dsp.focus({ workspace = "+1" }))
+hl.bind(subMod .. "+H", hl.dsp.focus({ workspace = "-1" }))
 
 -- Move window across workspace
 for i = 1, 9 do
@@ -72,8 +72,8 @@ for i = 1, 9 do
 end
 hl.bind(mainMod .. "+SHIFT+0", hl.dsp.window.move({ workspace = 10 }))
 
-hl.bind(mainMod .. "+" .. subMod .. "+L", hl.dsp.window.move({ workspace = "e+1" }))
-hl.bind(mainMod .. "+" .. subMod .. "+H", hl.dsp.window.move({ workspace = "e-1" }))
+hl.bind(mainMod .. "+" .. subMod .. "+L", hl.dsp.window.move({ workspace = "+1" }))
+hl.bind(mainMod .. "+" .. subMod .. "+H", hl.dsp.window.move({ workspace = "-1" }))
 
 -- Functional Keys
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+"))
