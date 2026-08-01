@@ -22,9 +22,9 @@ Use Luna for clear bounded work, Terra for analysis spanning files or modules, a
 
 ## Permissions
 
-Reading is generally allowed, while environment files require confirmation. Shell commands ask by default. Git inspection, staging, fetch and pull; read-only GitHub queries; selected GitHub PR and repository writes; and common project test-runner commands are automatically allowed with arguments. Common spellings of destructive filesystem and Git operations, history rewriting, force-push, direct pushes to common default-branch names, and privilege escalation are denied. Bash permissions are approval gates rather than a complete sandbox; repository-local configuration can override these global defaults and is therefore trusted.
+Reading is generally allowed, while environment files require confirmation. Shell commands ask by default. Git inspection, staging, fetch and pull; read-only GitHub and OpenCode queries; selected GitHub Issue and PR writes; and common project test, lint, check, type-check, build, evaluation, and validation commands are automatically allowed with arguments. GitHub release creation and upload remain confirmation-gated. Common spellings of destructive filesystem and Git operations, history rewriting, force-push, direct pushes to common default-branch names, and privilege escalation are denied. Bash permissions are approval gates rather than a complete sandbox; repository-local configuration can override these global defaults and is therefore trusted.
 
-Only `build` and `general` edit the worktree. Only primary agents (`build` and `plan`) may start subagents. `subagent_depth` is one, so subagents cannot create another generation. Commits, pushes, remote publication, and merges require an explicit user workflow and applicable permission approval. No workflow merges automatically.
+Only `build` and `general` edit the worktree. Only primary agents (`build` and `plan`) may start subagents. `subagent_depth` is one, so subagents cannot create another generation. `build` may push automatically after an explicit user request and a branch-safety check; subagents may not push. Explicit main/master and force-push forms remain denied, but a bare `git push` requires the agent to detect the current and default branches because permission patterns cannot inspect Git state. Commits, remote publication, and merges still require an explicit user workflow. No workflow merges automatically.
 
 ## Standard Workflows
 
@@ -37,6 +37,13 @@ Only `build` and `general` edit the worktree. Only primary agents (`build` and `
 | Fix CI | `/fix-ci <pr-number-or-url>` |
 | Debug behavior | `/debug <symptom>` |
 | Publish a Draft PR | `/publish` |
+| Prepare or publish a release | `/release [version]` |
+| Update selected dependencies | `/deps <dependency-or-scope>` |
+| Prepare and hand off an isolated worktree | `/worktree <task-or-branch>` |
+| Backport selected commits | `/backport <commits> <target-branch>` |
+| Create a threat model | `/threat-model <scope>` |
+| Measure performance | `/benchmark <target>` |
+| Run a staged migration | `/migrate <target>` |
 | Audit a repository | `/repo-audit` |
 | Audit this configuration | `/agent-audit` |
 
