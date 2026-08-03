@@ -16,17 +16,23 @@ Built-in agents are overridden in `opencode.json`. Specialized custom agents, in
 | --- | --- | --- |
 | `build`, `plan`, `architect` | `openai/gpt-5.6-sol` | Integration, architecture, planning, final decisions |
 | `reviewer`, `investigator`, `security-reviewer` | `openai/gpt-5.6-terra` | Cross-file analysis, diagnosis, and review |
-| `general`, `explore`, `scout`, `verifier` | `openai/gpt-5.6-luna` | Bounded implementation, search, research, and verification |
+| `scout` | `openai/gpt-5.6-luna` | External documentation and upstream investigation |
+| `general`, `explore`, `verifier` | `openai/gpt-5.3-codex-spark` | Bounded implementation, repository exploration, and verification |
 
-Use Luna for clear bounded work, Terra for analysis spanning files or modules, and Sol only for consequential design or integration decisions.
+Use Sol for integration, planning, and major design or architectural decisions, Terra for review and diagnosis spanning files/modules, Luna for external research, and Spark for bounded implementation, repository exploration, and verification workflows.
 
 ## Permissions
 
-Reading is generally allowed, while environment files require confirmation. Shell commands ask by default. Git inspection, staging, fetch and pull; read-only GitHub and OpenCode queries; selected GitHub Issue and PR writes; common shell inspection and text-processing utilities; and common project test, lint, check, type-check, build, evaluation, and validation commands are automatically allowed with arguments. OpenCode evaluates each simple command in an `&&` or `||` chain separately, so a chain is automatically approved when every command in it is allowed. GitHub release creation and upload, force-push, and other non-denied history-affecting operations remain confirmation-gated. Common spellings of destructive filesystem operations, direct pushes to common default-branch names, and privilege escalation are denied. Bash permissions are approval gates rather than a complete sandbox; redirects and utility options can still change files, and repository-local configuration can override these global defaults and is therefore trusted.
+Reading is generally allowed, while environment files require confirmation. Shell commands are allowed by explicit allowlist and denied/asked otherwise. Git and GitHub write operations are not auto-approved globally.
 
-External-directory access is denied by default for every agent. `/tmp/opencode/` and all paths below it are always allowed as shared temporary workspace.
+External-directory access is denied by default. `/tmp/opencode` and `/tmp/opencode/**` require approval (`ask`) globally. This approval does not override an agent's `read`/`edit` permission settings.
+All other external paths are denied unless explicitly configured later at the repository level.
 
-Only `build` and `general` edit the worktree. Only primary agents (`build` and `plan`) may start subagents. `subagent_depth` is one, so subagents cannot create another generation. `build` may push automatically after an explicit user request and a branch-safety check; subagents may not push. Force-push requires permission confirmation, while explicit main/master push forms remain denied. A bare `git push` requires the agent to detect the current and default branches because permission patterns cannot inspect Git state. Commits, remote publication, and merges still require an explicit user workflow. No workflow merges automatically.
+Only `build` and `general` can edit the worktree. Read-only agents are read-only even through Bash by restricting Bash defaults to deny-state-changing commands. `build` and `plan` (primary agents) may start subagents. `subagent_depth` remains one.
+
+`build` and `general` keep edit permission enabled for delegated local changes, but do not auto-allow sensitive write commands. GitHub Issue/PR/state-changing commands and destructive filesystem commands require explicit approval. Push, branch/rebase/reset operations, and remote writes are not globally auto-approved.
+
+Commit, branch manipulation, `git push`, and GitHub Issue/PR changes require explicit user instruction and permission review.
 
 ## Standard Workflows
 
@@ -53,7 +59,13 @@ Review and audit workflows are read-only by default. Issue implementation never 
 
 ## Parallel Subagents
 
-The primary agent may delegate two to four independent workstreams concurrently. Each worker must receive an exact scope, expected result, validation requirement, and prohibited changes. Work that edits the same file or depends on another workstream runs sequentially. OpenCode does not isolate workers in separate worktrees, so file boundaries are prompt-enforced and parallel workers see shared changes. The primary agent must inspect all returned diffs and owns integration; worker summaries are not accepted as evidence by themselves.
+The primary agent may delegate two to four independent workstreams concurrently when scopes are non-overlapping. Each worker must receive an exact scope, expected result, validation requirement, and prohibited changes. Work that edits the same file or depends on another workstream runs sequentially. `build` should prioritize delegation for repository exploration, bounded implementation, and verification instead of doing everything itself.
+
+OpenCode does not isolate workers in separate worktrees, so file boundaries are prompt-enforced and parallel workers see shared changes. The primary agent must inspect returned diffs and execution results and own all final architecture/integration decisions.
+
+- `build` must not assign overlapping files to concurrent workers.
+- `build` should run `explore`, `general`, `verifier`, and `reviewer` in bounded form when those roles fit the subtask.
+- Parent integration and final judgment stay with the parent agent; worker summaries alone are not enough evidence.
 
 ## Adding Configuration
 
@@ -79,7 +91,15 @@ After editing this directory, restart OpenCode because configuration is loaded a
 jq empty config.d/opencode/opencode.json config.d/opencode/tui.json
 opencode models openai --refresh --verbose
 XDG_CONFIG_HOME="$PWD/config.d" opencode agent list
+XDG_CONFIG_HOME="$PWD/config.d" opencode debug config
 nix flake check --no-build
+
+Optional focused checks:
+
+- XDG_CONFIG_HOME="$PWD/config.d" opencode debug agent build
+- XDG_CONFIG_HOME="$PWD/config.d" opencode debug agent general
+- XDG_CONFIG_HOME="$PWD/config.d" opencode debug agent explore
+- XDG_CONFIG_HOME="$PWD/config.d" opencode debug agent verifier
 ```
 
 Confirm that all expected agents, skills, and commands are discovered, custom agent frontmatter uses `permission`, skill names match their directories, and no removed runtime references remain. Permission smoke tests require valid model credentials; report unavailable tests as unverified rather than successful.
