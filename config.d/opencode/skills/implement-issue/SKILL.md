@@ -10,15 +10,15 @@ Before acting, inspect applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, `Just
 Never select an issue. If no issue number or URL is supplied, ask for one and stop. Never merge automatically.
 
 1. Fetch the specified issue and repository metadata.
-2. Confirm the discovered project conventions relevant to the issue.
-3. Extract acceptance criteria and identify missing information. Ask before making consequential assumptions.
-4. Inspect the current branch and worktree. Do not overwrite or stage unrelated changes.
-5. Create a dedicated branch only after confirming it is safe; never branch-switch over conflicting local work.
-6. Split implementation into independent workstreams. Delegate two to four non-overlapping workstreams to `general` in parallel when useful.
-7. Give each worker exact files, completion criteria, and prohibited changes. Never assign the same file concurrently, and sequence dependent work.
-8. Inspect and integrate every worker diff. The parent owns design and integration decisions.
-9. Run `verifier`. Use `reviewer`, and use `security-reviewer` only when trust boundaries are affected.
-10. Resolve failures and re-verify. Do not claim checks that were not run.
-11. Create a Draft pull request only after verification is adequate. Include evidence and unresolved risks.
+2. Confirm the discovered project conventions and acceptance criteria.
+3. If needed, delegate to `explore` first for impact analysis and test-location discovery.
+4. Split implementation into 2 to 4 independent, non-overlapping scopes and delegate each to `general`.
+5. For each workstream, provide exact files, completion criteria, and prohibited changes. Never assign the same file concurrently, and sequence dependent work.
+6. Parent owns architecture, task decomposition, conflict resolution, and final integration decisions.
+7. Inspect and integrate every worker diff; do not rely on summaries as sufficient evidence.
+8. Execute `verifier` and include results.
+9. Use `reviewer` when independent correctness review is warranted.
+10. Resolve failures and re-verify.
+11. Include unresolved items when verification is incomplete.
 
-Independent tests, documentation, and modules may run in parallel. Shared files and dependent tasks may not. Stop before the Draft PR if requirements, branch safety, permissions, or verification are inadequate, and report the blocker.
+Issue auto-selection remains forbidden, Draft PR issuance remains explicit, branch and repository safety checks remain in force, and shared files/dependent tasks must run sequentially.
