@@ -15,7 +15,6 @@
         ls = "ls --color=auto";
         ll = "ls --color=auto -l";
         la = "ls --color=auto -a";
-        g = "git";
         "-" = "cd -";
         t = "tmux new -s";
         tl = "tmux ls";
