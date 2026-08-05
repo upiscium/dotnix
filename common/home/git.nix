@@ -168,6 +168,35 @@ in
     git-aa
   ];
 
+  programs.zsh.zsh-abbr.abbreviations = {
+    "git a" = "git add";
+    "git b" = "git branch -a";
+    "git bd" = "git branch -D";
+    "git rbd" = "git push origin --delete";
+    "git c" = "git commit -m";
+    "git cc" = "git rm -r --cached";
+    "git l" = "git fetch -p && git pull";
+    "git m" = "git merge";
+    "git p" = "git push && git worktree prune";
+    "git r" = "git reset --soft";
+    "git rh" = "git reset --hard";
+    "git s" = "git status";
+    "git t" = "git tag";
+    "git w" = "git switch";
+    "git wc" = "git switch -c";
+    "git wt" = "git worktree";
+    "git wr" = "git worktree repair";
+    "git wk" = "git worktree lock";
+    "git wl" = "git worktree list";
+
+    "gh rpc" = "gh repo clone";
+    "gh rpr" = "gh repo create";
+    "gh pc" = "gh pr create -B";
+    "gh pm" = "gh pr merge";
+    "gh rc" = "gh release create";
+    "gh rl" = "gh release list";
+  };
+
   programs.git = {
     enable = true;
     settings = {
@@ -183,27 +212,6 @@ in
       init.defaultBranch = "main";
       ghq = {
         root = "~/src";
-      };
-      alias = {
-        a = "add";
-        b = "branch -a";
-        bd = "branch -D";
-        rbd = "push origin --delete";
-        c = "commit -m";
-        cc = "rm -r --cached";
-        l = "!git fetch -p && git pull";
-        m = "merge";
-        p = "!git push && git worktree prune";
-        r = "reset --soft";
-        rh = "reset --hard";
-        s = "status";
-        t = "tag";
-        w = "switch";
-        wc = "switch -c";
-        wt = "worktree";
-        wr = "worktree repair";
-        wk = "worktree lock";
-        wl = "worktree list";
       };
       # signing = {
       #   signByDefault = true;
@@ -225,14 +233,6 @@ in
 
     settings = {
       editor = "nvim";
-      aliases = {
-        rpc = "repo clone";
-        rpr = "repo create";
-        pc = "pr create -B";
-        pm = "pr merge";
-        rc = "release create";
-        rl = "release list";
-      };
     };
   };
 }
