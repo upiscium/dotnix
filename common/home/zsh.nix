@@ -7,18 +7,21 @@
     syntaxHighlighting.enable = true;
     historySubstringSearch.enable = true;
 
-    shellAliases = {
-      grep = "rg";
-      ip = "ip -a";
-      ls = "ls --color=auto";
-      ll = "ls -l";
-      la = "ls -a";
-      g = "git";
-      "-" = "cd -";
-      t = "tmux new -s";
-      tl = "tmux ls";
-      tt = "tmux a -t";
-      tr = "tmux rename -t";
+    zsh-abbr = {
+      enable = true;
+      abbreviations = {
+        grep = "rg";
+        ip = "ip -a";
+        ls = "ls --color=auto";
+        ll = "ls --color=auto -l";
+        la = "ls --color=auto -a";
+        g = "git";
+        "-" = "cd -";
+        t = "tmux new -s";
+        tl = "tmux ls";
+        tt = "tmux a -t";
+        tr = "tmux rename -t";
+      };
     };
 
     history = {
