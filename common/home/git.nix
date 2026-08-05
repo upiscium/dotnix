@@ -169,25 +169,28 @@ in
   ];
 
   programs.zsh.zsh-abbr.abbreviations = {
-    "git a" = "git add";
-    "git b" = "git branch -a";
-    "git bd" = "git branch -D";
-    "git rbd" = "git push origin --delete";
-    "git c" = "git commit -m";
-    "git cc" = "git rm -r --cached";
-    "git l" = "git fetch -p && git pull";
-    "git m" = "git merge";
-    "git p" = "git push && git worktree prune";
-    "git r" = "git reset --soft";
-    "git rh" = "git reset --hard";
-    "git s" = "git status";
-    "git t" = "git tag";
-    "git w" = "git switch";
-    "git wc" = "git switch -c";
-    "git wt" = "git worktree";
-    "git wr" = "git worktree repair";
-    "git wk" = "git worktree lock";
-    "git wl" = "git worktree list";
+    "g a" = "git add";
+    "g aa" = "git aa";
+    "g b" = "git branch -a";
+    "g bd" = "git branch -D";
+    "g rbd" = "git push origin --delete";
+    "g c" = "git commit -m";
+    "g cc" = "git rm -r --cached";
+    "g l" = "git fetch -p && git pull";
+    "g m" = "git merge";
+    "g p" = "git push && git worktree prune";
+    "g r" = "git reset --soft";
+    "g rh" = "git reset --hard";
+    "g s" = "git status";
+    "g t" = "git tag";
+    "g w" = "git switch";
+    "g wc" = "git switch -c";
+    "g wt" = "git worktree";
+    "g wb" = "git wb";
+    "g wd" = "git wd";
+    "g wr" = "git worktree repair";
+    "g wk" = "git worktree lock";
+    "g wl" = "git worktree list";
 
     "gh rpc" = "gh repo clone";
     "gh rpr" = "gh repo create";
