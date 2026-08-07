@@ -168,6 +168,38 @@ in
     git-aa
   ];
 
+  programs.zsh.zsh-abbr.abbreviations = {
+    "g a" = "git add";
+    "g aa" = "git aa";
+    "g b" = "git branch -a";
+    "g bd" = "git branch -D";
+    "g rbd" = "git push origin --delete";
+    "g c" = "git commit -m";
+    "g cc" = "git rm -r --cached";
+    "g l" = "git fetch -p && git pull";
+    "g m" = "git merge";
+    "g p" = "git push && git worktree prune";
+    "g r" = "git reset --soft";
+    "g rh" = "git reset --hard";
+    "g s" = "git status";
+    "g t" = "git tag";
+    "g w" = "git switch";
+    "g wc" = "git switch -c";
+    "g wt" = "git worktree";
+    "g wb" = "git wb";
+    "g wd" = "git wd";
+    "g wr" = "git worktree repair";
+    "g wk" = "git worktree lock";
+    "g wl" = "git worktree list";
+
+    "gh rpc" = "gh repo clone";
+    "gh rpr" = "gh repo create";
+    "gh pc" = "gh pr create -B";
+    "gh pm" = "gh pr merge";
+    "gh rc" = "gh release create";
+    "gh rl" = "gh release list";
+  };
+
   programs.git = {
     enable = true;
     settings = {
@@ -183,27 +215,6 @@ in
       init.defaultBranch = "main";
       ghq = {
         root = "~/src";
-      };
-      alias = {
-        a = "add";
-        b = "branch -a";
-        bd = "branch -D";
-        rbd = "push origin --delete";
-        c = "commit -m";
-        cc = "rm -r --cached";
-        l = "!git fetch -p && git pull";
-        m = "merge";
-        p = "!git push && git worktree prune";
-        r = "reset --soft";
-        rh = "reset --hard";
-        s = "status";
-        t = "tag";
-        w = "switch";
-        wc = "switch -c";
-        wt = "worktree";
-        wr = "worktree repair";
-        wk = "worktree lock";
-        wl = "worktree list";
       };
       # signing = {
       #   signByDefault = true;
@@ -225,14 +236,6 @@ in
 
     settings = {
       editor = "nvim";
-      aliases = {
-        rpc = "repo clone";
-        rpr = "repo create";
-        pc = "pr create -B";
-        pm = "pr merge";
-        rc = "release create";
-        rl = "release list";
-      };
     };
   };
 }
