@@ -1,7 +1,6 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     # antigravity
-    atlauncher
     bambu-studio
     blender
     # discord
@@ -19,6 +18,7 @@
     libreoffice
     opencode
     parsec-bin
+    prismlauncher
     slack
     unityhub
     # teams-for-linux
