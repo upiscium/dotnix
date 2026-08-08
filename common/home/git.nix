@@ -212,6 +212,7 @@ in
       pull.rebase = false;
       credential.helper = "store";
       fetch.prune = true;
+      submodule.recurse = true;
       init.defaultBranch = "main";
       ghq = {
         root = "~/src";
