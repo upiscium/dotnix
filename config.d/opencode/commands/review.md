@@ -3,4 +3,4 @@ description: Review the current change or specified PR
 agent: plan
 ---
 
-Load the `review-change` skill and review $ARGUMENTS. When no argument is supplied, review the current branch against its detected base branch. Do not modify files unless the user explicitly requested fixes.
+Load the `task-run` skill to run `review-change $ARGUMENTS`. If no arguments are supplied, default to the current branch against its detected base branch. If this is not a dedicated task worktree, request `/task-start review-change` first.

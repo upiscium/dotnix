@@ -5,6 +5,8 @@ description: Use only when the user identifies a GitHub Issue to implement throu
 
 # Implement Issue
 
+This workflow requires a dedicated task worktree. If no `/task-start` handoff is active, ask for `/task-start implement-issue <issue>` and stop.
+
 Before acting, inspect applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, CI workflow files, existing tests, and Git metadata for the default branch. Treat absent conventions as unknown and do not guess destructive operations.
 
 Never select an issue. If no issue number or URL is supplied, ask for one and stop. Never merge automatically.

@@ -5,6 +5,8 @@ description: Use when reviewing the current change, a commit range, or a pull re
 
 # Review Change
 
+This workflow requires a dedicated task worktree. If the session is not a `/task-start` worktree, ask for `/task-start review-change <scope>` and stop.
+
 Before acting, inspect applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, CI workflow files, existing tests, and Git metadata for the default branch. Treat absent conventions as unknown and do not guess destructive operations.
 
 1. Confirm the requested review target and exact diff range. Never assume a branch name.

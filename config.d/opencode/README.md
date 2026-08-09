@@ -14,21 +14,35 @@ Built-in agents are overridden in `opencode.json`. Specialized custom agents, in
 
 | Role | Model | Use |
 | --- | --- | --- |
-| `build`, `plan`, `architect` | `openai/gpt-5.6-sol` | Integration, architecture, planning, final decisions |
+| `build`, `plan`, `architect` | `openai/gpt-5.6-sol` | Integration, architecture, planning, and final decisions |
 | `reviewer`, `investigator`, `security-reviewer` | `openai/gpt-5.6-terra` | Cross-file analysis, diagnosis, and review |
 | `scout` | `openai/gpt-5.6-luna` | External documentation and upstream investigation |
 | `general`, `explore`, `verifier` | `openai/gpt-5.3-codex-spark` | Bounded implementation, repository exploration, and verification |
 
-Use Sol for integration, planning, and major design or architectural decisions, Terra for review and diagnosis spanning files/modules, Luna for external research, and Spark for bounded implementation, repository exploration, and verification workflows.
+Use **Sol** for integration, planning, and architectural decisions. Use **Terra** for cross-file diagnosis and review. Use **Luna** for external research. Use **Spark** for bounded implementation, repository exploration, and verification workflows handled by the `general`, `explore`, and `verifier` subagents.
+
+## Task execution model
+
+The workflow is two-tier:
+
+1. **Task orchestration tier**: the parent agent starts and schedules work with `/task-start`, setting scope, dependencies, and verification requirements.
+2. **Task execution tier**: bounded workers run via `/task-run` against that task definition in their assigned scope.
+
+## Task State
+
+Task progress is stored in shared task-state and drives orchestration decisions. `/task-start` creates/updates task records, and `/task-run` appends execution results, blockers, and completion status. The task-orchestrator is responsible for state transitions and for reconciling concurrent worker updates.
+
+## External directory
+
+External directory access is denied by default. `/tmp/opencode` and `/tmp/opencode/**` require approval (`ask`) globally. This approval does not override an agent's `read`/`edit` permission settings.
+All other external paths are denied unless explicitly configured at repository scope.
 
 ## Permissions
 
 Reading is generally allowed, while environment files require confirmation. Shell commands are allowed by explicit allowlist and denied/asked otherwise. Git and GitHub write operations are not auto-approved globally.
 
-External-directory access is denied by default. `/tmp/opencode` and `/tmp/opencode/**` require approval (`ask`) globally. This approval does not override an agent's `read`/`edit` permission settings.
-All other external paths are denied unless explicitly configured later at the repository level.
-
-Only `build` and `general` can edit the worktree. Read-only agents are read-only even through Bash by restricting Bash defaults to deny-state-changing commands. `build` and `plan` (primary agents) may start subagents. `subagent_depth` remains one.
+Only `build` and `general` can edit the worktree. Build keeps `task` permission enabled for orchestration; other agents run edits through delegated scope assignments.
+Read-only agents remain state-safe through Bash defaults that deny state-changing commands. `build` and `plan` (primary agents) may start subagents. `subagent_depth` remains one.
 
 `build` and `general` keep edit permission enabled for delegated local changes, but do not auto-allow sensitive write commands. GitHub Issue/PR/state-changing commands and destructive filesystem commands require explicit approval. Push, branch/rebase/reset operations, and remote writes are not globally auto-approved.
 
@@ -54,15 +68,18 @@ Commit, branch manipulation, `git push`, and GitHub Issue/PR changes require exp
 | Run a staged migration | `/migrate <target>` |
 | Audit a repository | `/repo-audit` |
 | Audit this configuration | `/agent-audit` |
+| Start a task workflow | `/task-start <goal-or-scope>` |
+| Execute a delegated task | `/task-run <task-id>` |
 
 Review and audit workflows are read-only by default. Issue implementation never selects an issue and publication creates a Draft PR without merging.
 
-## Parallel Subagents
+## Parallelism
 
-The primary agent may delegate two to four independent workstreams concurrently when scopes are non-overlapping. Each worker must receive an exact scope, expected result, validation requirement, and prohibited changes. Work that edits the same file or depends on another workstream runs sequentially. `build` should prioritize delegation for repository exploration, bounded implementation, and verification instead of doing everything itself.
+The primary agent may delegate two to four independent task runs concurrently when scopes are non-overlapping. Each worker must receive an exact scope, expected result, validation requirement, and prohibited changes. Work that edits the same file or depends on another workstream runs sequentially.
 
-OpenCode does not isolate workers in separate worktrees, so file boundaries are prompt-enforced and parallel workers see shared changes. The primary agent must inspect returned diffs and execution results and own all final architecture/integration decisions.
+In the two-tier model, a worker can execute in a dedicated work-tree when needed, while shared state and task orchestration remain centralized. This reduces file-conflict risk versus pure shared-worktree parallel edits.
 
+- By convention, task worktrees are placed under `/.worktrees/` and are ignored via root `.gitignore` to avoid accidental commits.
 - `build` must not assign overlapping files to concurrent workers.
 - `build` should run `explore`, `general`, `verifier`, and `reviewer` in bounded form when those roles fit the subtask.
 - Parent integration and final judgment stay with the parent agent; worker summaries alone are not enough evidence.
