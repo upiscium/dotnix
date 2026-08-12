@@ -3,6 +3,8 @@
     # antigravity
     bambu-studio
     blender
+    claude-code
+    droidcam
     # discord
     vesktop
     gdlauncher-carbon
@@ -13,6 +15,8 @@
     # krita
     moonlight-qt
     obsidian
+    obs-studio
+    obs-studio-plugins.droidcam-obs
     # onlyoffice-desktopeditors
     wpsoffice
     libreoffice
