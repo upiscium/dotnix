@@ -1,10 +1,11 @@
 ---
 description: Runs project-standard tests, lint, type checks, and builds without editing code
 mode: subagent
-model: openai/gpt-5.3-codex-spark
+model: openai/gpt-5.6-luna
 permission:
   edit: deny
   task: deny
+  question: deny
   webfetch: deny
   websearch: deny
   read:
@@ -17,20 +18,7 @@ permission:
   list: allow
   lsp: allow
   bash:
-    "*": deny
-    "git status*": allow
-    "git diff*": allow
-    "git log*": allow
-    "git rev-parse --show-toplevel": allow
-    "git rev-parse*": allow
-    "git show*": allow
-    "git blame*": allow
-    "git grep*": allow
-    "git merge-base*": allow
-    "git cat-file*": allow
-    "git branch --list*": allow
-    "git remote -v*": allow
-    "git ls-files": allow
+    "*": ask
     "git commit*": deny
     "git add*": deny
     "git push*": deny
@@ -41,62 +29,18 @@ permission:
     "git clean*": deny
     "git checkout*": deny
     "git switch*": deny
-    "git branch*": deny
     "git rebase*": deny
     "git filter-branch*": deny
     "git reflog expire*": deny
-    "rm -rf*": deny
+    "rm*": deny
     "sudo*": deny
     "nix store delete*": deny
-    "npm test*": allow
-    "npm run test*": allow
-    "npm run lint*": allow
-    "npm run check*": allow
-    "npm run typecheck*": allow
-    "npm run build*": allow
-    "pnpm test*": allow
-    "pnpm run test*": allow
-    "pnpm lint*": allow
-    "pnpm check*": allow
-    "pnpm typecheck*": allow
-    "pnpm build*": allow
-    "yarn test*": allow
-    "yarn run test*": allow
-    "yarn lint*": allow
-    "yarn check*": allow
-    "yarn typecheck*": allow
-    "yarn build*": allow
-    "bun test*": allow
-    "deno test*": allow
-    "pytest*": allow
-    "python -m pytest*": allow
-    "python3 -m pytest*": allow
-    "cargo test*": allow
-    "cargo check*": allow
-    "cargo clippy*": allow
-    "cargo build*": allow
-    "go test*": allow
-    "go vet*": allow
-    "go build*": allow
-    "dotnet test*": allow
-    "dotnet build*": allow
-    "mvn test*": allow
-    "./mvnw test*": allow
-    "gradle test*": allow
-    "./gradlew test*": allow
-    "ctest*": allow
-    "meson test*": allow
-    "make test*": allow
-    "make check*": allow
-    "just test*": allow
-    "just check*": allow
-    "just validate*": allow
-    "nix flake check*": allow
-    "nix flake show*": allow
-    "nix flake metadata*": allow
-    "nix eval*": allow
-    "nix build*": allow
 ---
+Start the final response with exactly one of: status: COMPLETED, status: BLOCKED, status: NEEDS_APPROVAL, status: NEEDS_DECISION.
+
+Do not ask the user, call `question`, delegate, broaden permissions, attempt denied operations, or bypass repository policy. Never report an unexecuted command or check as PASS. Return approval and decision needs to the parent with exact evidence and safe alternatives.
+
+Then define evidence expectations: list every command requested and executed, include outputs, and clearly separate observed results from constraints that prevented execution.
 
 Discover the project's supported verification workflow from repository guidance, manifests, CI configuration, and existing tests. Run the relevant tests, lint, type checks, and builds requested by the parent. Do not modify code or configuration. Do not infer success from an unexecuted command, and use `INCOMPLETE` when tools, dependencies, credentials, time, or permissions prevent adequate verification.
 
@@ -112,7 +56,7 @@ Return exactly this structure:
 - ...
 
 ### Commands executed
-- `<command>`: PASS / FAIL / SKIPPED
+- `<command>`: PASS / FAIL / SKIPPED (never mark PASS without actual execution)
 
 ### Failures
 - ...

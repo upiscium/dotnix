@@ -5,7 +5,20 @@ description: Use when preparing or publishing a repository release.
 
 # Release
 
-Before acting, discover applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, tracked manifests and build entry points (including `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, `go.mod`, `Gemfile`, Maven or Gradle files, and `composer.json` when present), CI workflow files, existing tests, and Git metadata for the default branch. Treat absent conventions as unknown; do not guess release commands, version formats, or destructive operations.
+At workflow start, detect Agent-ready mode:
+
+- Agent-ready when **both** `.automation/VERSION` and `.automation/INIT.md` exist.
+- Exactly one path must be followed: Agent-ready path or Generic path.
+
+Agent-ready setup (skip in Generic mode):
+
+1. Read `AGENTS.md`, `.automation/INIT.md`, and optional task state.
+2. Load the repository-local `initialize` skill when available.
+3. If local policy requires it, execute in local Task context and use repository Task orchestration.
+4. For writes involving Task State, worktree lifecycle, release tags/branches, or publication/integration, use guarded APIs only.
+5. For source edits and artifact preparation, use repository-appropriate tools as part of the core workflow.
+
+Then follow this core workflow in either mode. Discover applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, tracked manifests and build entry points (including `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, `go.mod`, `Gemfile`, Maven or Gradle files, and `composer.json` when present), CI workflow files, existing tests, and Git metadata for the default branch. Treat absent conventions as unknown; do not guess release commands, version formats, or destructive operations.
 
 1. Confirm the requested version, release scope, repository, and whether the user authorizes a Draft Release or publication. Stop if any consequential detail is ambiguous.
 2. Detect the project’s release conventions, version sources, tag format, changelog process, artifact definitions, signing requirements, and CI release workflow from repository evidence and Git tags.

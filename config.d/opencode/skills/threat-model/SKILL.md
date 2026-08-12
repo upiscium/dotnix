@@ -5,9 +5,18 @@ description: Use when a read-only threat model is needed for a system, feature, 
 
 # Threat Model
 
-Before acting, discover applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, tracked manifests and build entry points (including `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, `go.mod`, `Gemfile`, Maven or Gradle files, and `composer.json` when present), CI workflow files, existing tests, and Git metadata including the default branch. Treat absent conventions as unknown; do not guess.
-
 This workflow is read-only. Do not edit code, create issues, or post findings remotely. Confirm the system or change in scope and stop if its boundaries or required context cannot be established.
+
+Agent-ready awareness:
+
+- Detect repository Agent-ready mode if and only if both `.automation/VERSION` and `.automation/INIT.md` exist.
+- If Agent-ready, load `AGENTS.md` and repository-local guidance from `.automation/INIT.md` (including any Agent Core directives) before analysis.
+- When present, use optional local Task State context for workflow continuity; never write Task State in this workflow.
+- If not Agent-ready, treat it as generic and continue with global conventions only.
+- Read-only workflow rule: do not mutate Task State.
+- If local initialize is defined in `INIT.md` and context is appropriate, run it before threat-modeling.
+
+Before acting, discover applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, tracked manifests and build entry points (including `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, `go.mod`, `Gemfile`, Maven or Gradle files, and `composer.json` when present), CI workflow files, existing tests, and Git metadata including the default branch. Treat absent conventions as unknown; do not guess.
 
 1. Describe scope, assumptions, assets, security properties, trust boundaries, actors, and attacker capabilities.
 2. Trace relevant data flows, entry points, privileged operations, persistence, secrets, and external dependencies.
