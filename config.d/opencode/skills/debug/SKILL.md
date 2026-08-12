@@ -5,7 +5,19 @@ description: Use when a bug, runtime error, or failing test requires systematic 
 
 # Debug
 
-Before acting, inspect applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, CI workflow files, existing tests, and Git metadata for the default branch. Treat absent conventions as unknown and do not guess destructive operations.
+At workflow start, detect Agent-ready mode:
+
+- Agent-ready when **both** `.automation/VERSION` and `.automation/INIT.md` exist.
+- Exactly one path must be followed: Agent-ready path or Generic path.
+
+Agent-ready setup (skip in Generic mode):
+
+1. Read `AGENTS.md`, `.automation/INIT.md`, and optional task state.
+2. Load the repository-local `initialize` skill when available.
+3. Start with read-only diagnosis without requiring Task lifecycle.
+4. If a fix requires edits or integration commits, enter local Task lifecycle (`task-start`/`task-run`) before mutating repository state when local policy requires.
+
+Then follow this core workflow in either mode. Inspect applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, CI workflow files, existing tests, and Git metadata for the default branch. Treat absent conventions as unknown and do not guess destructive operations.
 
 1. Fix the observed symptom in precise terms.
 2. Establish the smallest reliable reproduction.

@@ -5,9 +5,18 @@ description: Use when auditing an entire repository for actionable correctness, 
 
 # Repository Audit
 
-Before acting, inspect applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, CI workflow files, existing tests, and Git metadata for the default branch. Treat absent conventions as unknown and do not guess destructive operations.
-
 This workflow is read-only. Do not change code or create issues without a separate explicit request.
+
+Agent-ready awareness:
+
+- Detect repository Agent-ready mode if and only if both `.automation/VERSION` and `.automation/INIT.md` exist.
+- If Agent-ready, load `AGENTS.md` and repository-local guidance from `.automation/INIT.md` (including any Agent Core directives) before analysis.
+- When present, use optional local Task State context for workflow continuity; never write Task State in this workflow.
+- If not Agent-ready, treat it as generic and continue with global conventions only.
+- Read-only workflow rule: do not mutate Task State.
+- If local initialize is defined in `INIT.md` and context is appropriate, run it before audit actions.
+
+Before acting, inspect applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, CI workflow files, existing tests, and Git metadata for the default branch. Treat absent conventions as unknown and do not guess destructive operations.
 
 1. Establish repository purpose, release configuration, and the applicable discovered conventions.
 2. Define and report sampled and excluded areas before drawing conclusions.

@@ -5,7 +5,19 @@ description: Use when a breaking API, data, platform, system, or compatibility t
 
 # Migrate
 
-Before acting, discover applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, tracked manifests and build entry points (including `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, `go.mod`, `Gemfile`, Maven or Gradle files, and `composer.json` when present), CI workflow files, existing tests, and Git metadata including the default branch. Treat absent conventions as unknown; do not guess.
+At workflow start, detect Agent-ready mode:
+
+- Agent-ready when **both** `.automation/VERSION` and `.automation/INIT.md` exist.
+- Exactly one path must be followed: Agent-ready path or Generic path.
+
+Agent-ready setup (skip in Generic mode):
+
+1. Read `AGENTS.md`, `.automation/INIT.md`, and optional task state.
+2. Load the repository-local `initialize` skill when available.
+3. If local policy requires, execute stateful orchestration through local Task lifecycle before writes to task/state, branches, worktrees, or external integration.
+4. Keep core migration analysis and edits as normal repository-driven steps.
+
+Then follow this core workflow in either mode. Discover applicable `AGENTS.md`, `README*`, `CONTRIBUTING*`, tracked manifests and build entry points (including `Justfile`, `Makefile`, `flake.nix`, `package.json`, `pyproject.toml`, `Cargo.toml`, `CMakeLists.txt`, `go.mod`, `Gemfile`, Maven or Gradle files, and `composer.json` when present), CI workflow files, existing tests, and Git metadata including the default branch. Treat absent conventions as unknown; do not guess.
 
 Require an explicit target, source, scope, and acceptable compatibility window. If the target or required context is missing, stop and ask. Use `scout` to research target breaking changes and record authoritative evidence; do not assume compatibility.
 
