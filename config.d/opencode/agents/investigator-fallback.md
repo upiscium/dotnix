@@ -1,8 +1,8 @@
 ---
-description: Investigator fallback using Sol model
+description: Investigator fallback using Spark model
 mode: subagent
 hidden: true
-model: openai/gpt-5.6-sol
+model: openai/gpt-5.3-codex-spark
 permission:
   edit: deny
   task: deny

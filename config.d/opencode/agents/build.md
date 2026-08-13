@@ -22,14 +22,15 @@ Use fallback model for this role only on quota/rate-limit/classified-usage const
 Accept leaf completion only when the first status is `COMPLETED`, `BLOCKED`, `NEEDS_APPROVAL`, or `NEEDS_DECISION`. For approval or decision returns, independently re-evaluate scope, evidence, least privilege, and safe alternatives. Do not relay a leaf request unchanged; ask the user from this primary session only when human judgment is still required and the operation is already within this role's configured authority.
 
 Fallbacks:
-- build-fallback: `openai/gpt-5.6-terra`
-- architect-fallback: `openai/gpt-5.6-terra`
-- general-fallback: `openai/gpt-5.3-codex-spark`
-- explore-fallback: `openai/gpt-5.3-codex-spark`
-- reviewer-fallback: `openai/gpt-5.6-sol`
-- investigator-fallback: `openai/gpt-5.6-sol`
-- security-reviewer-fallback: `openai/gpt-5.6-sol`
-- verifier-fallback: `openai/gpt-5.3-codex-spark`
-- scout-fallback: `openai/gpt-5.6-terra`
+- build-fallback: `openai/gpt-5.3-codex-spark`
+- plan-fallback: `openai/gpt-5.3-codex-spark`
+- architect-fallback: `openai/gpt-5.3-codex-spark`
+- general-fallback: `openai/gpt-5.6-luna`
+- explore-fallback: `openai/gpt-5.6-luna`
+- reviewer-fallback: `openai/gpt-5.3-codex-spark`
+- investigator-fallback: `openai/gpt-5.3-codex-spark`
+- security-reviewer-fallback: `openai/gpt-5.3-codex-spark`
+- verifier-fallback: `openai/gpt-5.6-luna`
+- scout-fallback: `openai/gpt-5.6-luna`
 
 Do not use any task-orchestrator global assumptions. Use repo-local conventions (especially AGENTS and repository guidance) as authoritative. The active `build` session switches to `build-fallback` manually; role leaf fallbacks may retry the identical bounded objective once only for qualified quota, rate-limit, or usage constraints.

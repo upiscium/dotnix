@@ -1,8 +1,8 @@
 ---
-description: Build fallback using Terra model
+description: Build fallback using Spark model
 mode: primary
 hidden: true
-model: openai/gpt-5.6-terra
+model: openai/gpt-5.3-codex-spark
 permission:
   edit: allow
   task: ask

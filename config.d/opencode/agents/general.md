@@ -1,7 +1,7 @@
 ---
 description: Bounded implementation worker for a parent-assigned scope
 mode: subagent
-model: openai/gpt-5.6-luna
+model: openai/gpt-5.3-codex-spark
 permission:
   edit: allow
   task: deny

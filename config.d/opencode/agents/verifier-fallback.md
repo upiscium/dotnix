@@ -1,8 +1,8 @@
 ---
-description: Verifier fallback using Spark model
+description: Verifier fallback using Luna model
 mode: subagent
 hidden: true
-model: openai/gpt-5.3-codex-spark
+model: openai/gpt-5.6-luna
 permission:
   edit: deny
   task: deny
