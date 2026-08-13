@@ -1,8 +1,8 @@
 ---
-description: Architect fallback using Terra model
+description: Architect fallback using Spark model
 mode: subagent
 hidden: true
-model: openai/gpt-5.6-terra
+model: openai/gpt-5.3-codex-spark
 permission:
   edit: deny
   task: deny

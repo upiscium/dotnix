@@ -1,8 +1,8 @@
 ---
-description: Scout fallback using Terra model
+description: Scout fallback using Luna model
 mode: subagent
 hidden: true
-model: openai/gpt-5.6-terra
+model: openai/gpt-5.6-luna
 permission:
   edit: deny
   task: deny

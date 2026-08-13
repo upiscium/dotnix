@@ -29,18 +29,18 @@ Primary assignments:
 | --- | --- |
 | `build`, `plan`, `architect` | `openai/gpt-5.6-sol` |
 | `reviewer`, `investigator`, `security-reviewer` | `openai/gpt-5.6-terra` |
-| `general`, `explore`, `verifier`, `scout` | `openai/gpt-5.6-luna` |
+| `general`, `explore`, `verifier`, `scout` | `openai/gpt-5.3-codex-spark` |
 
-Model-name mapping used in this config: **Sol**=`openai/gpt-5.6-sol`, **Terra**=`openai/gpt-5.6-terra`, **Luna**=`openai/gpt-5.6-luna`, **Spark**=`openai/gpt-5.3-codex-spark` (fallback only).
+Model-name mapping used in this config: **Sol**=`openai/gpt-5.6-sol`, **Terra**=`openai/gpt-5.6-terra`, **Luna**=`openai/gpt-5.6-luna`, **Spark**=`openai/gpt-5.3-codex-spark`.
 
 Fallback assignments:
 
-- `build`, `architect` → `Terra`
-- `general`, `explore`, `verifier` → `Spark`
-- `reviewer`, `investigator`, `security-reviewer` → `Sol`
-- `scout` → `Terra`
+- `build`, `plan`, `architect`, `reviewer`, `investigator`, `security-reviewer` → `Spark`
+- `general`, `explore`, `verifier`, `scout` → `Luna`
 
-`build-fallback` is a hidden primary-mode fallback selected manually when the active Main session encounters a classified usage limit. Other role fallbacks retry only the identical bounded objective and only for classified quota/rate-limit/HTTP 429 failures, never for authentication, permission, validation, context, tool, or safety failures.
+Fallbacks cross model quota families: 5.6-primary roles fall back to Spark, while Spark-primary roles fall back to Luna. A 5.6 model never falls back to another 5.6 model.
+
+`build-fallback` and `plan-fallback` are hidden primary-mode fallbacks selected manually when their active primary session encounters a classified usage limit. Other role fallbacks retry only the identical bounded objective and only for classified quota/rate-limit/HTTP 429 failures, never for authentication, permission, validation, context, tool, or safety failures.
 
 There is no global task-orchestrator model binding.
 
