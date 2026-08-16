@@ -36,7 +36,7 @@ hl.bind(mainMod .. "+SHIFT+J", hl.dsp.window.move({ direction = "down" }))
 hl.bind(mainMod .. "+SHIFT+H", hl.dsp.window.move({ direction = "left" }))
 
 -- Window kill
-hl.bind(mainMod .. "+Q", hl.dsp.window.kill())
+hl.bind(mainMod .. "+Q", hl.dsp.window.close())
 
 -- Lock screen
 hl.bind(mainMod .. "+F11", hl.dsp.exec_cmd("hyprlock --no-fade-in"))
