@@ -21,8 +21,8 @@
     source = ../../config.d/hypr/hypridle.conf;
   };
 
-  home.file.".config/hypr/hyprland.conf" = {
-    source = ../../config.d/hypr/hyprland.conf;
+  home.file.".config/hypr/hyprland.lua" = {
+    source = ../../config.d/hypr/hyprland.lua;
   };
 
   home.file.".config/hypr/hyprlock.conf" = {
@@ -33,8 +33,8 @@
     source = ../../config.d/hypr/hyprpaper.conf;
   };
 
-  home.file.".config/hypr/platform.conf" = {
-    source = ../../config.d/hypr/platforms/${hostname}.conf;
+  home.file.".config/hypr/platform.lua" = {
+    source = ../../config.d/hypr/platforms/${hostname}.lua;
   };
 
   home.file.".config/swaync" = {
@@ -57,4 +57,3 @@
     recursive = true;
   };
 }
-

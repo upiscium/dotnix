@@ -1,9 +1,10 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     # antigravity
-    atlauncher
     bambu-studio
     blender
+    claude-code
+    droidcam
     # discord
     vesktop
     gdlauncher-carbon
@@ -14,11 +15,14 @@
     # krita
     moonlight-qt
     obsidian
+    obs-studio
+    obs-studio-plugins.droidcam-obs
     # onlyoffice-desktopeditors
     wpsoffice
     libreoffice
     opencode
     parsec-bin
+    prismlauncher
     slack
     unityhub
     # teams-for-linux

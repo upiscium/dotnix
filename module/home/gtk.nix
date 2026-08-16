@@ -1,8 +1,10 @@
 { pkgs, ... }:
 {
   gtk.enable = true;
-  gtk.gtk4.theme.package = pkgs.stilo-themes;
-  gtk.gtk4.theme.name = "Stilo";
+  gtk.theme.package = pkgs.adw-gtk3;
+  gtk.theme.name = "adw-gtk3";
+  gtk.gtk4.theme.package = pkgs.adw-gtk3;
+  gtk.gtk4.theme.name = "adw-gtk3";
   gtk.iconTheme.package = pkgs.tela-icon-theme;
   gtk.iconTheme.name = "Tela";
   # gtk.cursorTheme.package = pkgs.volantes-cursors;
@@ -10,5 +12,5 @@
 
   qt.enable = true;
   qt.platformTheme.name = "gtk3";
-  qt.style.package = pkgs.stilo-themes;
+  qt.style.name = "adwaita";
 }

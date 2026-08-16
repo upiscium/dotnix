@@ -28,12 +28,19 @@
   # Bootloader.
   # boot.kernelPackages = pkgs.linuxKernel.packages.linux_zen;
   boot.kernelPackages = pkgs.linuxPackages_latest; # Use latest kernel for better hardware support
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    v4l2loopback
+  ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelModules = [ "v4l2loopback" ];
   boot.kernelParams = [
     "nvidia-drm.modeset=1"
     "nvidia-drm.fbdev=1"
   ];
+  boot.extraModprobeConfig = ''
+    options v4l2loopback devices=1 video_nr=10 card_label="DroidCam" exclusive_caps=1
+  '';
 
   nixpkgs.config = {
     allowUnfree = true;
@@ -70,6 +77,9 @@
     nvidia-docker
     nvidia-container-toolkit
     wireguard-tools
+
+    android-tools
+    v4l-utils
   ];
 
   # This value determines the NixOS release from which the default
