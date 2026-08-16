@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 
 {
   imports =
@@ -31,6 +31,8 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   services.xserver.displayManager.lightdm.enable = false;
+
+  hardware.alsa.enablePersistence = lib.mkForce false;
 
   # environment.systemPackages = with pkgs; [ ];
 
