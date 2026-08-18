@@ -163,6 +163,7 @@ in
 {
   home.packages = with pkgs; [
     tig
+    git-lfs
     git-wb
     git-wd
     git-aa
