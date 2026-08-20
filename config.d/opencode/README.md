@@ -6,7 +6,7 @@ This directory is deployed recursively to `~/.config/opencode/`. Changes apply t
 
 **Source of truth:** Templates behavior should not be duplicated; repository-local Templates configuration is authoritative.
 
-- Dotnix is the **user-wide generic baseline and safe fallback**.
+- Dotnix is the **user-wide generic baseline**.
 - Repository-local configuration, when present, performs deep-merge override and is authoritative.
 - Generic repos have no Agent Core requirements.
 - `review`, `audit`, `threat-model`, and `benchmark` remain global and read-only by default.
@@ -33,9 +33,9 @@ Primary assignments:
 
 Model-name mapping used in this config: **Sol**=`openai/gpt-5.6-sol`, **Terra**=`openai/gpt-5.6-terra`, **Luna**=`openai/gpt-5.6-luna`.
 
-No global fallback-agent layer is currently configured. Spark has been removed from the global Dotnix OpenCode configuration, and this layer does not pretend that switching between 5.6 variants provides an independent quota-family fallback.
+Each global role is bound to exactly one configured model. The global layer does not perform model substitution or retry work under a different model when the configured model becomes unavailable.
 
-When a configured model is unavailable or quota-limited, the global baseline fails closed: report the exact provider/model failure and return `BLOCKED` unless repository-local policy defines a valid alternative. A future local coding-model provider may be added as a genuine independent fallback family.
+Sol, Terra, and Luna are all GPT-5.6 variants. If the required GPT-5.6 capability is unavailable or quota-limited, report the exact provider/model failure and return `BLOCKED`. Model availability is treated as a hard execution prerequisite, not as a routing event.
 
 There is no global task-orchestrator model binding.
 
