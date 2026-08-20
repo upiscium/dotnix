@@ -29,18 +29,13 @@ Primary assignments:
 | --- | --- |
 | `build`, `plan`, `architect` | `openai/gpt-5.6-sol` |
 | `reviewer`, `investigator`, `security-reviewer` | `openai/gpt-5.6-terra` |
-| `general`, `explore`, `verifier`, `scout` | `openai/gpt-5.3-codex-spark` |
+| `general`, `explore`, `verifier`, `scout` | `openai/gpt-5.6-luna` |
 
-Model-name mapping used in this config: **Sol**=`openai/gpt-5.6-sol`, **Terra**=`openai/gpt-5.6-terra`, **Luna**=`openai/gpt-5.6-luna`, **Spark**=`openai/gpt-5.3-codex-spark`.
+Model-name mapping used in this config: **Sol**=`openai/gpt-5.6-sol`, **Terra**=`openai/gpt-5.6-terra`, **Luna**=`openai/gpt-5.6-luna`.
 
-Fallback assignments:
+No global fallback-agent layer is currently configured. Spark has been removed from the global Dotnix OpenCode configuration, and this layer does not pretend that switching between 5.6 variants provides an independent quota-family fallback.
 
-- `build`, `plan`, `architect`, `reviewer`, `investigator`, `security-reviewer` → `Spark`
-- `general`, `explore`, `verifier`, `scout` → `Luna`
-
-Fallbacks cross model quota families: 5.6-primary roles fall back to Spark, while Spark-primary roles fall back to Luna. A 5.6 model never falls back to another 5.6 model.
-
-`build-fallback` and `plan-fallback` are hidden primary-mode fallbacks selected manually when their active primary session encounters a classified usage limit. Other role fallbacks retry only the identical bounded objective and only for classified quota/rate-limit/HTTP 429 failures, never for authentication, permission, validation, context, tool, or safety failures.
+When a configured model is unavailable or quota-limited, the global baseline fails closed: report the exact provider/model failure and return `BLOCKED` unless repository-local policy defines a valid alternative. A future local coding-model provider may be added as a genuine independent fallback family.
 
 There is no global task-orchestrator model binding.
 
@@ -81,7 +76,7 @@ All other external paths are denied unless explicitly allowed by local repositor
 
 Do not use OpenCode auto-approval mode in untrusted repositories: auto-approval defeats the human review provided by global `ask` rules. Repository-local deny rules remain the authoritative stronger boundary in Agent-ready repositories.
 
-Only `build`, `general`, and their role-equivalent fallback agents keep edit permission for delegated local modifications; other agents remain read-focused.
+Only `build` and `general` keep edit permission for local modifications; other agents remain read-focused.
 `plan` may start read-only inspection subagents only; executable verification is returned to the parent.
 
 GitHub Issue/PR/state-changing commands and branch/reset/push-style operations are confirm-only globally.
