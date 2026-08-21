@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -195,7 +196,66 @@ def validate_update(before: dict[str, Any], after: dict[str, Any]) -> tuple[str,
         raise LockUpdateError("root nixpkgs node identity changed")
     if before_nodes[before_nixpkgs] != after_nodes[after_nixpkgs]:
         raise LockUpdateError("root nixpkgs node changed")
+    if before_revision == after_revision and before != after:
+        raise LockUpdateError(
+            "flake.lock changed without an OpenCodePolicy revision change"
+        )
     return before_revision, after_revision
+
+
+def validate_candidate_files(before_path: Path, after_path: Path) -> tuple[bool, str, str]:
+    try:
+        before_bytes = before_path.read_bytes()
+        after_bytes = after_path.read_bytes()
+    except OSError as exc:
+        raise LockUpdateError(f"cannot read lock file: {exc}") from exc
+
+    before_revision, after_revision = validate_update(
+        load_lock(before_path), load_lock(after_path)
+    )
+    if before_bytes == after_bytes:
+        return False, before_revision, after_revision
+    if before_revision == after_revision:
+        raise LockUpdateError(
+            "flake.lock changed without an OpenCodePolicy revision change"
+        )
+    return True, before_revision, after_revision
+
+
+def validate_existing_branch(
+    before_path: Path,
+    candidate_path: Path,
+    branch_path: Path,
+    *,
+    candidate_sha256: str,
+    expected_revision: str,
+    changed_paths: list[str],
+) -> tuple[str, str]:
+    if changed_paths != ["flake.lock"]:
+        rendered = ", ".join(changed_paths) if changed_paths else "<none>"
+        raise LockUpdateError(
+            f"existing branch must change only flake.lock; changed paths: {rendered}"
+        )
+    try:
+        candidate_bytes = candidate_path.read_bytes()
+        branch_bytes = branch_path.read_bytes()
+    except OSError as exc:
+        raise LockUpdateError(f"cannot read existing branch lock candidate: {exc}") from exc
+    if hashlib.sha256(candidate_bytes).hexdigest() != candidate_sha256:
+        raise LockUpdateError("validated candidate checksum mismatch")
+    if branch_bytes != candidate_bytes:
+        raise LockUpdateError("existing branch flake.lock does not match validated candidate")
+
+    changed, before_revision, branch_revision = validate_candidate_files(
+        before_path, branch_path
+    )
+    if not changed:
+        raise LockUpdateError("existing branch does not contain a lock update")
+    if branch_revision != expected_revision:
+        raise LockUpdateError(
+            "existing branch OpenCodePolicy revision does not match validated candidate"
+        )
+    return before_revision, branch_revision
 
 
 def parser() -> argparse.ArgumentParser:
@@ -204,20 +264,44 @@ def parser() -> argparse.ArgumentParser:
     )
     result.add_argument("before", type=Path)
     result.add_argument("after", type=Path)
+    result.add_argument("--candidate", type=Path)
+    result.add_argument("--candidate-sha256")
+    result.add_argument("--expected-revision")
+    result.add_argument("--changed-path", action="append", default=[])
     return result
 
 
 def main() -> int:
     args = parser().parse_args()
     try:
-        before_revision, after_revision = validate_update(
-            load_lock(args.before), load_lock(args.after)
-        )
+        if args.candidate is None:
+            if args.candidate_sha256 or args.expected_revision or args.changed_path:
+                raise LockUpdateError(
+                    "existing-branch options require --candidate"
+                )
+            changed, before_revision, after_revision = validate_candidate_files(
+                args.before, args.after
+            )
+        else:
+            if not args.candidate_sha256 or not args.expected_revision:
+                raise LockUpdateError(
+                    "--candidate requires --candidate-sha256 and --expected-revision"
+                )
+            before_revision, after_revision = validate_existing_branch(
+                args.before,
+                args.candidate,
+                args.after,
+                candidate_sha256=args.candidate_sha256,
+                expected_revision=args.expected_revision,
+                changed_paths=args.changed_path,
+            )
+            changed = True
     except LockUpdateError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
+    status = "VALID" if changed else "NOOP"
     print(
-        "VALID OpenCodePolicy lock update "
+        f"{status} OpenCodePolicy lock update "
         f"old={before_revision} new={after_revision}"
     )
     return 0

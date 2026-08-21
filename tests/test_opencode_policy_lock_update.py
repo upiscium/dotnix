@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import importlib.util
 import json
 import sys
@@ -59,11 +60,29 @@ class OpenCodePolicyLockUpdateTest(unittest.TestCase):
         with self.assertRaisesRegex(checker.LockUpdateError, message):
             checker.validate_update(before, after)
 
-    def test_identical_lock_is_valid_for_noop_simulation(self) -> None:
-        lock = self.lock()
-        self.assertEqual(
-            (self.OLD_REV, self.OLD_REV),
-            checker.validate_update(lock, copy.deepcopy(lock)),
+    def write_lock(self, path: Path, lock: dict) -> None:
+        path.write_text(json.dumps(lock, sort_keys=True) + "\n", encoding="utf-8")
+
+    def test_identical_revision_and_identical_lock_is_noop(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            before = Path(directory) / "before.lock"
+            after = Path(directory) / "after.lock"
+            self.write_lock(before, self.lock())
+            after.write_bytes(before.read_bytes())
+            self.assertEqual(
+                (False, self.OLD_REV, self.OLD_REV),
+                checker.validate_candidate_files(before, after),
+            )
+
+    def test_identical_revision_with_exclusive_dependency_change_is_rejected(self) -> None:
+        before = self.lock()
+        after = copy.deepcopy(before)
+        after["nodes"]["opencodePolicy"]["inputs"]["tool"] = "policyTool"
+        after["nodes"]["policyTool"] = {"locked": {"rev": "3" * 40}}
+        self.assert_invalid(
+            before,
+            after,
+            "flake.lock changed without an OpenCodePolicy revision change",
         )
 
     def test_policy_revision_update_is_valid(self) -> None:
@@ -97,6 +116,80 @@ class OpenCodePolicyLockUpdateTest(unittest.TestCase):
         del after["nodes"]["policyTool"]
         del after["nodes"]["policyLeaf"]
         checker.validate_update(before, after)
+
+    def test_existing_branch_matching_candidate_is_reusable(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            before_path = root / "before.lock"
+            candidate_path = root / "candidate.lock"
+            branch_path = root / "branch.lock"
+            before = self.lock()
+            candidate = self.update_policy(before)
+            candidate["nodes"]["opencodePolicy"]["inputs"]["tool"] = "policyTool"
+            candidate["nodes"]["policyTool"] = {"locked": {"rev": "3" * 40}}
+            self.write_lock(before_path, before)
+            self.write_lock(candidate_path, candidate)
+            branch_path.write_bytes(candidate_path.read_bytes())
+            digest = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
+            self.assertEqual(
+                (self.OLD_REV, self.NEW_REV),
+                checker.validate_existing_branch(
+                    before_path,
+                    candidate_path,
+                    branch_path,
+                    candidate_sha256=digest,
+                    expected_revision=self.NEW_REV,
+                    changed_paths=["flake.lock"],
+                ),
+            )
+
+    def test_existing_branch_different_from_candidate_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            before_path = root / "before.lock"
+            candidate_path = root / "candidate.lock"
+            branch_path = root / "branch.lock"
+            before = self.lock()
+            candidate = self.update_policy(before)
+            branch = copy.deepcopy(candidate)
+            branch["nodes"]["opencodePolicy"]["locked"]["narHash"] = "manual"
+            self.write_lock(before_path, before)
+            self.write_lock(candidate_path, candidate)
+            self.write_lock(branch_path, branch)
+            digest = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(
+                checker.LockUpdateError, "does not match validated candidate"
+            ):
+                checker.validate_existing_branch(
+                    before_path,
+                    candidate_path,
+                    branch_path,
+                    candidate_sha256=digest,
+                    expected_revision=self.NEW_REV,
+                    changed_paths=["flake.lock"],
+                )
+
+    def test_existing_branch_with_unrelated_file_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            before_path = root / "before.lock"
+            candidate_path = root / "candidate.lock"
+            branch_path = root / "branch.lock"
+            before = self.lock()
+            candidate = self.update_policy(before)
+            self.write_lock(before_path, before)
+            self.write_lock(candidate_path, candidate)
+            branch_path.write_bytes(candidate_path.read_bytes())
+            digest = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(checker.LockUpdateError, "only flake.lock"):
+                checker.validate_existing_branch(
+                    before_path,
+                    candidate_path,
+                    branch_path,
+                    candidate_sha256=digest,
+                    expected_revision=self.NEW_REV,
+                    changed_paths=["README.md", "flake.lock"],
+                )
 
     def test_nested_follows_shared_dependency_change_is_rejected(self) -> None:
         before = self.lock(unrelated=True)

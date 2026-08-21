@@ -27,6 +27,15 @@ jobs:
       candidate_sha256: ${{ steps.candidate.outputs.candidate_sha256 }}
       audit_summary: ${{ steps.audit.outputs.summary }}
     steps:
+      - name: Require dispatch from main
+        env:
+          DISPATCH_REF: ${{ github.ref }}
+        run: |
+          if [[ "$DISPATCH_REF" != "refs/heads/main" ]]; then
+            echo "Update OpenCodePolicy must be dispatched from refs/heads/main; got $DISPATCH_REF" >&2
+            exit 1
+          fi
+
       - name: Check out trusted main
         uses: actions/checkout@v6
         with:
@@ -74,9 +83,13 @@ jobs:
           nix flake update opencodePolicy
           NEW_REV="$(read_revision flake.lock)"
 
-          if [[ "$OLD_REV" == "$NEW_REV" ]]; then
+          if cmp -s "$RUNNER_TEMP/flake.lock.before" flake.lock; then
             CHANGED=false
           else
+            if [[ "$OLD_REV" == "$NEW_REV" ]]; then
+              echo "flake.lock changed without an OpenCodePolicy revision change" >&2
+              exit 1
+            fi
             CHANGED=true
           fi
           {
@@ -96,11 +109,12 @@ jobs:
             echo
             echo "OpenCodePolicy is already up to date."
             echo
-            printf 'Old: `%s`\n' "$OLD_REV"
-            printf 'Current: `%s`\n' "$NEW_REV"
+            printf "Old: \`%s\`\n" "$OLD_REV"
+            printf "Current: \`%s\`\n" "$NEW_REV"
             echo
             echo "No branch, commit, push, or pull request was created."
           } >> "$GITHUB_STEP_SUMMARY"
+          cmp -s "$RUNNER_TEMP/flake.lock.before" flake.lock
 
       - name: Require flake.lock-only candidate change
         if: steps.revisions.outputs.changed == 'true'
@@ -232,7 +246,9 @@ jobs:
         id: duplicate
         env:
           GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ needs.validate.outputs.base_sha }}
           NEW_REV: ${{ needs.validate.outputs.new_rev }}
+          CANDIDATE_SHA256: ${{ needs.validate.outputs.candidate_sha256 }}
         shell: bash
         run: |
           set -euo pipefail
@@ -262,7 +278,28 @@ jobs:
             exit 1
           fi
           EXISTING_PR="${OPEN_PRS[0]:-}"
-          if [[ -z "$EXISTING_PR" ]]; then
+          if [[ -n "$EXISTING_PR" ]]; then
+            git fetch --no-tags origin \
+              "refs/heads/$BRANCH:refs/remotes/origin/$BRANCH"
+            git show "$BASE_SHA:flake.lock" > "$RUNNER_TEMP/flake.lock.base"
+            git show "refs/remotes/origin/$BRANCH:flake.lock" \
+              > "$RUNNER_TEMP/flake.lock.branch"
+            mapfile -d '' -t CHANGED_PATHS < <(
+              git diff --name-only -z "$BASE_SHA" "refs/remotes/origin/$BRANCH"
+            )
+            CHECK_ARGS=(
+              python3 tools/check_opencode_policy_lock_update.py
+              "$RUNNER_TEMP/flake.lock.base"
+              "$RUNNER_TEMP/flake.lock.branch"
+              --candidate "$RUNNER_TEMP/flake.lock.candidate"
+              --candidate-sha256 "$CANDIDATE_SHA256"
+              --expected-revision "$NEW_REV"
+            )
+            for path in "${CHANGED_PATHS[@]}"; do
+              CHECK_ARGS+=(--changed-path "$path")
+            done
+            "${CHECK_ARGS[@]}"
+          else
             set +e
             git ls-remote --exit-code --heads origin "refs/heads/$BRANCH" >/dev/null
             REMOTE_STATUS=$?
@@ -293,9 +330,9 @@ jobs:
           {
             echo "### OpenCodePolicy update"
             echo
-            printf 'Old: `%s`\n' "$OLD_REV"
-            printf 'New: `%s`\n' "$NEW_REV"
-            printf 'Branch: `%s`\n' "$BRANCH"
+            printf "Old: \`%s\`\n" "$OLD_REV"
+            printf "New: \`%s\`\n" "$NEW_REV"
+            printf "Branch: \`%s\`\n" "$BRANCH"
             echo "Draft PR: $PR_URL"
             echo "Validation: PASS"
             echo
@@ -384,9 +421,9 @@ jobs:
           {
             echo "### OpenCodePolicy update"
             echo
-            printf 'Old: `%s`\n' "$OLD_REV"
-            printf 'New: `%s`\n' "$NEW_REV"
-            printf 'Branch: `%s`\n' "$BRANCH"
+            printf "Old: \`%s\`\n" "$OLD_REV"
+            printf "New: \`%s\`\n" "$NEW_REV"
+            printf "Branch: \`%s\`\n" "$BRANCH"
             echo "Draft PR: $PR_URL"
             echo "Validation: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
