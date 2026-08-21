@@ -14,6 +14,8 @@ dotnix pins [`upiscium/OpenCodePolicy`](https://github.com/upiscium/OpenCodePoli
 
 The dependency is validation-only. It does not generate or materialize agents, prompts, commands, skills, provider settings, or any other file under `config.d/opencode/`.
 
+The `global` profile enforces the fixed Sol/Terra/Luna role assignments used by dotnix. It does not permit Spark, fallback agents, model substitution, or alternate-model retries; an unavailable configured model must report the exact provider/model failure and return `BLOCKED`.
+
 After `nix develop`, the pinned CLI is available directly:
 
 ```sh
