@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Test updater lock contract
+        run: python3 -m unittest discover -s tests -p 'test_opencode_policy_lock_update.py' -v
       - uses: cachix/install-nix-action@v31
       - name: Evaluate supported systems
         run: nix flake check --all-systems --no-build --no-update-lock-file
