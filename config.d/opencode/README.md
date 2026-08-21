@@ -6,7 +6,7 @@ This directory is deployed recursively to `~/.config/opencode/`. Changes apply t
 
 **Source of truth:** Templates behavior should not be duplicated; repository-local Templates configuration is authoritative.
 
-- Dotnix is the **user-wide generic baseline and safe fallback**.
+- Dotnix is the **user-wide generic baseline**.
 - Repository-local configuration, when present, performs deep-merge override and is authoritative.
 - Generic repos have no Agent Core requirements.
 - `review`, `audit`, `threat-model`, and `benchmark` remain global and read-only by default.
@@ -29,18 +29,13 @@ Primary assignments:
 | --- | --- |
 | `build`, `plan`, `architect` | `openai/gpt-5.6-sol` |
 | `reviewer`, `investigator`, `security-reviewer` | `openai/gpt-5.6-terra` |
-| `general`, `explore`, `verifier`, `scout` | `openai/gpt-5.3-codex-spark` |
+| `general`, `explore`, `verifier`, `scout` | `openai/gpt-5.6-luna` |
 
-Model-name mapping used in this config: **Sol**=`openai/gpt-5.6-sol`, **Terra**=`openai/gpt-5.6-terra`, **Luna**=`openai/gpt-5.6-luna`, **Spark**=`openai/gpt-5.3-codex-spark`.
+Model-name mapping used in this config: **Sol**=`openai/gpt-5.6-sol`, **Terra**=`openai/gpt-5.6-terra`, **Luna**=`openai/gpt-5.6-luna`.
 
-Fallback assignments:
+Each global role is bound to exactly one configured model. The global layer does not perform model substitution or retry work under a different model when the configured model becomes unavailable.
 
-- `build`, `plan`, `architect`, `reviewer`, `investigator`, `security-reviewer` → `Spark`
-- `general`, `explore`, `verifier`, `scout` → `Luna`
-
-Fallbacks cross model quota families: 5.6-primary roles fall back to Spark, while Spark-primary roles fall back to Luna. A 5.6 model never falls back to another 5.6 model.
-
-`build-fallback` and `plan-fallback` are hidden primary-mode fallbacks selected manually when their active primary session encounters a classified usage limit. Other role fallbacks retry only the identical bounded objective and only for classified quota/rate-limit/HTTP 429 failures, never for authentication, permission, validation, context, tool, or safety failures.
+Sol, Terra, and Luna are all GPT-5.6 variants. If the required GPT-5.6 capability is unavailable or quota-limited, report the exact provider/model failure and return `BLOCKED`. Model availability is treated as a hard execution prerequisite, not as a routing event.
 
 There is no global task-orchestrator model binding.
 
@@ -81,7 +76,7 @@ All other external paths are denied unless explicitly allowed by local repositor
 
 Do not use OpenCode auto-approval mode in untrusted repositories: auto-approval defeats the human review provided by global `ask` rules. Repository-local deny rules remain the authoritative stronger boundary in Agent-ready repositories.
 
-Only `build`, `general`, and their role-equivalent fallback agents keep edit permission for delegated local modifications; other agents remain read-focused.
+Only `build` and `general` keep edit permission for local modifications; other agents remain read-focused.
 `plan` may start read-only inspection subagents only; executable verification is returned to the parent.
 
 GitHub Issue/PR/state-changing commands and branch/reset/push-style operations are confirm-only globally.

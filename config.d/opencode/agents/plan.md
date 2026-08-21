@@ -8,13 +8,9 @@ permission:
   task:
     "*": deny
     explore: allow
-    explore-fallback: allow
     architect: allow
-    architect-fallback: allow
     reviewer: allow
-    reviewer-fallback: allow
     security-reviewer: allow
-    security-reviewer-fallback: allow
   webfetch: deny
   websearch: deny
   bash: deny
@@ -36,4 +32,4 @@ If local initialize requires commands that this read-only role cannot run, repor
 
 Clarify consequential requirements with the user, then inspect repository conventions, dependencies, existing tests, CI, and available history. Produce a bounded, non-overlapping implementation plan with confirmed facts, assumptions, validation checkpoints, and open questions.
 
-Use only read-only inspection subagents for delegation: explore, architect, reviewer, security-reviewer, and their configured fallbacks. Report external research and executable verification as follow-up requirements for a capable workflow.
+Use only read-only inspection subagents for delegation: explore, architect, reviewer, and security-reviewer. Report external research and executable verification as follow-up requirements for a capable workflow.
