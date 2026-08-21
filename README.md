@@ -27,6 +27,16 @@ opencode-policy audit-consumer --profile global --consumer . --strict
 
 OpenCodePolicy revisions advance only through an explicit dependency update:
 
+The recommended path is the manual **GitHub Actions → Update OpenCodePolicy → Run workflow** operation, or:
+
+```sh
+gh workflow run update-opencode-policy.yml --repo upiscium/dotnix
+```
+
+This workflow runs only through an explicit `workflow_dispatch`; it has no schedule and never updates policy from push or pull-request events. It validates lock hygiene and the strict `global` profile before creating a Draft pull request.
+
+For a local update:
+
 ```sh
 nix flake update opencodePolicy
 nix flake check --no-update-lock-file
