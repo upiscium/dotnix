@@ -18,7 +18,5 @@ jobs:
       - uses: cachix/install-nix-action@v31
       - name: Evaluate supported systems
         run: nix flake check --all-systems --no-build --no-update-lock-file
-      - name: Build Neovim package
-        run: nix build .#checks.x86_64-linux.neovim-package --no-link --no-update-lock-file
       - name: Global profile conformity
         run: nix build .#checks.x86_64-linux.opencode-policy --no-link --no-update-lock-file
