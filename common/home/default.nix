@@ -2,7 +2,7 @@
   imports = [
     ./git.nix
     # ./gpg.nix
-    ./neovim.nix
+    ../../packages/neovim/home.nix
     ./packages.nix
     ./ssh.nix
     ./terminal.nix

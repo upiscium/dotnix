@@ -1,5 +1,5 @@
 {
-  description = "dotnix repository policy and development boundary";
+  description = "dotnix repository policy, reusable packages, and development boundary";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -16,12 +16,22 @@
       forAllSystems = nixpkgs.lib.genAttrs systems;
     in
     {
+      packages = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          neovim = pkgs.callPackage ./packages/neovim { };
+        });
+
       checks = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           policy = opencodePolicy.packages.${system}.opencode-policy;
         in
         {
+          neovim-package = self.packages.${system}.neovim;
+
           opencode-policy = pkgs.runCommand "dotnix-opencode-policy" {
             nativeBuildInputs = [ policy ];
           } ''
