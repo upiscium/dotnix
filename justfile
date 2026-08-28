@@ -20,18 +20,18 @@ build package:
 run package:
     nix run ".#{{package}}"
 
-# Install one local package into the current Nix profile.
+# Install one local package. Set DOTNIX_PROFILE to target an isolated profile.
 install package:
-    nix profile install ".#{{package}}"
+    if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile install --profile "$DOTNIX_PROFILE" ".#{{package}}"; else nix profile install ".#{{package}}"; fi
 
-# Install a package directly from the public dotnix GitHub flake.
+# Install from the public dotnix GitHub flake. Honors DOTNIX_PROFILE.
 install-remote package:
-    nix profile install "github:upiscium/dotnix#{{package}}"
+    if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile install --profile "$DOTNIX_PROFILE" "github:upiscium/dotnix#{{package}}"; else nix profile install "github:upiscium/dotnix#{{package}}"; fi
 
 # Remove profile entries matching the supplied Nix profile selector/regex.
 remove selector:
-    nix profile remove "{{selector}}"
+    if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile remove --profile "$DOTNIX_PROFILE" "{{selector}}"; else nix profile remove "{{selector}}"; fi
 
-# Show the current Nix profile.
+# Show the selected Nix profile.
 profile:
-    nix profile list
+    if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile list --profile "$DOTNIX_PROFILE"; else nix profile list; fi
