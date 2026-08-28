@@ -2,11 +2,29 @@
 
 ## Repository structure
 
-- The root `flake.nix` owns repository-level policy validation, minimal development tooling, and CI only.
+- The root `flake.nix` owns reusable package outputs, repository-level policy validation, minimal development tooling, and CI.
 - Host directories such as `Adam/`, `Caspar/`, `Eve/`, `Michael/`, and `Ramiel/` retain authority for their NixOS and Home Manager configurations, inputs, and lockfiles.
+- `packages/` contains self-contained application artifacts that can be consumed by host-local NixOS/Home Manager configurations or through the root flake.
 - `config.d/opencode/` remains the deployed global OpenCode implementation. Home Manager deployment continues to be owned by `common/home/terminal.nix`.
 
-The root flake does not aggregate hosts, expose `nixosConfigurations` or `homeConfigurations`, consolidate host inputs, or participate in deployment.
+The root flake does not aggregate hosts, expose `nixosConfigurations` or `homeConfigurations`, consolidate host inputs, or own deployment. Its package outputs are reusable artifacts only; host-local flakes remain the deployment authority.
+
+## Neovim package
+
+The configured Neovim environment is owned by `packages/neovim/`:
+
+- `default.nix` builds the standalone wrapped Neovim derivation.
+- `config/` owns the Lua configuration previously stored under `config.d/nvim/`.
+- `home.nix` is the thin Home Manager integration used by `common/home/`.
+
+The package includes the Neovim providers plus the LSP servers, formatters, compilers, and command-line tools that were previously supplied by `common/home/neovim.nix`. It can be built or run independently:
+
+```sh
+nix build .#neovim
+nix run .#neovim
+```
+
+The existing `lazy.nvim` bootstrap remains unchanged for this first migration, so Neovim plugins are still acquired at runtime. The standalone package therefore makes the editor, configuration, providers, LSPs, formatters, and supporting executables reproducible, but plugin acquisition is not yet fully Nix-managed.
 
 ## OpenCodePolicy
 
