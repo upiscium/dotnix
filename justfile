@@ -20,7 +20,7 @@ build package:
 run package:
     nix run ".#{{package}}"
 
-# Install one local package using nix profile add. Set DOTNIX_PROFILE to target an isolated profile.
+# Install one local package. Set DOTNIX_PROFILE to target an isolated profile.
 install package:
     if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile add --profile "$DOTNIX_PROFILE" ".#{{package}}"; else nix profile add ".#{{package}}"; fi
 
