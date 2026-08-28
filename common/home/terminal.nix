@@ -12,11 +12,6 @@
     recursive = true;
   };
 
-  home.file.".config/tmux" = {
-    source = ../../config.d/tmux;
-    recursive = true;
-  };
-
   home.file.".config/opencode" = {
     source = ../../config.d/opencode;
     recursive = true;
