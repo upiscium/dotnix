@@ -28,7 +28,7 @@ The currently published application package is `neovim`. `just` is also exposed 
 On a supported Linux or Apple Silicon macOS machine with Nix and flakes enabled, a published package can be installed directly from GitHub without cloning this repository:
 
 ```sh
-nix profile install github:upiscium/dotnix#neovim
+nix profile add github:upiscium/dotnix#neovim
 ```
 
 The installer app provides the same package from the exact dotnix revision used to launch it:
@@ -49,6 +49,8 @@ Set `DOTNIX_PROFILE` when an install/remove/profile operation should target an i
 DOTNIX_PROFILE=/tmp/dotnix-test-profile \
   nix run github:upiscium/dotnix#install -- just
 ```
+
+The bootstrap path has been smoke-tested on `x86_64-linux`: an isolated profile can install `just` through the flake app and then install the configured `neovim` package through the Just frontend without modifying the user's normal profile. The implementation uses the current `nix profile add` command; the human-facing Just recipe remains `just install <package>`.
 
 ### Just frontend
 
