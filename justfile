@@ -22,11 +22,11 @@ run package:
 
 # Install one local package. Set DOTNIX_PROFILE to target an isolated profile.
 install package:
-    if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile install --profile "$DOTNIX_PROFILE" ".#{{package}}"; else nix profile install ".#{{package}}"; fi
+    if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile add --profile "$DOTNIX_PROFILE" ".#{{package}}"; else nix profile add ".#{{package}}"; fi
 
 # Install from the public dotnix GitHub flake. Honors DOTNIX_PROFILE.
 install-remote package:
-    if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile install --profile "$DOTNIX_PROFILE" "github:upiscium/dotnix#{{package}}"; else nix profile install "github:upiscium/dotnix#{{package}}"; fi
+    if [ -n "${DOTNIX_PROFILE:-}" ]; then nix profile add --profile "$DOTNIX_PROFILE" "github:upiscium/dotnix#{{package}}"; else nix profile add "github:upiscium/dotnix#{{package}}"; fi
 
 # Remove profile entries matching the supplied Nix profile selector/regex.
 remove selector:
