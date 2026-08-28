@@ -4,6 +4,7 @@
     ./git.nix
     # ./gpg.nix
     ../../packages/neovim/home.nix
+    ../../packages/tmux/home.nix
     ./packages.nix
     ./ssh.nix
     ./terminal.nix
