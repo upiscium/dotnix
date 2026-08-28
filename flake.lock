@@ -1,0 +1,48 @@
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1786534138,
+        "narHash": "sha256-fBJMdnKUTUDtfi/BYLr71HLaC9dG382arxLF2Egg2uo=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "044bfe75bfe4c7bbe043dc17b5e42ea823b84a09",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "opencodePolicy": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787237951,
+        "narHash": "sha256-VWJWPI7hz+u+DcbuO0QOsREjuRAwpnsBPv0pIfxQJi4=",
+        "owner": "upiscium",
+        "repo": "OpenCodePolicy",
+        "rev": "103b47b67a7e650835ac277ed192dbc92d1639c4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "upiscium",
+        "repo": "OpenCodePolicy",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "opencodePolicy": "opencodePolicy"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
