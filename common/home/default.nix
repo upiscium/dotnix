@@ -1,5 +1,6 @@
 { ... }: {
   imports = [
+    ./clang.nix
     ./git.nix
     # ./gpg.nix
     ../../packages/neovim/home.nix
