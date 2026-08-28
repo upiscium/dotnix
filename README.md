@@ -43,6 +43,13 @@ To bootstrap the Just frontend itself:
 nix run github:upiscium/dotnix#install -- just
 ```
 
+Set `DOTNIX_PROFILE` when an install/remove/profile operation should target an isolated Nix profile instead of the user's default profile. This is useful for tests and for machines where Home Manager owns the normal user environment:
+
+```sh
+DOTNIX_PROFILE=/tmp/dotnix-test-profile \
+  nix run github:upiscium/dotnix#install -- just
+```
+
 ### Just frontend
 
 When working from a clone, `justfile` is the human-facing interface and Nix remains the build/install authority:
@@ -64,7 +71,7 @@ nix develop -c just list
 nix develop -c just install neovim
 ```
 
-`just install <package>` installs the package from the checked-out repository revision. `just install-remote <package>` installs from `github:upiscium/dotnix` instead.
+`just install <package>` installs the package from the checked-out repository revision. `just install-remote <package>` installs from `github:upiscium/dotnix` instead. The `install`, `install-remote`, `remove`, and `profile` recipes honor `DOTNIX_PROFILE`.
 
 ## Neovim package
 
