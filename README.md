@@ -2,29 +2,87 @@
 
 ## Repository structure
 
-- The root `flake.nix` owns reusable package outputs, repository-level policy validation, minimal development tooling, and CI.
+- The root `flake.nix` owns portable package outputs, repository-level policy validation, minimal development tooling, and CI.
 - Host directories such as `Adam/`, `Caspar/`, `Eve/`, `Michael/`, and `Ramiel/` retain authority for their NixOS and Home Manager configurations, inputs, and lockfiles.
 - `packages/` contains self-contained application artifacts that can be consumed by host-local NixOS/Home Manager configurations or through the root flake.
 - `config.d/opencode/` remains the deployed global OpenCode implementation. Home Manager deployment continues to be owned by `common/home/terminal.nix`.
 
 The root flake does not aggregate hosts, expose `nixosConfigurations` or `homeConfigurations`, consolidate host inputs, or own deployment. Its package outputs are reusable artifacts only; host-local flakes remain the deployment authority.
 
+## Portable package contract
+
+The root flake targets these platforms:
+
+- `x86_64-linux`
+- `aarch64-linux`
+- `x86_64-darwin`
+- `aarch64-darwin`
+
+A package published as `packages.<system>.<name>` is intended to be consumable independently of the host-local NixOS/Home Manager configurations. Platform-specific dependencies must stay inside the package definition and must not leak into callers.
+
+The currently published application package is `neovim`. `just` is also exposed as a bootstrap utility for the repository CLI.
+
+### Direct installation
+
+On a Linux or macOS machine with Nix and flakes enabled, a published package can be installed directly from GitHub without cloning this repository:
+
+```sh
+nix profile install github:upiscium/dotnix#neovim
+```
+
+The installer app provides the same package from the exact dotnix revision used to launch it:
+
+```sh
+nix run github:upiscium/dotnix#install -- neovim
+```
+
+To bootstrap the Just frontend itself:
+
+```sh
+nix run github:upiscium/dotnix#install -- just
+```
+
+### Just frontend
+
+When working from a clone, `justfile` is the human-facing interface and Nix remains the build/install authority:
+
+```sh
+just list
+just check
+just build neovim
+just run neovim
+just install neovim
+just install-remote neovim
+just profile
+```
+
+If `just` is not installed yet, it is available through the root development shell:
+
+```sh
+nix develop -c just list
+nix develop -c just install neovim
+```
+
+`just install <package>` installs the package from the checked-out repository revision. `just install-remote <package>` installs from `github:upiscium/dotnix` instead.
+
 ## Neovim package
 
 The configured Neovim environment is owned by `packages/neovim/`:
 
 - `default.nix` builds the standalone wrapped Neovim derivation.
-- `config/` owns the Lua configuration previously stored under `config.d/nvim/`.
+- `config/` owns the Lua configuration previously stored under `config.d/nvim/` and the packaged MCPHub runtime configuration.
 - `home.nix` is the thin Home Manager integration used by `common/home/`.
 
-The package includes the Neovim providers plus the LSP servers, formatters, compilers, and command-line tools that were previously supplied by `common/home/neovim.nix`. It can be built or run independently:
+The package includes the Neovim providers plus the LSP servers, formatters, compilers, and command-line tools that were previously supplied by `common/home/neovim.nix`. Linux-only runtime dependencies such as `glibc` and GCC are kept conditional inside the package so Darwin callers do not inherit Linux assumptions.
+
+It can be built or run independently:
 
 ```sh
 nix build .#neovim
 nix run .#neovim
 ```
 
-The existing `lazy.nvim` bootstrap remains unchanged for this first migration, so Neovim plugins are still acquired at runtime. The standalone package therefore makes the editor, configuration, providers, LSPs, formatters, and supporting executables reproducible, but plugin acquisition is not yet fully Nix-managed.
+The existing `lazy.nvim` bootstrap remains runtime-managed, so Neovim plugins are still acquired at runtime. The standalone package therefore makes the editor, configuration, providers, LSPs, formatters, MCPHub configuration, and supporting executables reproducible, but plugin acquisition is not yet fully Nix-managed.
 
 ## OpenCodePolicy
 
@@ -34,7 +92,7 @@ The dependency is validation-only. It does not generate or materialize agents, p
 
 The `global` profile enforces the fixed Sol/Terra/Luna role assignments used by dotnix. It does not permit Spark, fallback agents, model substitution, or alternate-model retries; an unavailable configured model must report the exact provider/model failure and return `BLOCKED`.
 
-After `nix develop`, the pinned CLI is available directly:
+After `nix develop`, the pinned CLI is available directly on platforms where OpenCodePolicy publishes a package:
 
 ```sh
 opencode-policy validate
