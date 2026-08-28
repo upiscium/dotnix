@@ -48,7 +48,7 @@
                 profile_args=(--profile "$DOTNIX_PROFILE")
               fi
 
-              exec nix profile install "''${profile_args[@]}" "path:${self.outPath}#$package"
+              exec nix profile add "''${profile_args[@]}" "path:${self.outPath}#$package"
             '';
           };
         in
