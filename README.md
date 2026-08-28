@@ -50,6 +50,8 @@ DOTNIX_PROFILE=/tmp/dotnix-test-profile \
   nix run github:upiscium/dotnix#install -- just
 ```
 
+The bootstrap path has been smoke-tested on `x86_64-linux`: an isolated profile can install `just` through the flake app and then install the configured `neovim` package through the Just frontend without modifying the user's normal profile.
+
 ### Just frontend
 
 When working from a clone, `justfile` is the human-facing interface and Nix remains the build/install authority:
