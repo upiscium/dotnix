@@ -27,6 +27,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
+          just = pkgs.just;
           neovim = pkgs.callPackage ./packages/neovim { inherit pkgs; };
         });
 
