@@ -11,12 +11,13 @@ The root flake does not aggregate hosts, expose `nixosConfigurations` or `homeCo
 
 ## Portable package contract
 
-The root flake targets these platforms:
+The root flake targets the platforms supported by the pinned unstable Nixpkgs that are relevant to this repository:
 
 - `x86_64-linux`
 - `aarch64-linux`
-- `x86_64-darwin`
 - `aarch64-darwin`
+
+`x86_64-darwin` is deliberately not part of the primary contract because Nixpkgs 26.11 dropped Intel Darwin support. If an Intel Mac needs to be supported later, it should use an explicit legacy Nixpkgs lane rather than silently pinning the whole repository back to an older package set.
 
 A package published as `packages.<system>.<name>` is intended to be consumable independently of the host-local NixOS/Home Manager configurations. Platform-specific dependencies must stay inside the package definition and must not leak into callers.
 
@@ -24,7 +25,7 @@ The currently published application package is `neovim`. `just` is also exposed 
 
 ### Direct installation
 
-On a Linux or macOS machine with Nix and flakes enabled, a published package can be installed directly from GitHub without cloning this repository:
+On a supported Linux or Apple Silicon macOS machine with Nix and flakes enabled, a published package can be installed directly from GitHub without cloning this repository:
 
 ```sh
 nix profile install github:upiscium/dotnix#neovim
