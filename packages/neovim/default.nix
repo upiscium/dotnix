@@ -11,6 +11,7 @@
   tree-sitter,
   imagemagick,
   git,
+  uv,
   bash-language-server,
   cmake-language-server,
   dockerfile-language-server,
@@ -51,6 +52,7 @@ let
     tree-sitter
     imagemagick
     git
+    uv
 
     bash-language-server
     cmake-language-server
@@ -95,7 +97,8 @@ wrapNeovimUnstable neovim-unwrapped {
   # Keep the existing Lua configuration authoritative while making the
   # configured editor runnable directly from the derivation. lazy.nvim still
   # owns plugin acquisition for now; only the editor, providers, tools, LSPs,
-  # and formatters are made reproducible by this package.
+  # formatters, and MCP server launcher dependencies are made reproducible by
+  # this package.
   luaRcContent = ''
     vim.opt.runtimepath:prepend("${./config}")
     dofile("${./config}/init.lua")
