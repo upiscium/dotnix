@@ -5,7 +5,7 @@
   neovim-unwrapped,
 }:
 let
-  clangTools = if pkgs.stdenv.isLinux then
+  clangTools = if pkgs.stdenv.hostPlatform.isLinux then
     pkgs.clang-tools.override {
       enableLibcxx = true;
     }
@@ -49,7 +49,7 @@ let
     pkgs.yaml-language-server
     pkgs.yamlfmt
     pkgs.yamllint
-  ] ++ lib.optionals pkgs.stdenv.isLinux [
+  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     pkgs.gcc
     pkgs.glibc
   ];
