@@ -1,85 +1,57 @@
 {
   lib,
+  pkgs,
   wrapNeovimUnstable,
   neovim-unwrapped,
-  deno,
-  clang-tools,
-  gcc,
-  glibc,
-  gnumake,
-  nodejs,
-  tree-sitter,
-  imagemagick,
-  git,
-  uv,
-  bash-language-server,
-  cmake-language-server,
-  dockerfile-language-server,
-  efm-langserver,
-  lua-language-server,
-  nil,
-  nixpkgs-fmt,
-  nixpkgs-lint,
-  vscode-langservers-extracted,
-  typescript-language-server,
-  omnisharp-roslyn,
-  basedpyright,
-  python312Packages,
-  ruff,
-  rust-analyzer,
-  glsl_analyzer,
-  shellcheck,
-  shader-slang,
-  stylua,
-  taplo,
-  tinymist,
-  typstyle,
-  vim-language-server,
-  yaml-language-server,
-  yamlfmt,
-  yamllint,
 }:
 let
-  runtimeDeps = [
-    deno
-    (clang-tools.override {
+  clangTools = if pkgs.stdenv.isLinux then
+    pkgs.clang-tools.override {
       enableLibcxx = true;
-    })
-    gcc
-    glibc
-    gnumake
-    nodejs
-    tree-sitter
-    imagemagick
-    git
-    uv
+    }
+  else
+    pkgs.clang-tools;
 
-    bash-language-server
-    cmake-language-server
-    dockerfile-language-server
-    efm-langserver
-    lua-language-server
-    nil
-    nixpkgs-fmt
-    nixpkgs-lint
-    vscode-langservers-extracted
-    typescript-language-server
-    omnisharp-roslyn
-    basedpyright
-    python312Packages.debugpy
-    ruff
-    rust-analyzer
-    glsl_analyzer
-    shellcheck
-    shader-slang
-    stylua
-    taplo
-    tinymist
-    typstyle
-    vim-language-server
-    yaml-language-server
-    yamlfmt
-    yamllint
+  runtimeDeps = [
+    pkgs.deno
+    clangTools
+    pkgs.gnumake
+    pkgs.nodejs
+    pkgs.tree-sitter
+    pkgs.imagemagick
+    pkgs.git
+    pkgs.uv
+    pkgs.zsh
+
+    pkgs.bash-language-server
+    pkgs.cmake-language-server
+    pkgs.dockerfile-language-server
+    pkgs.efm-langserver
+    pkgs.lua-language-server
+    pkgs.nil
+    pkgs.nixpkgs-fmt
+    pkgs.nixpkgs-lint
+    pkgs.vscode-langservers-extracted
+    pkgs.typescript-language-server
+    pkgs.omnisharp-roslyn
+    pkgs.basedpyright
+    pkgs.python312Packages.debugpy
+    pkgs.ruff
+    pkgs.rust-analyzer
+    pkgs.glsl_analyzer
+    pkgs.shellcheck
+    pkgs.shader-slang
+    pkgs.stylua
+    pkgs.taplo
+    pkgs.tinymist
+    pkgs.typstyle
+    pkgs.vim-language-server
+    pkgs.yaml-language-server
+    pkgs.yamlfmt
+    pkgs.yamllint
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
+    pkgs.gcc
+    pkgs.glibc
   ];
 in
 wrapNeovimUnstable neovim-unwrapped {
@@ -89,10 +61,9 @@ wrapNeovimUnstable neovim-unwrapped {
   withRuby = true;
   withPython3 = true;
 
-  extraLuaPackages = ps: [
-    ps.magick
-    ps.tiktoken_core
-  ];
+  extraLuaPackages = ps:
+    lib.optional (builtins.hasAttr "magick" ps) ps.magick
+    ++ lib.optional (builtins.hasAttr "tiktoken_core" ps) ps.tiktoken_core;
 
   # Keep the existing Lua configuration authoritative while making the
   # configured editor runnable directly from the derivation. lazy.nvim still
