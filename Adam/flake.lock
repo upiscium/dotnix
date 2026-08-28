@@ -452,6 +452,27 @@
         "type": "github"
       }
     },
+    "opencode-discord-bridge": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787872994,
+        "narHash": "sha256-yXWmFAkPpmMUa3ghOFGbHWTmEG/oML93KlGTlXCu3G4=",
+        "owner": "upiscium",
+        "repo": "OpencodeDiscordBridge",
+        "rev": "105130126fe1e63cccc2f208cc33469073d91a28",
+        "type": "github"
+      },
+      "original": {
+        "owner": "upiscium",
+        "repo": "OpencodeDiscordBridge",
+        "rev": "105130126fe1e63cccc2f208cc33469073d91a28",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -479,7 +500,8 @@
         "home-manager": "home-manager",
         "hyprland": "hyprland",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_3",
+        "opencode-discord-bridge": "opencode-discord-bridge"
       }
     },
     "systems": {

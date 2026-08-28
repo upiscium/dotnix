@@ -7,6 +7,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland.url = "github:hyprwm/Hyprland";
+    opencode-discord-bridge = {
+      url = "github:upiscium/OpencodeDiscordBridge/105130126fe1e63cccc2f208cc33469073d91a28";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs:

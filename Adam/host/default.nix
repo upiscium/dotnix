@@ -11,6 +11,7 @@
       ./hardware.nix
       ./ipfix.nix
       ./ollama.nix
+      ./opencode-discord-bridge.nix
       # ./sunshine.nix
       ./wireguard.nix
 
