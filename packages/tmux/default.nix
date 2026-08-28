@@ -23,5 +23,11 @@ symlinkJoin {
 
   meta = tmux.meta // {
     description = "upiscium's configured tmux environment";
+
+    # The upstream tmux package has separate `out` and `man` outputs. This
+    # wrapper derivation only produces `out`, so inheriting upstream's
+    # outputsToInstall would make `nix build` request a nonexistent `man`
+    # output from tmux-upiscium.
+    outputsToInstall = [ "out" ];
   };
 }
