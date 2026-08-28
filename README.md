@@ -21,14 +21,22 @@ The root flake targets the platforms supported by the pinned unstable Nixpkgs th
 
 A package published as `packages.<system>.<name>` is intended to be consumable independently of the host-local NixOS/Home Manager configurations. Platform-specific dependencies must stay inside the package definition and must not leak into callers.
 
-The currently published application package is `neovim`. `just` is also exposed as a bootstrap utility for the repository CLI.
+Published configured application packages:
+
+- `neovim`: `x86_64-linux`, `aarch64-linux`, `aarch64-darwin`
+- `tmux`: `x86_64-linux`, `aarch64-linux`, `aarch64-darwin`
+- `kitty`: `x86_64-linux`, `aarch64-linux`
+
+`kitty` is intentionally limited to Linux for now. Nixpkgs itself supports Kitty on Darwin, but this repository does not yet claim that its immutable configured wrapper is authoritative when Kitty is launched through the macOS application bundle. `just` is also exposed as a bootstrap utility for the repository CLI.
 
 ### Direct installation
 
-On a supported Linux or Apple Silicon macOS machine with Nix and flakes enabled, a published package can be installed directly from GitHub without cloning this repository:
+On a supported machine with Nix and flakes enabled, a published package can be installed directly from GitHub without cloning this repository:
 
 ```sh
 nix profile add github:upiscium/dotnix#neovim
+nix profile add github:upiscium/dotnix#tmux
+nix profile add github:upiscium/dotnix#kitty
 ```
 
 The installer app provides the same package from the exact dotnix revision used to launch it:
@@ -50,7 +58,7 @@ DOTNIX_PROFILE=/tmp/dotnix-test-profile \
   nix run github:upiscium/dotnix#install -- just
 ```
 
-The bootstrap path has been smoke-tested on `x86_64-linux`: an isolated profile can install `just` through the flake app and then install the configured `neovim` package through the Just frontend without modifying the user's normal profile. The implementation uses the current `nix profile add` command; the human-facing Just recipe remains `just install <package>`.
+The bootstrap path has been smoke-tested on `x86_64-linux`: an isolated profile can install `just` through the flake app and then install configured packages through the Just frontend without modifying the user's normal profile. The implementation uses the current `nix profile add` command; the human-facing Just recipe remains `just install <package>`.
 
 ### Just frontend
 
@@ -60,9 +68,11 @@ When working from a clone, `justfile` is the human-facing interface and Nix rema
 just list
 just check
 just build neovim
+just build tmux
+just build kitty
 just run neovim
-just install neovim
-just install-remote neovim
+just install tmux
+just install kitty
 just profile
 ```
 
@@ -85,14 +95,13 @@ The configured Neovim environment is owned by `packages/neovim/`:
 
 The package includes the Neovim providers plus the LSP servers, formatters, compilers, and command-line tools that were previously supplied by `common/home/neovim.nix`. Linux-only runtime dependencies such as `glibc` and GCC are kept conditional inside the package so Darwin callers do not inherit Linux assumptions.
 
-It can be built or run independently:
-
-```sh
-nix build .#neovim
-nix run .#neovim
-```
-
 The existing `lazy.nvim` bootstrap remains runtime-managed, so Neovim plugins are still acquired at runtime. The standalone package therefore makes the editor, configuration, providers, LSPs, formatters, MCPHub configuration, and supporting executables reproducible, but plugin acquisition is not yet fully Nix-managed.
+
+## Kitty package
+
+`packages/kitty/` owns the configured Kitty environment. The wrapper leaves the Nixpkgs Kitty runtime intact and sets `KITTY_CONFIG_DIRECTORY` to the immutable package-owned `config/` directory. Kitty documents this environment variable as authoritative for configuration lookup, so user-local `~/.config/kitty` is not required for the packaged launcher.
+
+The package is currently published only on Linux until the macOS application-bundle launch path is validated separately.
 
 ## OpenCodePolicy
 
