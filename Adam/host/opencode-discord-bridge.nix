@@ -12,7 +12,7 @@
     group = "users";
     createUser = false;
 
-    secretsFile = "~/secrets/ocb_secrets.env";
+    secretsCredentialFile = "/etc/opencode-discord-bridge/secrets.env";
 
     # 既存の非secret設定用
     environmentFile = "/run/opencode-discord-bridge.env";
