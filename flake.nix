@@ -43,7 +43,12 @@
               fi
 
               package="$1"
-              exec nix profile install "path:${self.outPath}#$package"
+              profile_args=()
+              if [ -n "''${DOTNIX_PROFILE:-}" ]; then
+                profile_args=(--profile "$DOTNIX_PROFILE")
+              fi
+
+              exec nix profile install "''${profile_args[@]}" "path:${self.outPath}#$package"
             '';
           };
         in
