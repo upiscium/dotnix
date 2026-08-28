@@ -28,7 +28,7 @@ The currently published application package is `neovim`. `just` is also exposed 
 On a supported Linux or Apple Silicon macOS machine with Nix and flakes enabled, a published package can be installed directly from GitHub without cloning this repository:
 
 ```sh
-nix profile install github:upiscium/dotnix#neovim
+nix profile add github:upiscium/dotnix#neovim
 ```
 
 The installer app provides the same package from the exact dotnix revision used to launch it:
