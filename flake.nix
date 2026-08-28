@@ -19,6 +19,12 @@
         "aarch64-darwin"
       ];
       forAllSystems = lib.genAttrs systems;
+
+      packageRegistry = import ./lib/package-registry.nix {
+        inherit lib systems;
+        packagesDir = ./packages;
+        reservedNames = [ "just" ];
+      };
     in
     {
       packages = forAllSystems (system:
@@ -26,9 +32,11 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
+          # Bootstrap utility; custom portable applications are discovered
+          # automatically from packages/<name>/default.nix.
           just = pkgs.just;
-          neovim = pkgs.callPackage ./packages/neovim { inherit pkgs; };
-        });
+        }
+        // packageRegistry.forSystem system pkgs);
 
       apps = forAllSystems (system:
         let
@@ -62,14 +70,17 @@
       checks = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          portablePackages = packageRegistry.forSystem system pkgs;
+          packageChecks = lib.mapAttrs'
+            (name: package: lib.nameValuePair "${name}-package" package)
+            portablePackages;
           policy =
             if builtins.hasAttr system opencodePolicy.packages
             then opencodePolicy.packages.${system}.opencode-policy
             else null;
         in
-        {
-          neovim-package = self.packages.${system}.neovim;
-
+        packageChecks
+        // {
           justfile = pkgs.runCommand "dotnix-justfile-check" {
             nativeBuildInputs = [ pkgs.just ];
           } ''
