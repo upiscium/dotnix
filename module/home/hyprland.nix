@@ -21,37 +21,37 @@
   ];
 
   home.file.".config/hypr/hypridle.conf" = {
-    source = ../../config.d/hypr/hypridle.conf;
+    source = ./hyprland/hypridle.conf;
   };
 
   home.file.".config/hypr/hyprland.lua" = {
-    source = ../../config.d/hypr/hyprland.lua;
+    source = ./hyprland/hyprland.lua;
   };
 
   home.file.".config/hypr/hyprlock.conf" = {
-    source = ../../config.d/hypr/hyprlock.conf;
+    source = ./hyprland/hyprlock.conf;
   };
 
   home.file.".config/hypr/hyprpaper.conf" = {
-    source = ../../config.d/hypr/hyprpaper.conf;
+    source = ./hyprland/hyprpaper.conf;
   };
 
   home.file.".config/hypr/platform.lua" = {
-    source = ../../config.d/hypr/platforms/${hostname}.lua;
+    source = ./hyprland/platforms/${hostname}.lua;
   };
 
   home.file.".config/swaync" = {
-    source = ../../config.d/swaync;
+    source = ./hyprland/swaync;
     recursive = true;
   };
 
   home.file.".config/wlogout" = {
-    source = ../../config.d/wlogout;
+    source = ./hyprland/wlogout;
     recursive = true;
   };
 
   home.file.".config/wofi" = {
-    source = ../../config.d/wofi;
+    source = ./hyprland/wofi;
     recursive = true;
   };
 }
