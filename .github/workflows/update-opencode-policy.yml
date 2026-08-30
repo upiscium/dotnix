@@ -391,7 +391,7 @@ jobs:
 
           ## Scope
           - flake.lock only
-          - packages/opencode/config unchanged
+          - config.d/opencode unchanged
           - host flakes/locks unchanged
 
           ## Non-goals
