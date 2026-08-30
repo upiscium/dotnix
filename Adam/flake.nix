@@ -8,7 +8,7 @@
     };
     hyprland.url = "github:hyprwm/Hyprland";
     opencode-discord-bridge = {
-      url = "github:upiscium/OpencodeDiscordBridge";
+      url = "github:upiscium/DisCode";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
