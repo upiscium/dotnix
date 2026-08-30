@@ -15,3 +15,15 @@ Host Gabriel
   User root
   Port 22
   PasswordAuthentication no
+
+Host Metatron
+  HostName 192.168.100.4
+  User root
+  Port 22
+  PasswordAuthentication no
+
+Host Sandalphon
+  HostName 192.168.100.5
+  User root
+  Port 22
+  PasswordAuthentication no
