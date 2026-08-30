@@ -1,19 +1,19 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     # antigravity
-    bambu-studio
-    blender
+    # bambu-studio
+    # blender
     claude-code
     droidcam
     # discord
     vesktop
-    gdlauncher-carbon
+    # gdlauncher-carbon
     gpu-screen-recorder
     gpu-screen-recorder-gtk
-    jetbrains-toolbox
+    # jetbrains-toolbox
     # modrinth-app
     # krita
-    moonlight-qt
+    # moonlight-qt
     obsidian
     obs-studio
     obs-studio-plugins.droidcam-obs
