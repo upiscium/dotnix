@@ -459,16 +459,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1787893862,
-        "narHash": "sha256-AnhV+DFmHDuyu5VKnWHDDFp/iUl66GGL4ESFt0ZmkX8=",
+        "lastModified": 1788082781,
+        "narHash": "sha256-jN9DsiU1GiGhChWG4aeBM26FpTMDYgKJjB++Fd6PAjg=",
         "owner": "upiscium",
-        "repo": "OpencodeDiscordBridge",
-        "rev": "0f6df91602b4c3d8c558f9a89017e270815b7aaf",
+        "repo": "DisCode",
+        "rev": "a8041e6866de93494139ac12939741d858fab54a",
         "type": "github"
       },
       "original": {
         "owner": "upiscium",
-        "repo": "OpencodeDiscordBridge",
+        "repo": "DisCode",
         "type": "github"
       }
     },

@@ -8,7 +8,8 @@
     };
     hyprland.url = "github:hyprwm/Hyprland";
     opencode-discord-bridge = {
-      url = "github:upiscium/OpencodeDiscordBridge";
+      url = "github:upiscium/DisCode";
+      # url = "github:upiscium/OpencodeDiscordBridge/d7bdf912942e61cb43912fa656569ba00bdfb3da";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
