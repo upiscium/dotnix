@@ -16,7 +16,6 @@
     # onlyoffice-desktopeditors
     wpsoffice
     libreoffice
-    opencode
     parsec-bin
     slack
     unityhub

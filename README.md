@@ -4,114 +4,112 @@
 
 - The root `flake.nix` owns portable package outputs, repository-level policy validation, minimal development tooling, and CI.
 - Host directories such as `Adam/`, `Caspar/`, `Eve/`, `Michael/`, and `Ramiel/` retain authority for their NixOS and Home Manager configurations, inputs, and lockfiles.
-- `packages/` contains self-contained application artifacts that can be consumed by host-local NixOS/Home Manager configurations or through the root flake.
-- `config.d/opencode/` remains the deployed global OpenCode implementation. Home Manager deployment continues to be owned by `common/home/terminal.nix`.
+- `packages/` contains self-contained configured application artifacts consumed by host-local Home Manager configurations or through the root flake.
+- `config.d/` contains legacy/shared configuration that has not yet been moved to its final semantic owner. Configured portable applications should live under `packages/<name>/` instead.
 
 The root flake does not aggregate hosts, expose `nixosConfigurations` or `homeConfigurations`, consolidate host inputs, or own deployment. Its package outputs are reusable artifacts only; host-local flakes remain the deployment authority.
 
 ## Portable package contract
 
-The root flake targets the platforms supported by the pinned unstable Nixpkgs that are relevant to this repository:
+The root flake targets:
 
 - `x86_64-linux`
 - `aarch64-linux`
 - `aarch64-darwin`
 
-`x86_64-darwin` is deliberately not part of the primary contract because Nixpkgs 26.11 dropped Intel Darwin support. If an Intel Mac needs to be supported later, it should use an explicit legacy Nixpkgs lane rather than silently pinning the whole repository back to an older package set.
+`x86_64-darwin` is deliberately excluded because the pinned Nixpkgs line no longer supports Intel Darwin. Platform-specific dependencies stay inside package definitions and must not leak into callers.
 
-A package published as `packages.<system>.<name>` is intended to be consumable independently of the host-local NixOS/Home Manager configurations. Platform-specific dependencies must stay inside the package definition and must not leak into callers.
+Configured packages are auto-discovered from `packages/<name>/default.nix`. A package may restrict publication with `packages/<name>/systems.nix` when its supported platform subset is narrower than the root contract.
 
-Published configured application packages:
+Current configured packages include:
 
-- `neovim`: `x86_64-linux`, `aarch64-linux`, `aarch64-darwin`
-- `tmux`: `x86_64-linux`, `aarch64-linux`, `aarch64-darwin`
-- `kitty`: `x86_64-linux`, `aarch64-linux`
+- `neovim`: Linux + Apple Silicon Darwin
+- `tmux`: Linux + Apple Silicon Darwin
+- `kitty`: Linux only
+- `starship`: Linux + Apple Silicon Darwin
+- `waybar`: Linux only
+- `opencode`: Linux + Apple Silicon Darwin
 
-`kitty` is intentionally limited to Linux for now. Nixpkgs itself supports Kitty on Darwin, but this repository does not yet claim that its immutable configured wrapper is authoritative when Kitty is launched through the macOS application bundle. `just` is also exposed as a bootstrap utility for the repository CLI.
+`just` is exposed separately as a bootstrap utility.
 
-### Direct installation
-
-On a supported machine with Nix and flakes enabled, a published package can be installed directly from GitHub without cloning this repository:
+## Direct installation
 
 ```sh
 nix profile add github:upiscium/dotnix#neovim
 nix profile add github:upiscium/dotnix#tmux
 nix profile add github:upiscium/dotnix#kitty
+nix profile add github:upiscium/dotnix#starship
+nix profile add github:upiscium/dotnix#opencode
 ```
 
-The installer app provides the same package from the exact dotnix revision used to launch it:
+The installer app installs from the exact dotnix revision used to launch it:
 
 ```sh
-nix run github:upiscium/dotnix#install -- neovim
-```
-
-To bootstrap the Just frontend itself:
-
-```sh
+nix run github:upiscium/dotnix#install -- opencode
 nix run github:upiscium/dotnix#install -- just
 ```
 
-Set `DOTNIX_PROFILE` when an install/remove/profile operation should target an isolated Nix profile instead of the user's default profile. This is useful for tests and for machines where Home Manager owns the normal user environment:
+Set `DOTNIX_PROFILE` to target an isolated profile instead of the user's default profile.
 
-```sh
-DOTNIX_PROFILE=/tmp/dotnix-test-profile \
-  nix run github:upiscium/dotnix#install -- just
-```
+## Just frontend
 
-The bootstrap path has been smoke-tested on `x86_64-linux`: an isolated profile can install `just` through the flake app and then install configured packages through the Just frontend without modifying the user's normal profile. The implementation uses the current `nix profile add` command; the human-facing Just recipe remains `just install <package>`.
-
-### Just frontend
-
-When working from a clone, `justfile` is the human-facing interface and Nix remains the build/install authority:
+The root `justfile` is the human-facing CLI and Nix remains the build/install authority:
 
 ```sh
 just list
 just check
 just build neovim
-just build tmux
-just build kitty
-just run neovim
-just install tmux
-just install kitty
+just build opencode
+just run opencode
+just install opencode
+just install-remote opencode
 just profile
 ```
 
-If `just` is not installed yet, it is available through the root development shell:
+Without Just installed:
 
 ```sh
 nix develop -c just list
-nix develop -c just install neovim
+nix develop -c just build opencode
 ```
 
-`just install <package>` installs the package from the checked-out repository revision. `just install-remote <package>` installs from `github:upiscium/dotnix` instead. The `install`, `install-remote`, `remove`, and `profile` recipes honor `DOTNIX_PROFILE`.
+## Package ownership
 
-## Neovim package
+### Neovim
 
-The configured Neovim environment is owned by `packages/neovim/`:
+`packages/neovim/` owns the configured editor, Lua configuration, providers, LSP/tooling closure, and MCPHub configuration. `lazy.nvim` plugin acquisition remains runtime-managed.
 
-- `default.nix` builds the standalone wrapped Neovim derivation.
-- `config/` owns the Lua configuration previously stored under `config.d/nvim/` and the packaged MCPHub runtime configuration.
-- `home.nix` is the thin Home Manager integration used by `common/home/`.
+### Kitty
 
-The package includes the Neovim providers plus the LSP servers, formatters, compilers, and command-line tools that were previously supplied by `common/home/neovim.nix`. Linux-only runtime dependencies such as `glibc` and GCC are kept conditional inside the package so Darwin callers do not inherit Linux assumptions.
+`packages/kitty/` owns the configured Kitty wrapper and immutable config directory. It is currently Linux-only until the macOS application-bundle launch path is validated.
 
-The existing `lazy.nvim` bootstrap remains runtime-managed, so Neovim plugins are still acquired at runtime. The standalone package therefore makes the editor, configuration, providers, LSPs, formatters, MCPHub configuration, and supporting executables reproducible, but plugin acquisition is not yet fully Nix-managed.
+### Starship
 
-## Kitty package
+`packages/starship/` owns the configured Starship executable/configuration. Home Manager retains only shell integration.
 
-`packages/kitty/` owns the configured Kitty environment. The wrapper leaves the Nixpkgs Kitty runtime intact and sets `KITTY_CONFIG_DIRECTORY` to the immutable package-owned `config/` directory. Kitty documents this environment variable as authoritative for configuration lookup, so user-local `~/.config/kitty` is not required for the packaged launcher.
+### Waybar
 
-The package is currently published only on Linux until the macOS application-bundle launch path is validated separately.
+`packages/waybar/` owns the top/bottom bar configurations and provides `waybar-top` / `waybar-bottom` launchers. The upstream `waybar` CLI remains available for debugging.
+
+### OpenCode
+
+`packages/opencode/` owns the global OpenCode implementation. `config/` is the repository source of truth for global agents, commands, skills, provider/permission configuration, and TUI preferences.
+
+OpenCode needs writable configuration directories because it manages plugin dependencies at runtime. The packaged launcher therefore synchronizes only dotnix-owned top-level entries into the normal user config directory (`$XDG_CONFIG_HOME/opencode`, or `~/.config/opencode`) before starting upstream OpenCode. OpenCode-generated `.gitignore`, dependency directories, package metadata, and lockfiles are preserved. Package-owned entries are refreshed on every launch, so repository state remains authoritative.
+
+The launcher deliberately does not use `OPENCODE_CONFIG_DIR` for the global baseline. Keeping the baseline in OpenCode's normal global config directory preserves OpenCode's merge ordering: global configuration loads before repository-local `.opencode`, allowing repository-local policy to remain authoritative.
+
+Home Manager only installs the configured package through `packages/opencode/home.nix`; it no longer recursively deploys `~/.config/opencode` from `config.d`.
 
 ## OpenCodePolicy
 
-dotnix pins [`upiscium/OpenCodePolicy`](https://github.com/upiscium/OpenCodePolicy) through the root `flake.lock` and explicitly conforms to the `global` profile. OpenCodePolicy owns the shared policy and compatibility contract; dotnix remains the global OpenCode implementation owner.
+dotnix pins [`upiscium/OpenCodePolicy`](https://github.com/upiscium/OpenCodePolicy) through the root `flake.lock` and explicitly conforms to the `global` profile. OpenCodePolicy owns shared policy/compatibility contracts; dotnix remains implementation owner of the global OpenCode layer under `packages/opencode/config/`.
 
-The dependency is validation-only. It does not generate or materialize agents, prompts, commands, skills, provider settings, or any other file under `config.d/opencode/`.
+The dependency is validation-only. It does not generate or materialize agents, prompts, commands, skills, provider settings, or TUI configuration.
 
-The `global` profile enforces the fixed Sol/Terra/Luna role assignments used by dotnix. It does not permit Spark, fallback agents, model substitution, or alternate-model retries; an unavailable configured model must report the exact provider/model failure and return `BLOCKED`.
+The global profile enforces fixed Sol/Terra/Luna assignments. Spark, fallback agents, model substitution, and alternate-model retry are not part of the contract; an unavailable configured model must report the exact provider/model failure and return `BLOCKED`.
 
-After `nix develop`, the pinned CLI is available directly on platforms where OpenCodePolicy publishes a package:
+After `nix develop`:
 
 ```sh
 opencode-policy validate
@@ -120,17 +118,13 @@ opencode-policy audit-consumer --profile global --consumer . --strict
 
 ## Updating policy
 
-OpenCodePolicy revisions advance only through an explicit dependency update:
-
-The recommended path is the manual **GitHub Actions → Update OpenCodePolicy → Run workflow** operation with **Branch = main**, or:
+OpenCodePolicy advances only through an explicit dependency update. The recommended path is the manual **GitHub Actions → Update OpenCodePolicy → Run workflow** action on `main`, or:
 
 ```sh
 gh workflow run update-opencode-policy.yml \
   --repo upiscium/dotnix \
   --ref main
 ```
-
-This workflow runs only through an explicit `workflow_dispatch`; it has no schedule and never updates policy from push or pull-request events. It validates lock hygiene and the strict `global` profile before creating a Draft pull request.
 
 For a local update:
 
@@ -140,4 +134,4 @@ nix flake check --no-update-lock-file
 opencode-policy audit-consumer --profile global --consumer . --strict
 ```
 
-Review the root `flake.lock` diff before merging. OpenCodePolicy `main` moving does not change dotnix until the checked-in lock is deliberately updated. Host-local lockfiles must not be updated as part of this workflow.
+Review the root `flake.lock` diff before merging. Host-local lockfiles must not be updated as part of the policy workflow.
