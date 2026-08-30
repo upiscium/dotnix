@@ -5,11 +5,11 @@
     # ./gpg.nix
     ../../packages/kitty/home.nix
     ../../packages/neovim/home.nix
+    ../../packages/opencode/home.nix
     ../../packages/starship/home.nix
     ../../packages/tmux/home.nix
     ./packages.nix
     ./ssh.nix
-    ./terminal.nix
     ./zsh.nix
   ];
 
