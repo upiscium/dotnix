@@ -240,6 +240,22 @@
           "maxTokens": 16384
         }
       }
+    },
+    "ollama-agent": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama Agent Pool",
+      "options": {
+        "baseURL": "https://ollama-agent.arc.upiscium.dev/v1"
+      },
+      "models": {
+        "gemma4:12b-it-q4_K_M": {
+          "name": "gemma4:12b-it-q4_K_M",
+          "limit": {
+            "context": 65536,
+            "output": 16384
+          }
+        }
+      }
     }
   }
 }
