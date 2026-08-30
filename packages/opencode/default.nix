@@ -41,20 +41,14 @@ let
           if [ -r "$lock_dir/pid" ]; then
             lock_pid="$(cat "$lock_dir/pid" 2>/dev/null || true)"
             case "$lock_pid" in
-              ''|*[!0-9]*) ;;
+              *[!0-9]*) ;;
               *)
-                if ! kill -0 "$lock_pid" 2>/dev/null; then
+                if [ -n "$lock_pid" ] && ! kill -0 "$lock_pid" 2>/dev/null; then
                   rm -rf -- "$lock_dir"
                   continue
                 fi
                 ;;
             esac
-          else
-            sleep 0.05
-            if [ ! -r "$lock_dir/pid" ]; then
-              rm -rf -- "$lock_dir"
-              continue
-            fi
           fi
           sleep 0.05
         done
@@ -66,9 +60,14 @@ let
       }
 
       validate_entry() {
-        case "$1" in
-          ''|.|..|*/*)
-            echo "dotnix opencode: invalid managed config entry: $1" >&2
+        entry="$1"
+        if [ -z "$entry" ] || [ "$entry" = "." ] || [ "$entry" = ".." ]; then
+          echo "dotnix opencode: invalid managed config entry: $entry" >&2
+          exit 1
+        fi
+        case "$entry" in
+          */*|.dotnix-*)
+            echo "dotnix opencode: invalid managed config entry: $entry" >&2
             exit 1
             ;;
         esac
