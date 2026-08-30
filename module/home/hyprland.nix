@@ -1,4 +1,8 @@
 { pkgs, hostname, ... }: {
+  imports = [
+    ../../packages/waybar/home.nix
+  ];
+
   home.packages = with pkgs; [
     brightnessctl
     grim
@@ -11,7 +15,6 @@
     networkmanagerapplet
     playerctl
     swaynotificationcenter
-    waybar
     wofi
     wl-clipboard
     wlogout
@@ -39,11 +42,6 @@
 
   home.file.".config/swaync" = {
     source = ../../config.d/swaync;
-    recursive = true;
-  };
-
-  home.file.".config/waybar" = {
-    source = ../../config.d/waybar;
     recursive = true;
   };
 

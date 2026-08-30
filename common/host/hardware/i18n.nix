@@ -4,6 +4,9 @@
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
+    # Use Japanese glyph variants when an application cannot determine the
+    # language of CJK text (notably Chromium and other browsers).
+    LC_CTYPE = "ja_JP.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
     LC_MEASUREMENT = "en_US.UTF-8";
     LC_MONETARY = "en_US.UTF-8";

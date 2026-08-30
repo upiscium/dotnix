@@ -20,7 +20,6 @@
     # onlyoffice-desktopeditors
     wpsoffice
     libreoffice
-    opencode
     parsec-bin
     prismlauncher
     slack
