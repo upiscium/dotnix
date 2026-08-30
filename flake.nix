@@ -67,37 +67,40 @@
           };
         });
 
-      checks = forAllSystems (system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          portablePackages = packageRegistry.forSystem system pkgs;
-          packageChecks = lib.mapAttrs'
-            (name: package: lib.nameValuePair "${name}-package" package)
-            portablePackages;
-          policy =
-            if builtins.hasAttr system opencodePolicy.packages
-            then opencodePolicy.packages.${system}.opencode-policy
-            else null;
-        in
-        packageChecks
-        // {
-          justfile = pkgs.runCommand "dotnix-justfile-check" {
-            nativeBuildInputs = [ pkgs.just ];
-          } ''
-            just --justfile ${./justfile} --list > "$out"
-          '';
-        }
-        // lib.optionalAttrs (policy != null) {
-          opencode-policy = pkgs.runCommand "dotnix-opencode-policy" {
-            nativeBuildInputs = [ policy ];
-          } ''
-            opencode-policy audit-consumer \
-              --profile global \
-              --consumer ${self} \
-              --strict
-            touch "$out"
-          '';
-        });
+      checks =
+        assert lib.assertMsg (!(builtins.pathExists ./config.d))
+          "root config.d/ is forbidden; move configuration to its semantic owner";
+        forAllSystems (system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            portablePackages = packageRegistry.forSystem system pkgs;
+            packageChecks = lib.mapAttrs'
+              (name: package: lib.nameValuePair "${name}-package" package)
+              portablePackages;
+            policy =
+              if builtins.hasAttr system opencodePolicy.packages
+              then opencodePolicy.packages.${system}.opencode-policy
+              else null;
+          in
+          packageChecks
+          // {
+            justfile = pkgs.runCommand "dotnix-justfile-check" {
+              nativeBuildInputs = [ pkgs.just ];
+            } ''
+              just --justfile ${./justfile} --list > "$out"
+            '';
+          }
+          // lib.optionalAttrs (policy != null) {
+            opencode-policy = pkgs.runCommand "dotnix-opencode-policy" {
+              nativeBuildInputs = [ policy ];
+            } ''
+              opencode-policy audit-consumer \
+                --profile global \
+                --consumer ${self} \
+                --strict
+              touch "$out"
+            '';
+          });
 
       devShells = forAllSystems (system:
         let

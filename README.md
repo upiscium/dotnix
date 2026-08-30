@@ -5,7 +5,9 @@
 - The root `flake.nix` owns portable package outputs, repository-level policy validation, minimal development tooling, and CI.
 - Host directories such as `Adam/`, `Caspar/`, `Eve/`, `Michael/`, and `Ramiel/` retain authority for their NixOS and Home Manager configurations, inputs, and lockfiles.
 - `packages/` contains self-contained configured application artifacts consumed by host-local Home Manager configurations or through the root flake.
-- `config.d/` contains legacy/shared configuration that has not yet been moved to its final semantic owner. Configured portable applications should live under `packages/<name>/` instead.
+- `common/home/` owns shared user-level Home Manager configuration and retained user-level reference data.
+- `module/home/` and `module/host/` own reusable Home Manager and NixOS integration respectively.
+- A root `config.d/` directory is intentionally forbidden. Configuration must live with its semantic owner; root flake checks reject reintroduction of `config.d/`.
 
 The root flake does not aggregate hosts, expose `nixosConfigurations` or `homeConfigurations`, consolidate host inputs, or own deployment. Its package outputs are reusable artifacts only; host-local flakes remain the deployment authority.
 
@@ -73,6 +75,18 @@ nix develop -c just list
 nix develop -c just build opencode
 ```
 
+## Configuration ownership
+
+Configured standalone applications belong under `packages/<name>/`. Shared user-level configuration that only exists through Home Manager belongs under `common/home/`. Desktop/session integration belongs under the corresponding `module/home/` owner, and host-side shared data belongs under `common/host/` or a host-local directory when it is machine-specific.
+
+A few inactive configurations are retained without being deployed:
+
+- `common/home/vscode/`: historical VS Code user settings/keybindings.
+- `module/home/hyprland/walker/`: historical Walker launcher configuration/theme.
+- `common/home/ssh-pubkeys/`: public-key reference material; this is intentionally outside the recursively deployed `common/home/ssh/` tree.
+
+Retained inactive configuration does not imply that the corresponding application is installed or managed. It should only be wired into Home Manager or promoted to `packages/<name>/` when the application becomes active again.
+
 ## Package ownership
 
 ### Neovim
@@ -99,7 +113,7 @@ OpenCode needs writable configuration directories because it manages plugin depe
 
 The launcher deliberately does not use `OPENCODE_CONFIG_DIR` for the global baseline. Keeping the baseline in OpenCode's normal global config directory preserves OpenCode's merge ordering: global configuration loads before repository-local `.opencode`, allowing repository-local policy to remain authoritative.
 
-Home Manager only installs the configured package through `packages/opencode/home.nix`; it no longer recursively deploys `~/.config/opencode` from `config.d`.
+Home Manager only installs the configured package through `packages/opencode/home.nix`; it no longer recursively deploys the global OpenCode implementation from a root configuration directory.
 
 ## OpenCodePolicy
 
