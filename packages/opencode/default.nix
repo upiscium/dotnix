@@ -81,14 +81,14 @@ let
         while IFS= read -r entry; do
           [ -n "$entry" ] || continue
           validate_entry "$entry"
-          rm -rf -- "$config_dir/$entry"
+          rm -rf -- "''${config_dir:?}/''${entry:?}"
         done < "$runtime_manifest"
       fi
 
       while IFS= read -r entry; do
         [ -n "$entry" ] || continue
         validate_entry "$entry"
-        rm -rf -- "$config_dir/$entry"
+        rm -rf -- "''${config_dir:?}/''${entry:?}"
         cp -R -- "$source_config/$entry" "$config_dir/$entry"
         chmod -R u+rwX -- "$config_dir/$entry"
       done < "$source_manifest"
