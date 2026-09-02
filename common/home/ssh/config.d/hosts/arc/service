@@ -1,0 +1,78 @@
+Host dockge
+  HostName 10.12.2.1
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host openwebui
+  HostName 10.12.2.2
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host wallabag
+  HostName 10.12.2.3
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host convertx
+  HostName 10.12.2.4
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host stirling-pdf
+  HostName 10.12.2.5
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host gitea-lxc
+  HostName 10.12.2.7
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host ollama-agent-proxy
+  HostName 10.12.2.8
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host ollama-agent-1
+  HostName 10.12.2.9
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host ollama-agent-2
+  HostName 10.12.2.10
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host ollama-agent-3
+  HostName 10.12.2.11
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host ollama-agent-4
+  HostName 10.12.2.12
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host ollama-agent-5
+  HostName 10.12.2.13
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host ollama-agent-6
+  HostName 10.12.2.14
+  Port 22
+  User root
+  PasswordAuthentication no
+

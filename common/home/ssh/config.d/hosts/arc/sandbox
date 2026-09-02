@@ -1,0 +1,18 @@
+Host obsidian-publisher
+  HostName 10.12.10.1
+  User root
+  Port 22
+  PasswordAuthentication no
+
+Host obsidian-snapshot-taker
+  HostName 10.12.10.2
+  User root
+  Port 22
+  PasswordAuthentication no
+
+Host obsidian-ai-processor
+  HostName 10.12.10.3
+  User root
+  Port 22
+  PasswordAuthentication no
+
