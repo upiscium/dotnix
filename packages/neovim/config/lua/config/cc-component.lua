@@ -1,4 +1,3 @@
--- ~/.config/nvim/lua/plugins/lazyLoad/cc-component.lua
 local active_requests = {}
 local spinner_index = 1
 local spinner_symbols = {
