@@ -117,7 +117,7 @@
         in
         {
           default = pkgs.mkShell {
-            packages = [ pkgs.just ] ++ lib.optional (policy != null) policy;
+            packages = [ pkgs.just pkgs.python3 ] ++ lib.optional (policy != null) policy;
           };
         });
     };
