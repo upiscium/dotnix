@@ -10,10 +10,9 @@
       ./firewall.nix
       ./hardware.nix
       ./ipfix.nix
-      ./ollama.nix
-
       ../../common/host
       ../../module/host/nvidia.nix
+      ../../module/host/ollama.nix
       ../../module/host/proxmox.nix
       # ../../module/NixOS/docker/rootful.nix
     ]
