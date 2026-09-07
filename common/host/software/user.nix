@@ -2,8 +2,8 @@
   users.users.upiscium = {
     shell = pkgs.zsh;
     isNormalUser = true;
-    description = "uPiscium";
-    extraGroups = [ "networkmanager" "wheel" "dialout" ];
+    description = "upiscium";
+    extraGroups = [ "networkmanager" "wheel" "dialout" "wireshark" ];
   };
 }
 

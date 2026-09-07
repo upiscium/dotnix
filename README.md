@@ -21,27 +21,26 @@ The root flake targets:
 
 `x86_64-darwin` is deliberately excluded because the pinned Nixpkgs line no longer supports Intel Darwin. Platform-specific dependencies stay inside package definitions and must not leak into callers.
 
-Configured packages are auto-discovered from `packages/<name>/default.nix`. A package may restrict publication with `packages/<name>/systems.nix` when its supported platform subset is narrower than the root contract.
+Configured packages are auto-discovered from `packages/<name>/default.nix`. A package may restrict publication with `packages/<name>/systems.nix` when its supported platform subset is narrower than the root contract. Use `just list` or inspect the flake outputs for the canonical, currently available package set.
 
-Current configured packages include:
+The current human-readable package overview is:
 
-- `neovim`: Linux + Apple Silicon Darwin
-- `tmux`: Linux + Apple Silicon Darwin
 - `kitty`: Linux only
-- `starship`: Linux + Apple Silicon Darwin
-- `waybar`: Linux only
+- `neovim`: Linux + Apple Silicon Darwin
 - `opencode`: Linux + Apple Silicon Darwin
+- `starship`: Linux + Apple Silicon Darwin
+- `tmux`: Linux + Apple Silicon Darwin
+- `waybar`: Linux only
 
 `just` is exposed separately as a bootstrap utility.
 
 ## Direct installation
 
+Install any exposed package directly. These are representative examples, not an exhaustive package inventory:
+
 ```sh
 nix profile add github:upiscium/dotnix#neovim
-nix profile add github:upiscium/dotnix#tmux
-nix profile add github:upiscium/dotnix#kitty
-nix profile add github:upiscium/dotnix#starship
-nix profile add github:upiscium/dotnix#opencode
+nix profile add github:upiscium/dotnix#waybar
 ```
 
 The installer app installs from the exact dotnix revision used to launch it:
@@ -68,10 +67,13 @@ just install-remote opencode
 just profile
 ```
 
+`just check` runs the normal no-build repository validation: repository contract tests, the package registry contract tests, and all-system flake evaluation. CI reuses the same validation authority and keeps build-time gates separate.
+
 Without Just installed:
 
 ```sh
 nix develop -c just list
+nix develop -c just check
 nix develop -c just build opencode
 ```
 
@@ -92,6 +94,10 @@ Retained inactive configuration does not imply that the corresponding applicatio
 ### Neovim
 
 `packages/neovim/` owns the configured editor, Lua configuration, providers, LSP/tooling closure, and MCPHub configuration. `lazy.nvim` plugin acquisition remains runtime-managed.
+
+### Tmux
+
+`packages/tmux/` owns the configured Tmux wrapper and immutable `config/tmux.conf`; the wrapper starts Tmux with that package-owned configuration. `packages/tmux/home.nix` only installs the configured package rather than maintaining a second Tmux configuration.
 
 ### Kitty
 

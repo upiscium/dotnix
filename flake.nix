@@ -90,6 +90,11 @@
               just --justfile ${./justfile} --list > "$out"
             '';
           }
+          // lib.optionalAttrs (system == "x86_64-linux") {
+            package-registry-contract = import ./tests/package-registry {
+              inherit lib pkgs;
+            };
+          }
           // lib.optionalAttrs (policy != null) {
             opencode-policy = pkgs.runCommand "dotnix-opencode-policy" {
               nativeBuildInputs = [ policy ];
@@ -112,7 +117,7 @@
         in
         {
           default = pkgs.mkShell {
-            packages = [ pkgs.just ] ++ lib.optional (policy != null) policy;
+            packages = [ pkgs.just pkgs.python3 ] ++ lib.optional (policy != null) policy;
           };
         });
     };
