@@ -10,12 +10,12 @@
       ./firewall.nix
       ./hardware.nix
       ./ipfix.nix
-      ./ollama.nix
       ./opencode-discord-bridge.nix
       # ./sunshine.nix
       ./wireguard.nix
 
       ../../common/host
+      ../../module/host/ollama.nix
       ../../module/host/proxmox.nix
       ../../module/host/docker/rootless.nix
     ]
