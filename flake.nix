@@ -90,6 +90,11 @@
               just --justfile ${./justfile} --list > "$out"
             '';
           }
+          // lib.optionalAttrs (system == "x86_64-linux") {
+            package-registry-contract = import ./tests/package-registry {
+              inherit lib pkgs;
+            };
+          }
           // lib.optionalAttrs (policy != null) {
             opencode-policy = pkgs.runCommand "dotnix-opencode-policy" {
               nativeBuildInputs = [ policy ];
