@@ -8,9 +8,9 @@ default:
 list:
     nix flake show --all-systems --no-write-lock-file
 
-# Evaluate the complete portable package contract without building packages.
+# Run the normal no-build repository validation contract.
 check:
-    nix flake check --all-systems --no-build --no-update-lock-file
+    tools/check-repository.sh
 
 # Build one local package output.
 build package:

@@ -1,0 +1,20 @@
+name: Repository Validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
+      - name: Validate repository
+        run: tools/check-repository.sh
+      - name: Global profile conformity
+        run: nix build .#checks.x86_64-linux.opencode-policy --no-link --no-update-lock-file

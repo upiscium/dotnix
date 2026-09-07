@@ -68,10 +68,13 @@ just install-remote opencode
 just profile
 ```
 
+`just check` runs the normal no-build repository validation: repository contract tests, the package registry contract tests, and all-system flake evaluation. CI reuses the same validation authority and keeps build-time gates separate.
+
 Without Just installed:
 
 ```sh
 nix develop -c just list
+nix develop -c just check
 nix develop -c just build opencode
 ```
 
