@@ -121,9 +121,9 @@ The launcher deliberately does not use `OPENCODE_CONFIG_DIR` for the global base
 
 Home Manager only installs the configured package through `packages/opencode/home.nix`; it no longer recursively deploys the global OpenCode implementation from a root configuration directory.
 
-## OpenCodePolicy
+## OpencodeContract
 
-dotnix pins [`upiscium/OpenCodePolicy`](https://github.com/upiscium/OpenCodePolicy) through the root `flake.lock` and explicitly conforms to the `global` profile. OpenCodePolicy owns shared policy/compatibility contracts; dotnix remains implementation owner of the global OpenCode layer under `packages/opencode/config/`.
+dotnix pins [`upiscium/OpencodeContract`](https://github.com/upiscium/OpencodeContract) through the root `flake.lock` and explicitly conforms to the `global` profile. OpencodeContract owns shared policy/compatibility contracts; dotnix remains implementation owner of the global OpenCode layer under `packages/opencode/config/`.
 
 The dependency is validation-only. It does not generate or materialize agents, prompts, commands, skills, provider settings, or TUI configuration.
 
@@ -132,16 +132,16 @@ The global profile enforces fixed Sol/Terra/Luna assignments. Spark, fallback ag
 After `nix develop`:
 
 ```sh
-opencode-policy validate
-opencode-policy audit-consumer --profile global --consumer . --strict
+opencode-contract validate
+opencode-contract audit-consumer --profile global --consumer . --strict
 ```
 
 ## Updating policy
 
-OpenCodePolicy advances only through an explicit dependency update. The recommended path is the manual **GitHub Actions → Update OpenCodePolicy → Run workflow** action on `main`, or:
+OpencodeContract advances only through an explicit dependency update. The recommended path is the manual **GitHub Actions → Update OpencodeContract → Run workflow** action on `main`, or:
 
 ```sh
-gh workflow run update-opencode-policy.yml \
+gh workflow run update-opencode-contract.yml \
   --repo upiscium/dotnix \
   --ref main
 ```
@@ -149,9 +149,9 @@ gh workflow run update-opencode-policy.yml \
 For a local update:
 
 ```sh
-nix flake update opencodePolicy
+nix flake update opencodeContract
 nix flake check --no-update-lock-file
-opencode-policy audit-consumer --profile global --consumer . --strict
+opencode-contract audit-consumer --profile global --consumer . --strict
 ```
 
 Review the root `flake.lock` diff before merging. Host-local lockfiles must not be updated as part of the policy workflow.

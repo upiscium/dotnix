@@ -7,7 +7,7 @@ repo_root=$(cd -- "$script_dir/.." && pwd)
 
 cd -- "$repo_root"
 
-echo "==> Testing OpenCodePolicy updater lock contract"
+echo "==> Testing OpencodeContract updater lock contract"
 python_args=(
   -m unittest discover
   -s tests

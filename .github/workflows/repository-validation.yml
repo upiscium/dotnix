@@ -17,4 +17,4 @@ jobs:
       - name: Validate repository
         run: tools/check-repository.sh
       - name: Global profile conformity
-        run: nix build .#checks.x86_64-linux.opencode-policy --no-link --no-update-lock-file
+        run: nix build .#checks.x86_64-linux.opencode-contract --no-link --no-update-lock-file
