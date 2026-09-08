@@ -108,6 +108,23 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             for hardening in ("User=opencode-local", "NoNewPrivileges=yes", "ProtectSystem=strict", "CapabilityBoundingSet=", "BindReadOnlyPaths="):
                 self.assertIn(hardening, unit)
 
+    def test_documented_firewall_activation_precedes_listener_start(self) -> None:
+        readme = (CONFIG.parent / "runtime/README.md").read_text()
+        ordered_steps = (
+            "systemd/*.service /etc/systemd/system/",
+            "nftables.d/opencode-local.nft /etc/nftables.d/",
+            "grep -F '/etc/nftables.d/*.nft' /etc/nftables.conf",
+            "nft --check --file /etc/nftables.conf",
+            "systemctl reload nftables",
+            "nft list table inet opencode_local",
+            "systemctl enable --now",
+        )
+        positions = [readme.index(step) for step in ordered_steps]
+        self.assertEqual(sorted(positions), positions)
+        self.assertIn("ports `1919`, `8090`, and `8091`", readme)
+        self.assertIn("`10.12.0.1`", readme)
+        self.assertIn("Do not continue if the table or restriction is absent", readme)
+
 
 if __name__ == "__main__":
     unittest.main()
