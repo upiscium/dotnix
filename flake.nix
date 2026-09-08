@@ -4,13 +4,13 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    opencodePolicy = {
-      url = "github:upiscium/OpenCodePolicy";
+    opencodeContract = {
+      url = "github:upiscium/OpencodeContract";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, opencodePolicy }:
+  outputs = { self, nixpkgs, opencodeContract }:
     let
       lib = nixpkgs.lib;
       systems = [
@@ -77,9 +77,9 @@
             packageChecks = lib.mapAttrs'
               (name: package: lib.nameValuePair "${name}-package" package)
               portablePackages;
-            policy =
-              if builtins.hasAttr system opencodePolicy.packages
-              then opencodePolicy.packages.${system}.opencode-policy
+            contract =
+              if builtins.hasAttr system opencodeContract.packages
+              then opencodeContract.packages.${system}.opencode-contract
               else null;
           in
           packageChecks
@@ -95,11 +95,11 @@
               inherit lib pkgs;
             };
           }
-          // lib.optionalAttrs (policy != null) {
-            opencode-policy = pkgs.runCommand "dotnix-opencode-policy" {
-              nativeBuildInputs = [ policy ];
+          // lib.optionalAttrs (contract != null) {
+            opencode-contract = pkgs.runCommand "dotnix-opencode-contract" {
+              nativeBuildInputs = [ contract ];
             } ''
-              opencode-policy audit-consumer \
+              opencode-contract audit-consumer \
                 --profile global \
                 --consumer ${self} \
                 --strict
@@ -110,14 +110,14 @@
       devShells = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          policy =
-            if builtins.hasAttr system opencodePolicy.packages
-            then opencodePolicy.packages.${system}.opencode-policy
+          contract =
+            if builtins.hasAttr system opencodeContract.packages
+            then opencodeContract.packages.${system}.opencode-contract
             else null;
         in
         {
           default = pkgs.mkShell {
-            packages = [ pkgs.just pkgs.python3 ] ++ lib.optional (policy != null) policy;
+            packages = [ pkgs.just pkgs.python3 ] ++ lib.optional (contract != null) contract;
           };
         });
     };

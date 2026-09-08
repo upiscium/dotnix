@@ -10,31 +10,31 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MODULE_PATH = ROOT / "tools" / "check_opencode_policy_lock_update.py"
-SPEC = importlib.util.spec_from_file_location("check_opencode_policy_lock_update", MODULE_PATH)
+MODULE_PATH = ROOT / "tools" / "check_opencode_contract_lock_update.py"
+SPEC = importlib.util.spec_from_file_location("check_opencode_contract_lock_update", MODULE_PATH)
 assert SPEC and SPEC.loader
 checker = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = checker
 SPEC.loader.exec_module(checker)
 
 
-class OpenCodePolicyLockUpdateTest(unittest.TestCase):
+class OpencodeContractLockUpdateTest(unittest.TestCase):
     OLD_REV = "e4ff446514c303fe275ba9eb3a4ab498caea7ac0"
     NEW_REV = "103b47b67a7e650835ac277ed192dbc92d1639c4"
 
     def lock(self, *, unrelated: bool = False) -> dict:
         root_inputs = {
             "nixpkgs": "nixpkgs",
-            "opencodePolicy": "opencodePolicy",
+            "opencodeContract": "opencodeContract",
         }
         nodes = {
             "root": {"inputs": root_inputs},
             "nixpkgs": {"locked": {"rev": "1" * 40}},
-            "opencodePolicy": {
+            "opencodeContract": {
                 "inputs": {"nixpkgs": ["nixpkgs"]},
                 "locked": {
                     "owner": "upiscium",
-                    "repo": "OpenCodePolicy",
+                    "repo": "OpencodeContract",
                     "type": "github",
                     "rev": self.OLD_REV,
                     "narHash": "old",
@@ -47,9 +47,9 @@ class OpenCodePolicyLockUpdateTest(unittest.TestCase):
             nodes["other"] = {"locked": {"rev": "2" * 40}}
         return {"nodes": nodes, "root": "root", "version": 7}
 
-    def update_policy(self, lock: dict) -> dict:
+    def update_contract(self, lock: dict) -> dict:
         updated = copy.deepcopy(lock)
-        updated["nodes"]["opencodePolicy"]["locked"].update(
+        updated["nodes"]["opencodeContract"]["locked"].update(
             rev=self.NEW_REV,
             narHash="new",
             lastModified=2,
@@ -77,44 +77,44 @@ class OpenCodePolicyLockUpdateTest(unittest.TestCase):
     def test_identical_revision_with_exclusive_dependency_change_is_rejected(self) -> None:
         before = self.lock()
         after = copy.deepcopy(before)
-        after["nodes"]["opencodePolicy"]["inputs"]["tool"] = "policyTool"
-        after["nodes"]["policyTool"] = {"locked": {"rev": "3" * 40}}
+        after["nodes"]["opencodeContract"]["inputs"]["tool"] = "contractTool"
+        after["nodes"]["contractTool"] = {"locked": {"rev": "3" * 40}}
         self.assert_invalid(
             before,
             after,
-            "flake.lock changed without an OpenCodePolicy revision change",
+            "flake.lock changed without an OpencodeContract revision change",
         )
 
-    def test_policy_revision_update_is_valid(self) -> None:
+    def test_contract_revision_update_is_valid(self) -> None:
         before = self.lock()
         self.assertEqual(
             (self.OLD_REV, self.NEW_REV),
-            checker.validate_update(before, self.update_policy(before)),
+            checker.validate_update(before, self.update_contract(before)),
         )
 
-    def test_policy_exclusive_dependency_change_is_valid(self) -> None:
+    def test_contract_exclusive_dependency_change_is_valid(self) -> None:
         before = self.lock()
-        after = self.update_policy(before)
-        after["nodes"]["opencodePolicy"]["inputs"]["tool"] = "policyTool"
-        after["nodes"]["policyTool"] = {
-            "inputs": {"leaf": "policyLeaf"},
+        after = self.update_contract(before)
+        after["nodes"]["opencodeContract"]["inputs"]["tool"] = "contractTool"
+        after["nodes"]["contractTool"] = {
+            "inputs": {"leaf": "contractLeaf"},
             "locked": {"rev": "3" * 40},
         }
-        after["nodes"]["policyLeaf"] = {"locked": {"rev": "4" * 40}}
+        after["nodes"]["contractLeaf"] = {"locked": {"rev": "4" * 40}}
         checker.validate_update(before, after)
 
-    def test_policy_exclusive_dependency_removal_is_valid(self) -> None:
+    def test_contract_exclusive_dependency_removal_is_valid(self) -> None:
         before = self.lock()
-        before["nodes"]["opencodePolicy"]["inputs"]["tool"] = "policyTool"
-        before["nodes"]["policyTool"] = {
-            "inputs": {"leaf": "policyLeaf"},
+        before["nodes"]["opencodeContract"]["inputs"]["tool"] = "contractTool"
+        before["nodes"]["contractTool"] = {
+            "inputs": {"leaf": "contractLeaf"},
             "locked": {"rev": "3" * 40},
         }
-        before["nodes"]["policyLeaf"] = {"locked": {"rev": "4" * 40}}
-        after = self.update_policy(before)
-        del after["nodes"]["opencodePolicy"]["inputs"]["tool"]
-        del after["nodes"]["policyTool"]
-        del after["nodes"]["policyLeaf"]
+        before["nodes"]["contractLeaf"] = {"locked": {"rev": "4" * 40}}
+        after = self.update_contract(before)
+        del after["nodes"]["opencodeContract"]["inputs"]["tool"]
+        del after["nodes"]["contractTool"]
+        del after["nodes"]["contractLeaf"]
         checker.validate_update(before, after)
 
     def test_existing_branch_matching_candidate_is_reusable(self) -> None:
@@ -124,9 +124,9 @@ class OpenCodePolicyLockUpdateTest(unittest.TestCase):
             candidate_path = root / "candidate.lock"
             branch_path = root / "branch.lock"
             before = self.lock()
-            candidate = self.update_policy(before)
-            candidate["nodes"]["opencodePolicy"]["inputs"]["tool"] = "policyTool"
-            candidate["nodes"]["policyTool"] = {"locked": {"rev": "3" * 40}}
+            candidate = self.update_contract(before)
+            candidate["nodes"]["opencodeContract"]["inputs"]["tool"] = "contractTool"
+            candidate["nodes"]["contractTool"] = {"locked": {"rev": "3" * 40}}
             self.write_lock(before_path, before)
             self.write_lock(candidate_path, candidate)
             branch_path.write_bytes(candidate_path.read_bytes())
@@ -150,9 +150,9 @@ class OpenCodePolicyLockUpdateTest(unittest.TestCase):
             candidate_path = root / "candidate.lock"
             branch_path = root / "branch.lock"
             before = self.lock()
-            candidate = self.update_policy(before)
+            candidate = self.update_contract(before)
             branch = copy.deepcopy(candidate)
-            branch["nodes"]["opencodePolicy"]["locked"]["narHash"] = "manual"
+            branch["nodes"]["opencodeContract"]["locked"]["narHash"] = "manual"
             self.write_lock(before_path, before)
             self.write_lock(candidate_path, candidate)
             self.write_lock(branch_path, branch)
@@ -176,7 +176,7 @@ class OpenCodePolicyLockUpdateTest(unittest.TestCase):
             candidate_path = root / "candidate.lock"
             branch_path = root / "branch.lock"
             before = self.lock()
-            candidate = self.update_policy(before)
+            candidate = self.update_contract(before)
             self.write_lock(before_path, before)
             self.write_lock(candidate_path, candidate)
             branch_path.write_bytes(candidate_path.read_bytes())
@@ -194,36 +194,36 @@ class OpenCodePolicyLockUpdateTest(unittest.TestCase):
     def test_nested_follows_shared_dependency_change_is_rejected(self) -> None:
         before = self.lock(unrelated=True)
         before["nodes"]["other"]["inputs"] = {"tool": "sharedTool"}
-        before["nodes"]["opencodePolicy"]["inputs"]["tool"] = ["other", "tool"]
+        before["nodes"]["opencodeContract"]["inputs"]["tool"] = ["other", "tool"]
         before["nodes"]["sharedTool"] = {"locked": {"rev": "5" * 40}}
-        after = self.update_policy(before)
+        after = self.update_contract(before)
         after["nodes"]["sharedTool"]["locked"]["rev"] = "6" * 40
         self.assert_invalid(before, after, "shared")
 
     def test_exclusive_dependency_becoming_shared_is_rejected(self) -> None:
         before = self.lock(unrelated=True)
-        before["nodes"]["opencodePolicy"]["inputs"]["tool"] = "policyTool"
-        before["nodes"]["policyTool"] = {"locked": {"rev": "7" * 40}}
-        after = self.update_policy(before)
-        after["nodes"]["other"]["inputs"] = {"tool": "policyTool"}
+        before["nodes"]["opencodeContract"]["inputs"]["tool"] = "contractTool"
+        before["nodes"]["contractTool"] = {"locked": {"rev": "7" * 40}}
+        after = self.update_contract(before)
+        after["nodes"]["other"]["inputs"] = {"tool": "contractTool"}
         self.assert_invalid(before, after, "consumer-owned")
 
     def test_root_nixpkgs_change_is_rejected(self) -> None:
         before = self.lock()
-        after = self.update_policy(before)
+        after = self.update_contract(before)
         after["nodes"]["nixpkgs"]["locked"]["rev"] = "8" * 40
         self.assert_invalid(before, after, "nixpkgs|shared")
 
     def test_root_inputs_change_is_rejected(self) -> None:
         before = self.lock()
-        after = self.update_policy(before)
+        after = self.update_contract(before)
         after["nodes"]["root"]["inputs"]["unexpected"] = "unexpected"
         after["nodes"]["unexpected"] = {"locked": {"rev": "9" * 40}}
         self.assert_invalid(before, after, "root node or root inputs changed")
 
     def test_unrelated_root_dependency_change_is_rejected(self) -> None:
         before = self.lock(unrelated=True)
-        after = self.update_policy(before)
+        after = self.update_contract(before)
         after["nodes"]["other"]["locked"]["rev"] = "a" * 40
         self.assert_invalid(before, after, "consumer-owned")
 

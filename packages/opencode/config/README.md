@@ -8,7 +8,7 @@ This directory is the package-owned source for dotnix's global OpenCode configur
 - Repository-local OpenCode configuration remains authoritative and may impose stronger rules.
 - Agent-ready repositories are detected when both `.automation/VERSION` and `.automation/INIT.md` exist.
 - Templates owns Agent Core behavior; do not duplicate Templates-specific lifecycle or repository policy here.
-- OpenCodePolicy owns shared compatibility contracts, not the complete implementation.
+- OpencodeContract owns shared compatibility contracts, not the complete implementation.
 
 Keeping this configuration in the standard global OpenCode path is intentional. OpenCode loads the global layer before repository-local `.opencode` configuration, so repository-local configuration can continue to override this baseline.
 
@@ -77,7 +77,7 @@ Refresh the provider model list before changing IDs:
 opencode models openai --refresh --verbose
 ```
 
-Use exact provider-prefixed IDs reported by OpenCode and keep OpenCodePolicy conformity intact.
+Use exact provider-prefixed IDs reported by OpenCode and keep OpencodeContract conformity intact.
 
 ## Validation
 
@@ -103,7 +103,7 @@ Validate repository policy and package publication from the root flake:
 
 ```sh
 nix flake check --all-systems --no-build --no-update-lock-file
-opencode-policy audit-consumer --profile global --consumer . --strict
+opencode-contract audit-consumer --profile global --consumer . --strict
 ```
 
 For Home Manager integration, build/switch an actual host and verify that `which opencode` resolves to the configured package. Restart OpenCode after source changes because configuration is loaded at startup.
