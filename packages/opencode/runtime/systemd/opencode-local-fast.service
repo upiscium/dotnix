@@ -1,0 +1,45 @@
+[Unit]
+Description=llama.cpp Gemma fast worker on GPU 1
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=opencode-local
+Group=opencode-local
+SupplementaryGroups=video render
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=900
+TimeoutStopSec=60
+KillSignal=SIGTERM
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectHostname=yes
+ProtectClock=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+AmbientCapabilities=
+LockPersonality=yes
+RemoveIPC=yes
+UMask=0077
+BindReadOnlyPaths=/root/opencode-local-model-eval:/srv/opencode-local
+ReadWritePaths=/var/lib/opencode-local /var/cache/opencode-local
+Environment=HOME=/var/lib/opencode-local
+Environment=XDG_CACHE_HOME=/var/cache/opencode-local
+Environment=CUDA_VISIBLE_DEVICES=1
+Environment=LD_LIBRARY_PATH=/srv/opencode-local/runtimes/llama.cpp/build-cuda13-sm86/bin:/srv/opencode-local/runtimes/freetoken/.venv/lib/python3.12/site-packages/nvidia/cu13/lib
+ExecStart=/srv/opencode-local/runtimes/llama.cpp/build-cuda13-sm86/bin/llama-server -m /srv/opencode-local/models/gemma4-12b-it-gguf/gemma-4-12b-it-Q4_K_M.gguf -a gemma4-12b-it-q4km-3060 --host 10.12.2.9 --port 8091 -c 32768 -ngl 99 --split-mode none --main-gpu 0 -fa auto -ctk q8_0 -ctv q8_0 -b 512 -ub 256 -t 8 --jinja
+
+[Install]
+WantedBy=multi-user.target

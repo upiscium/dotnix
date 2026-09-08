@@ -46,7 +46,7 @@ jobs:
       - uses: cachix/install-nix-action@v31
 
       - name: Test lock hygiene checker
-        run: python3 -m unittest discover -s tests -p 'test_opencode_policy_lock_update.py' -v
+        run: python3 -m unittest discover -s tests -p 'test_opencode*.py' -v
 
       - name: Record and update OpenCodePolicy revision
         id: revisions

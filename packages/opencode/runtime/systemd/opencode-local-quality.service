@@ -1,0 +1,47 @@
+[Unit]
+Description=FreeToken Qwen3.6 quality worker on GPU 0
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=opencode-local
+Group=opencode-local
+SupplementaryGroups=video render
+Restart=always
+RestartSec=10
+TimeoutStartSec=900
+TimeoutStopSec=60
+KillSignal=SIGTERM
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectHostname=yes
+ProtectClock=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+AmbientCapabilities=
+LockPersonality=yes
+RemoveIPC=yes
+UMask=0077
+BindReadOnlyPaths=/root/opencode-local-model-eval:/srv/opencode-local
+ReadWritePaths=/var/lib/opencode-local /var/cache/opencode-local
+Environment=HOME=/var/lib/opencode-local
+Environment=XDG_CACHE_HOME=/var/cache/opencode-local
+Environment=CUDA_VISIBLE_DEVICES=0
+Environment=CUDA_HOME=/srv/opencode-local/runtimes/freetoken/.venv/lib/python3.12/site-packages/nvidia/cu13
+Environment=CUDACXX=/srv/opencode-local/runtimes/freetoken/.venv/lib/python3.12/site-packages/nvidia/cu13/bin/nvcc
+Environment=LD_LIBRARY_PATH=/srv/opencode-local/runtimes/freetoken/.venv/lib/python3.12/site-packages/nvidia/cu13/lib
+Environment=PATH=/srv/opencode-local/runtimes/freetoken/.venv/lib/python3.12/site-packages/nvidia/cu13/bin:/srv/opencode-local/runtimes/freetoken/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/srv/opencode-local/runtimes/freetoken/.venv/bin/python3 /srv/opencode-local/runtimes/freetoken/.venv/bin/ft serve --model /srv/opencode-local/models/qwen3.6-35b-a3b-nvfp4 --served-model-name qwen3.6-35b-a3b-nvfp4 --host 10.12.2.9 --port 1919 --max-running-requests 1 --max-seq-len-override 32768 --max-output-tokens 4096 --moe-backend offload --moe-cache-auto --memory-ratio 0.9
+
+[Install]
+WantedBy=multi-user.target
