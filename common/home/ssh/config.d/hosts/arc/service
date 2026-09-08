@@ -40,7 +40,7 @@ Host ollama-agent-proxy
   User root
   PasswordAuthentication no
 
-Host ollama-agent-1
+Host agent-runtime-1 ollama-agent-1
   HostName 10.12.2.9
   Port 22
   User root
@@ -75,4 +75,3 @@ Host ollama-agent-6
   Port 22
   User root
   PasswordAuthentication no
-

@@ -11,7 +11,7 @@ echo "==> Testing OpenCodePolicy updater lock contract"
 python_args=(
   -m unittest discover
   -s tests
-  -p 'test_opencode_policy_lock_update.py'
+  -p 'test_opencode*.py'
   -v
 )
 if command -v python3 >/dev/null 2>&1; then

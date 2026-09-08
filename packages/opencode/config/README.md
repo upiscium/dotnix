@@ -19,6 +19,7 @@ Keeping this configuration in the standard global OpenCode path is intentional. 
 - `agents/*.md` defines persistent agent role/model/permission properties.
 - `skills/*/SKILL.md` defines reusable workflows.
 - `commands/*.md` defines thin user-invoked entry points into skills.
+- `local-workers.toml` defines the disabled-by-default, manual/shadow local-worker manifest. Local roles are available only through the explicit local-worker workflow.
 
 OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package metadata, and lock files are not package-owned and are preserved by the dotnix launcher.
 
@@ -31,6 +32,8 @@ OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package m
 | `general`, `explore`, `verifier`, `scout` | `openai/gpt-5.6-luna` |
 
 Each global role has exactly one configured model. Model substitution, fallback agents, and retrying work under an alternate model are not part of this layer. If the configured provider/model cannot execute the task, report the exact failure and return `BLOCKED`.
+
+The three local workers are separate OpenAI-compatible provider identities with conservative 32768-context/4096-output limits. They are Phase 1 manual/shadow advisory workers, not fallback capacity. OpenCode v1.18.16's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
 
 ## Authority boundary
 
@@ -62,6 +65,7 @@ Only roles explicitly configured for implementation retain edit authority. Revie
 | Audit this configuration | `/agent-audit` |
 | Start a task workflow | `/task-start <goal-or-scope>` |
 | Execute a scoped workflow/task | `/task-run <workflow-or-task-id>` |
+| Explicit local-worker dispatch | `/local-worker <worker> <read-or-grep> <bounded-objective>` |
 
 Commands remain thin entry points. Agent-ready repositories may override command semantics with their guarded local lifecycle.
 
