@@ -10,13 +10,13 @@
       # Include the results of the hardware scan.
       ./firewall.nix
       ./hardware.nix
-      ./udev.nix
       ./wireguard.nix
 
       ../../common/host
       ../../module/host/asusctl.nix
       ../../module/host/desktop.nix
       ../../module/host/docker/rootless.nix
+      ../../module/host/platformio-udev.nix
       ../../module/host/steam.nix
     ]
     ++ (with inputs.nixos-hardware.nixosModules; [
