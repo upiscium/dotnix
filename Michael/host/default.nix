@@ -10,7 +10,7 @@
       # Include the results of the hardware scan.
       ./firewall.nix
       ./hardware.nix
-      ./udev.nix
+      ../../module/host/platformio-udev.nix
       ./wireguard.nix
 
       ../../common/host
