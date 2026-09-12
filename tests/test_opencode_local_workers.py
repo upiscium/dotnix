@@ -8,6 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "packages/opencode/config"
+SSH_SERVICE = ROOT / "common/home/ssh/config.d/hosts/arc/service"
 MODELS = {
     "local-quality": ("http://10.12.2.9:1919/v1", "qwen3.6-35b-a3b-nvfp4"),
     "local-fast": ("http://10.12.2.9:8091/v1", "gemma4-12b-it-q4km-3060"),
@@ -40,6 +41,18 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             for worker in self.manifest["workers"]
         }
         self.assertEqual(WORKERS, bindings)
+
+    def test_single_runtime_has_no_agent_pool_proxy(self) -> None:
+        self.assertNotIn("ollama-agent", self.config["provider"])
+        config_text = (CONFIG / "opencode.json").read_text()
+        self.assertNotIn("https://ollama-agent.arc.upiscium.dev/v1", config_text)
+
+        ssh_service = SSH_SERVICE.read_text()
+        self.assertIn("Host agent-runtime\n  HostName 10.12.2.9", ssh_service)
+        for obsolete in ("agent-runtime-1", "ollama-agent-1", "ollama-agent-proxy"):
+            self.assertNotIn(obsolete, ssh_service)
+        for index, address in enumerate(range(10, 15), start=2):
+            self.assertIn(f"Host ollama-agent-{index}\n  HostName 10.12.2.{address}", ssh_service)
 
     def test_exact_read_only_permissions_and_hidden_agents(self) -> None:
         for worker in WORKERS:
@@ -110,6 +123,8 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
 
     def test_documented_firewall_activation_precedes_listener_start(self) -> None:
         readme = (CONFIG.parent / "runtime/README.md").read_text()
+        self.assertIn("hosted on `agent-runtime`, CT12009 (`10.12.2.9`)", readme)
+        self.assertNotIn("agent-runtime-1", readme)
         ordered_steps = (
             "systemd/*.service /etc/systemd/system/",
             "nftables.d/opencode-local.nft /etc/nftables.d/",

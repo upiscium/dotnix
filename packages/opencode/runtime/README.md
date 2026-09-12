@@ -1,9 +1,10 @@
-# CT12009 local inference runtime
+# agent-runtime local inference runtime
 
 These Ubuntu systemd units are the deployment source for the three local
-OpenCode workers hosted on `agent-runtime-1`, CT12009 (`10.12.2.9`). They deliberately bind only
-the CT's private address; no public DNS, reverse-proxy route, or model fallback
-is configured.
+OpenCode workers hosted on `agent-runtime`, CT12009 (`10.12.2.9`). OpenCode
+connects directly to this single runtime. The workers deliberately bind only
+the CT's private address; no public DNS, reverse-proxy route, agent pool, or
+model fallback is configured.
 
 The runtime and model tree is mounted read-only from
 `/root/opencode-local-model-eval` into each service namespace at
