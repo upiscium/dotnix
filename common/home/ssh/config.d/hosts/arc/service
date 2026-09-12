@@ -34,13 +34,7 @@ Host gitea-lxc
   User root
   PasswordAuthentication no
 
-Host ollama-agent-proxy
-  HostName 10.12.2.8
-  Port 22
-  User root
-  PasswordAuthentication no
-
-Host agent-runtime-1 ollama-agent-1
+Host agent-runtime
   HostName 10.12.2.9
   Port 22
   User root
