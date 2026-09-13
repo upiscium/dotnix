@@ -14,7 +14,7 @@
 
     secretsCredentialFile = "/etc/opencode-discord-bridge/secrets.env";
 
-    # 既存の非secret設定用
-    environmentFile = "/run/opencode-discord-bridge.env";
+    # non-secret configuration authority
+    configFile = "/etc/opencode-discord-bridge/config.toml";
   };
 }
