@@ -1,3 +1,6 @@
+Include config.d/hosts/*
+Include config.d/hosts/arc/*
+
 Host *
   StrictHostKeyChecking no
   AddKeysToAgent yes
@@ -10,6 +13,3 @@ Host *
   HashKnownHosts no
   # IdentityFile ~/secrets/private-key/arc
   # ControlPath    /tmp/%r@%h:%p
-
-Include config.d/hosts/*
-Include config.d/hosts/arc/*
