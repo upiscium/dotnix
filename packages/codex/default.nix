@@ -11,6 +11,10 @@ writeShellApplication {
     expect_config=0
 
     for arg in "$@"; do
+      if [[ "$arg" == "--" ]]; then
+        break
+      fi
+
       if (( expect_model )); then
         model_set=1
         expect_model=0
@@ -42,7 +46,7 @@ writeShellApplication {
         --config=model_reasoning_effort=*)
           effort_set=1
           ;;
-        -p|--profile|--profile=*)
+        -p|--profile|-p?*|--profile=*)
           profile_set=1
           ;;
       esac
@@ -61,6 +65,6 @@ writeShellApplication {
       defaults+=(--config 'model_reasoning_effort="max"')
     fi
 
-    exec ${codex}/bin/codex "${defaults[@]}" "$@"
+    exec ${codex}/bin/codex "''${defaults[@]}" "$@"
   '';
 }
