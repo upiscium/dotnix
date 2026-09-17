@@ -2,6 +2,7 @@
 description: Researches external documentation, dependencies, and upstream implementations without editing
 mode: subagent
 model: openai/gpt-5.6-luna
+reasoningEffort: max
 permission:
   edit: deny
   task: deny

@@ -2,6 +2,7 @@
 description: Repository reconnaissance and targeted investigation agent
 mode: subagent
 model: openai/gpt-5.6-luna
+reasoningEffort: max
 permission:
   edit: deny
   task: deny

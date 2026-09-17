@@ -1,7 +1,8 @@
 ---
 description: Read-only requirements, architecture, dependency, and implementation planning agent
 mode: primary
-model: openai/gpt-5.6-sol
+model: openai/gpt-5.6-luna
+reasoningEffort: max
 permission:
   edit: deny
   question: allow

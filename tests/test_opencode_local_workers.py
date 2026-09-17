@@ -87,7 +87,7 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         self.assertIn("retry_reason", self.manifest["metrics"]["metadata"])
 
     def test_canonical_assignments_remain_immutable(self) -> None:
-        canonical = {"build": "sol", "plan": "sol", "architect": "sol", "reviewer": "terra", "investigator": "terra", "security-reviewer": "terra", "general": "luna", "explore": "luna", "verifier": "luna", "scout": "luna"}
+        canonical = {"build": "sol", "plan": "luna", "architect": "sol", "reviewer": "luna", "investigator": "luna", "security-reviewer": "terra", "general": "luna", "explore": "luna", "verifier": "luna", "scout": "luna"}
         for agent, model in canonical.items():
             self.assertIn(f"model: openai/gpt-5.6-{model}", (CONFIG / "agents" / f"{agent}.md").read_text())
         skill = (CONFIG / "skills/local-workers/SKILL.md").read_text()

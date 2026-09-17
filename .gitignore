@@ -1,3 +1,5 @@
 *.local
 /.worktrees
 result
+__pycache__/
+*.py[cod]
