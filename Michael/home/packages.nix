@@ -17,6 +17,7 @@
     obsidian
     obs-studio
     obs-studio-plugins.droidcam-obs
+    kdePackages.okular
     # onlyoffice-desktopeditors
     wpsoffice
     libreoffice

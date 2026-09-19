@@ -28,12 +28,6 @@ Host influxdb
   User root
   PasswordAuthentication no
 
-Host nas
-  HostName 192.168.100.35
-  Port 22
-  User root
-  PasswordAuthentication no
-
 Host homeassistant
   HostName 10.12.2.10
   Port 22
