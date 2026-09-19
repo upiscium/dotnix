@@ -63,3 +63,19 @@ Host obsidian-snapshot-taker
   Port 22
   User root
   PasswordAuthentication no
+
+Host nextcloud
+  HostName 10.12.2.15
+  Port 22
+  User root
+  PasswordAuthentication no
+  StrictHostKeyChecking yes
+  ForwardAgent no
+
+Host immich
+  HostName 10.12.2.16
+  Port 22
+  User root
+  PasswordAuthentication no
+  StrictHostKeyChecking yes
+  ForwardAgent no

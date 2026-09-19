@@ -1,11 +1,27 @@
 {
   lib,
+  bun,
   symlinkJoin,
   writeShellApplication,
   coreutils,
   opencode,
 }:
 let
+  # Bun 1.4.x can break the compiled filesystem dependency cycle on first prompt.
+  # Backport NixOS/nixpkgs#563241 without updating host locks or model policy.
+  # Fixed Nixpkgs already applies this replacement; keep its cached package then.
+  upstreamDisablesSplitting =
+    lib.hasInfix "'splitting: false,'" (opencode.postPatch or "");
+  runtime =
+    if lib.versionAtLeast bun.version "1.4.0" && !upstreamDisablesSplitting then
+      opencode.overrideAttrs (previous: {
+        postPatch = (previous.postPatch or "") + ''
+          bash ${./disable-code-splitting.sh} packages/opencode/script/build.ts
+        '';
+      })
+    else
+      opencode;
+
   configSource = ./config;
   managedEntries = lib.attrNames (builtins.readDir configSource);
   managedManifest = builtins.toFile "dotnix-opencode-managed-entries" (
@@ -101,26 +117,26 @@ let
       release_lock
       trap - EXIT INT TERM HUP
 
-      exec ${opencode}/bin/opencode "$@"
+      exec ${runtime}/bin/opencode "$@"
     '';
   };
 in
 symlinkJoin {
   name = "opencode-upiscium";
 
-  paths = [ opencode ];
+  paths = [ runtime ];
 
   postBuild = ''
     rm -f "$out/bin/opencode"
     ln -s "${launcher}/bin/opencode" "$out/bin/opencode"
   '';
 
-  passthru = (opencode.passthru or { }) // {
+  passthru = (runtime.passthru or { }) // {
     config = configSource;
     inherit managedEntries;
   };
 
-  meta = opencode.meta // {
+  meta = runtime.meta // {
     description = "upiscium's configured OpenCode environment";
     outputsToInstall = [ "out" ];
   };

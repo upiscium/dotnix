@@ -459,17 +459,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1789265396,
-        "narHash": "sha256-rBcXTAu/BF7M+iK+yj33g3wtI0kBTvCQWuA66Vf4hP8=",
+        "lastModified": 1789278606,
+        "narHash": "sha256-0xiga8cixHpVqk1NK4ND1KcYEQX47CTseKgXjJgH5iQ=",
         "owner": "upiscium",
         "repo": "DisCode",
-        "rev": "de2ba1635c52cd251a3755aa02c118a41ec19c71",
+        "rev": "6b936f6c7c6cfbb5995a44cbff9361b9d72e4bc2",
         "type": "github"
       },
       "original": {
         "owner": "upiscium",
-        "ref": "v0.2.0",
         "repo": "DisCode",
+        "rev": "6b936f6c7c6cfbb5995a44cbff9361b9d72e4bc2",
         "type": "github"
       }
     },
