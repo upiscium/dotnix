@@ -34,6 +34,14 @@ Host nas
   User root
   PasswordAuthentication no
 
+Host nextcloud
+  HostName 10.12.2.6
+  Port 22
+  User root
+  PasswordAuthentication no
+  StrictHostKeyChecking yes
+  ForwardAgent no
+
 Host gitea-lxc
   HostName 10.12.2.7
   Port 22
@@ -66,10 +74,8 @@ Host obsidian-snapshot-taker
   User root
   PasswordAuthentication no
 
-Host nextcloud
-  HostName 10.12.2.6
+Host gitea-runner
+  HostName 10.12.2.12
   Port 22
   User root
   PasswordAuthentication no
-  StrictHostKeyChecking yes
-  ForwardAgent no
