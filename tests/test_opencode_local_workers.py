@@ -49,10 +49,10 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
 
         ssh_service = SSH_SERVICE.read_text()
         self.assertIn("Host agent-runtime\n  HostName 10.12.2.9", ssh_service)
-        for obsolete in ("agent-runtime-1", "ollama-agent-1", "ollama-agent-proxy"):
+        for obsolete in ("agent-runtime-1", "ollama-agent-proxy"):
             self.assertNotIn(obsolete, ssh_service)
-        for index, address in enumerate(range(10, 15), start=2):
-            self.assertIn(f"Host ollama-agent-{index}\n  HostName 10.12.2.{address}", ssh_service)
+        self.assertNotRegex(ssh_service, r"(?m)^Host ollama-agent(?:-[0-9]+)?$")
+        self.assertNotRegex(ssh_service, r"(?m)^Host agent-runtime-[0-9]+$")
 
     def test_exact_read_only_permissions_and_hidden_agents(self) -> None:
         for worker in WORKERS:
