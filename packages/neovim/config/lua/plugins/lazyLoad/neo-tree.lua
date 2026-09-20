@@ -48,7 +48,14 @@ return {
 						["<2-LeftMouse>"] = "open",
 						["<cr>"] = "open",
 						["<esc>"] = "cancel", -- close preview or floating neo-tree window
-						["P"] = { "toggle_preview", config = { use_float = true, use_image_nvim = true } },
+						["P"] = {
+							"toggle_preview",
+							config = {
+								use_float = true,
+								use_snacks_image = true,
+								use_image_nvim = false,
+							},
+						},
 						-- Read `# Preview Mode` for more information
 						["l"] = "open",
 						["S"] = "open_split",
