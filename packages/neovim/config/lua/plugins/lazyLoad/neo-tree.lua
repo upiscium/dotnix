@@ -18,6 +18,19 @@ return {
 			-- "3rd/image.nvim",              -- Optional image support in preview window: See `# Preview Mode` for more information
 		},
 		config = function()
+			local function toggle_snacks_preview(state)
+				-- Neo-tree's resolved mapping can retain an empty mapping config even
+				-- when state.window.mappings contains the configured preview options.
+				-- Set the command-local config explicitly so preview behavior stays
+				-- deterministic across existing and newly-created tree buffers.
+				state.config = {
+					use_float = true,
+					use_snacks_image = true,
+					use_image_nvim = false,
+				}
+				require("neo-tree.sources.common.commands").toggle_preview(state)
+			end
+
 			vim.diagnostic.config({
 				signs = {
 					text = {
@@ -32,6 +45,21 @@ return {
 			require("neo-tree").setup({
 				close_if_last_window = true,
 				popup_border_style = "rounded",
+				default_component_configs = {
+					git_status = {
+						symbols = {
+							added = "A",
+							deleted = "D",
+							modified = "M",
+							renamed = "R",
+							untracked = "?",
+							ignored = "I",
+							unstaged = "U",
+							staged = "S",
+							conflict = "!",
+						},
+					},
+				},
 				window = {
 					position = "left",
 					width = 30,
@@ -48,14 +76,7 @@ return {
 						["<2-LeftMouse>"] = "open",
 						["<cr>"] = "open",
 						["<esc>"] = "cancel", -- close preview or floating neo-tree window
-						["P"] = {
-							"toggle_preview",
-							config = {
-								use_float = true,
-								use_snacks_image = true,
-								use_image_nvim = false,
-							},
-						},
+						["P"] = toggle_snacks_preview,
 						-- Read `# Preview Mode` for more information
 						["l"] = "open",
 						["S"] = "open_split",
