@@ -34,9 +34,12 @@ permission:
     "git filter-branch*": deny
     "git reflog expire*": deny
     "git reflog delete*": deny
+    "git push*--mirror*": deny
     "git branch -d*": deny
     "git branch -D*": deny
+    "git branch --delete*": deny
     "git tag -d*": deny
+    "git tag --delete*": deny
     "git stash drop*": deny
     "git stash clear*": deny
     "git worktree remove*": deny
@@ -64,22 +67,69 @@ permission:
     "* git worktree remove*": deny
     "* git worktree prune*": deny
     "* gh pr merge*--delete-branch*": deny
+    "git*reset*": deny
+    "git*clean*": deny
+    "git*push*--force*": deny
+    "git*push*--mirror*": deny
+    "git*push*--delete*": deny
+    "git*branch*--delete*": deny
+    "git*branch* -d*": deny
+    "git*branch* -D*": deny
+    "git*tag*--delete*": deny
+    "git*tag* -d*": deny
+    "git*stash*drop*": deny
+    "git*stash*clear*": deny
+    "git*worktree*remove*": deny
+    "git*worktree*prune*": deny
+    "git*reflog*expire*": deny
+    "git*reflog*delete*": deny
+    "*git*reset*": deny
+    "*git*clean*": deny
+    "*git*push*--force*": deny
+    "*git*push*--mirror*": deny
+    "*git*push*--delete*": deny
+    "*git*branch*--delete*": deny
+    "*git*branch* -d*": deny
+    "*git*branch* -D*": deny
+    "*git*tag*--delete*": deny
+    "*git*tag* -d*": deny
+    "*git*stash*drop*": deny
+    "*git*stash*clear*": deny
+    "*git*worktree*remove*": deny
+    "*git*worktree*prune*": deny
+    "*git*reflog*expire*": deny
+    "*git*reflog*delete*": deny
     "* gh issue delete*": deny
     "* gh repo delete*": deny
     "* gh release delete*": deny
+    "*gh*pr*merge*--delete-branch*": deny
+    "*gh*issue*delete*": deny
+    "*gh*repo*delete*": deny
+    "*gh*release*delete*": deny
     "rm*": deny
     "* rm*": deny
     "* rmdir*": deny
+    "*rm *": deny
+    "*rmdir *": deny
+    "*rm\t*": deny
+    "*rmdir\t*": deny
     "sudo*": deny
     "* sudo*": deny
     "nix store delete*": deny
     "nix store gc*": deny
     "* nix store delete*": deny
     "* nix store gc*": deny
+    "nix*store*delete*": deny
+    "nix*store*gc*": deny
+    "*nix*store*delete*": deny
+    "*nix*store*gc*": deny
     "* env *": deny
     "* bash -c*": deny
     "* sh -c*": deny
     "* zsh -c*": deny
+    "*bash* -c*": deny
+    "*sh* -c*": deny
+    "*zsh* -c*": deny
     "* eval*": deny
     "* exec*": deny
     "*;*": deny
@@ -101,13 +151,31 @@ permission:
     "eval*": deny
     "exec*": deny
     "git diff*--output*": deny
+    "git*diff*--output*": deny
+    "git*diff* -o*": deny
+    "git*diff*-o*": deny
     "git diff-tree*--output*": deny
     "git diff-index*--output*": deny
     "git log*--output*": deny
+    "git*log*--output*": deny
+    "git*log* -o*": deny
+    "git*log*-o*": deny
     "git show*--output*": deny
+    "git*show*--output*": deny
+    "git*show* -o*": deny
+    "git*show*-o*": deny
     "git stash list*--output*": deny
+    "git*stash list*--output*": deny
+    "git*stash list* -o*": deny
+    "git*stash list*-o*": deny
     "git stash show*--output*": deny
+    "git*stash show*--output*": deny
+    "git*stash show* -o*": deny
+    "git*stash show*-o*": deny
     "git reflog show*--output*": deny
+    "git*reflog show*--output*": deny
+    "git*reflog show* -o*": deny
+    "git*reflog show*-o*": deny
 ---
 Start the final response with exactly one of: status: COMPLETED, status: BLOCKED, status: NEEDS_APPROVAL, status: NEEDS_DECISION.
 
