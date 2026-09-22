@@ -20,6 +20,23 @@ permission:
   lsp: allow
   bash:
     "*": ask
+    "pytest*": allow
+    "python -m pytest*": allow
+    "python3 -m pytest*": allow
+    "python -m unittest*": allow
+    "python3 -m unittest*": allow
+    "ruff*": allow
+    "python -m ruff*": allow
+    "python3 -m ruff*": allow
+    "mypy*": allow
+    "python -m mypy*": allow
+    "python3 -m mypy*": allow
+    "npm ci*": allow
+    "npm test*": allow
+    "npm run test*": allow
+    "npm run lint*": allow
+    "npm run typecheck*": allow
+    "npm run check*": allow
     "git commit*": deny
     "git add*": deny
     "git push*": deny
