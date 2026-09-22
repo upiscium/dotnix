@@ -174,8 +174,7 @@
       "npm run test*": "allow",
       "npm run lint*": "allow",
       "npm run typecheck*": "allow",
-      "npm run check*": "allow",
-      "git push*": "ask",
+      "npm run check*": "allow",      "git push*": "ask",
       "git merge*": "ask",
       "git push * main*": "deny",
       "git push * master*": "deny",
@@ -237,18 +236,6 @@
       "rm * ..": "deny",
       "rmdir .": "deny",
       "rmdir ..": "deny",
-      "rm *;*": "deny",
-      "rmdir *;*": "deny",
-      "rm *&*": "deny",
-      "rmdir *&*": "deny",
-      "rm *|*": "deny",
-      "rmdir *|*": "deny",
-      "rm *>*": "deny",
-      "rmdir *>*": "deny",
-      "rm *<*": "deny",
-      "rmdir *<*": "deny",
-      "rm *$(*": "deny",
-      "rmdir *$(*": "deny",
       "sed -i*": "ask",
       "echo >*": "deny",
       "echo * >*": "deny",
@@ -271,7 +258,15 @@
       "gh repo delete*": "deny",
       "gh release delete*": "deny",
       "sudo*": "deny",
-      "nix store delete*": "deny"
+      "nix store delete*": "deny",
+      "*;*": "deny",
+      "*&*": "deny",
+      "*|*": "deny",
+      "*>*": "deny",
+      "*<*": "deny",
+      "*$(*": "deny",
+      "*`*": "deny",
+      "*\n*": "deny"
     }
   },
   "provider": {
@@ -305,10 +300,7 @@
       "models": {
         "qwen3.6-35b-a3b-nvfp4": {
           "name": "qwen3.6-35b-a3b-nvfp4",
-          "limit": {
-            "context": 32768,
-            "output": 4096
-          },
+          "limit": { "context": 32768, "output": 4096 },
           "tool_call": true
         }
       }
@@ -322,10 +314,7 @@
       "models": {
         "gemma4-12b-it-q4km-3060": {
           "name": "gemma4-12b-it-q4km-3060",
-          "limit": {
-            "context": 32768,
-            "output": 4096
-          },
+          "limit": { "context": 32768, "output": 4096 },
           "tool_call": true
         }
       }
@@ -339,10 +328,7 @@
       "models": {
         "gemma4-12b-it-q4km-1080ti": {
           "name": "gemma4-12b-it-q4km-1080ti",
-          "limit": {
-            "context": 32768,
-            "output": 4096
-          },
+          "limit": { "context": 32768, "output": 4096 },
           "tool_call": true
         }
       }
