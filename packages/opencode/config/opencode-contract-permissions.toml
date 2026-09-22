@@ -68,6 +68,276 @@ signals = ["NEEDS_APPROVAL", "NEEDS_DECISION"]
 [[probes]]
 surface = "build"
 tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "git reset --hard HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "git push --force origin main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "sudo rm -rf /tmp/dotnix-52"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
 input = "rm generated.tmp"
 classes = ["local-filesystem-delete"]
 
@@ -86,12 +356,6 @@ classes = ["local-filesystem-delete"]
 [[probes]]
 surface = "build"
 tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
 input = "rmdir empty-generated-dir"
 classes = ["local-filesystem-delete"]
 
@@ -100,1707 +364,3 @@ surface = "build"
 tool = "bash"
 input = "rm -rf .build/default"
 classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git branch -D issue-52-test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git tag -d issue-52-test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git stash drop stash@{0}"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git stash clear"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git worktree remove .worktrees/test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git worktree prune"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git update-ref -d refs/heads/main"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git remote set-head origin -d"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git remote set-head origin --delete"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git remote prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git remote update --prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git remote update -p origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git remote remove origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git remote rm origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fetch --prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fetch -p origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git prune --expire now"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git gc --prune=now"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git gc"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git gc --auto"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git maintenance run --task=gc"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git notes remove HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git notes prune"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = 'git remote "$MODE" origin'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = 'git maintenance run --task="$TASK"'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = 'git notes "$MODE" HEAD'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = 'git fetch "$PRUNE" origin'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = 'git fetch origin "$REF"'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fetch -qpf origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git --git-dir=.git remote prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git --work-tree=. fetch --prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git --git-dir .git notes remove HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git --work-tree . gc"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tremote remove origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tnotes remove HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tfetch -p origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tfetch \"$PRUNE\" origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tremote update --prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tremote set-head origin -d"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tmaintenance run --task=gc"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tfetch -qpf origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fetch -P origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fetch -qp origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fetch -fp origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tremote \"$MODE\" origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fetch -vp origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fetch -np origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git symbolic-ref --delete refs/remotes/origin/HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git replace -d deadbeef"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git branch -vv -f feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git tag -f release HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git tag --force release HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fsck \"--lost-found\""
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fsck \"$FSCK_MODE\""
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git checkout -B feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git branch \"$MODE\" feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git checkout \"$MODE\" feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git switch \"$MODE\" feature"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git tag \"$MODE\" release HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git switch -C feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git fsck --lost-found"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git branch -f feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git branch --verbose --force feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git branch -M old new"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git branch -m old new"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git branch -c old new"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git\tbranch\t-D issue-52-test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git${IFS}branch${IFS}-D issue-52-test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git push origin +feature:feature"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git push origin \"$REF\""
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = 'git push origin \:issue-52-test'
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git send-pack --force origin refs/heads/main:refs/heads/main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "/usr/bin/git push origin :issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "/usr/bin/git\tpush\t:issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "git${IFS}push${IFS}:issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "gh pr merge 52 --delete-branch"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "doas id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "pkexec id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "su -c id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "runuser -u root id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "su --command=id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "build"
-tool = "bash"
-input = "nix-collect-garbage -d"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "rm generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "rm -f generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "rm -r build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "rmdir empty-generated-dir"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "rm -rf .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "architect"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "rm generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "rm -f generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "rm -r build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "rmdir empty-generated-dir"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "rm -rf .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "general"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "rm generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "rm -f generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "rm -r build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "rmdir empty-generated-dir"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "rm -rf .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "explore"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "rm generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "rm -f generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "rm -r build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "rmdir empty-generated-dir"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "rm -rf .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git branch -D issue-52-test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git tag -d issue-52-test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git stash drop stash@{0}"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git stash clear"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git worktree remove .worktrees/test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git worktree prune"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git update-ref -d refs/heads/main"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git remote set-head origin -d"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git remote set-head origin --delete"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git remote prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git remote update --prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git remote update -p origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git remote remove origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git remote rm origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fetch --prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fetch -p origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git prune --expire now"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git gc --prune=now"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git gc"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git gc --auto"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git maintenance run --task=gc"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git notes remove HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git notes prune"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = 'git remote "$MODE" origin'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = 'git maintenance run --task="$TASK"'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = 'git notes "$MODE" HEAD'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = 'git fetch "$PRUNE" origin'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = 'git fetch origin "$REF"'
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fetch -qpf origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git --git-dir=.git remote prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git --work-tree=. fetch --prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git --git-dir .git notes remove HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git --work-tree . gc"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tremote remove origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tnotes remove HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tfetch -p origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tfetch \"$PRUNE\" origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tremote update --prune origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tremote set-head origin -d"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tmaintenance run --task=gc"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tfetch -qpf origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fetch -P origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fetch -qp origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fetch -fp origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tremote \"$MODE\" origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fetch -vp origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fetch -np origin"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git symbolic-ref --delete refs/remotes/origin/HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git replace -d deadbeef"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git branch -vv -f feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git tag -f release HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git tag --force release HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fsck \"--lost-found\""
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fsck \"$FSCK_MODE\""
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git checkout -B feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git branch \"$MODE\" feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git checkout \"$MODE\" feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git switch \"$MODE\" feature"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git tag \"$MODE\" release HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git switch -C feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git fsck --lost-found"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git branch -f feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git branch --verbose --force feature HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git branch -M old new"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git branch -m old new"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git branch -c old new"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git\tbranch\t-D issue-52-test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git${IFS}branch${IFS}-D issue-52-test"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git push origin +feature:feature"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git push origin \"$REF\""
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = 'git push origin \:issue-52-test'
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git send-pack --force origin refs/heads/main:refs/heads/main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "/usr/bin/git push origin :issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "/usr/bin/git\tpush\t:issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "git${IFS}push${IFS}:issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "gh pr merge 52 --delete-branch"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "doas id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "pkexec id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "su -c id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "runuser -u root id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "su --command=id"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "verifier"
-tool = "bash"
-input = "nix-collect-garbage -d"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "rm generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "rm -f generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "rm -r build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "rmdir empty-generated-dir"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "rm -rf .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "reviewer"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "rm generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "rm -f generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "rm -r build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "rmdir empty-generated-dir"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "rm -rf .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "investigator"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "rm generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "rm -f generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "rm -r build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "rmdir empty-generated-dir"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "rm -rf .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "security-reviewer"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "rm generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "rm -f generated.tmp"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "rm -r build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "rm -rf build/cache"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "rmdir empty-generated-dir"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "rm -rf .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "rm -r .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "rmdir .build/default"
-classes = ["local-filesystem-delete"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "git reset --hard HEAD"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "git clean -fd"
-classes = ["repository-history-destruction"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "git push --force origin main"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "git push origin --delete issue-52-test"
-classes = ["remote-destructive-operation"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "sudo rm -rf /tmp/dotnix-52"
-classes = ["privilege-escalation"]
-
-[[probes]]
-surface = "scout"
-tool = "bash"
-input = "nix store delete /nix/store/example"
-classes = ["system-store-destruction"]
