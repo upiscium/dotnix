@@ -26,9 +26,11 @@
       "*": "ask",
       "git status*": "allow",
       "git -C *": "deny",
+      "git -C * status*": "allow",
       "git --no-pager *": "deny",
       "git --no-pager status*": "allow",
       "git -c *": "deny",
+      "git -c * status*": "allow",
       "git diff*": "allow",
       "git diff*--output*": "deny",
       "git log*": "allow",
@@ -234,6 +236,8 @@
       "gh release delete*": "deny",
       "sudo*": "deny",
       "nix store delete*": "deny",
+      "rm *": "ask",
+      "rmdir *": "ask",
       "*;*": "deny",
       "*&*": "deny",
       "*|*": "deny",
@@ -241,10 +245,7 @@
       "*<*": "deny",
       "*$(*": "deny",
       "*`*": "deny",
-      "*\n*": "deny",
-      "rm -rf .build/default": "ask",
-      "rm -r .build/default": "ask",
-      "rmdir .build/default": "ask"
+      "*\n*": "deny"
     }
   },
   "provider": {

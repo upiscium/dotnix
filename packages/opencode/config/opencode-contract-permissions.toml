@@ -68,6 +68,36 @@ signals = ["NEEDS_APPROVAL", "NEEDS_DECISION"]
 [[probes]]
 surface = "build"
 tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
 input = "rm -rf .build/default"
 classes = ["local-filesystem-delete"]
 
@@ -164,6 +194,36 @@ classes = ["system-store-destruction"]
 [[probes]]
 surface = "architect"
 tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "architect"
+tool = "bash"
 input = "rm -rf .build/default"
 classes = ["local-filesystem-delete"]
 
@@ -218,6 +278,36 @@ classes = ["system-store-destruction"]
 [[probes]]
 surface = "general"
 tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "general"
+tool = "bash"
 input = "rm -rf .build/default"
 classes = ["local-filesystem-delete"]
 
@@ -272,6 +362,36 @@ classes = ["system-store-destruction"]
 [[probes]]
 surface = "explore"
 tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "explore"
+tool = "bash"
 input = "rm -rf .build/default"
 classes = ["local-filesystem-delete"]
 
@@ -322,6 +442,36 @@ surface = "explore"
 tool = "bash"
 input = "nix store delete /nix/store/example"
 classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
 
 [[probes]]
 surface = "verifier"
@@ -422,6 +572,36 @@ classes = ["system-store-destruction"]
 [[probes]]
 surface = "reviewer"
 tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "reviewer"
+tool = "bash"
 input = "rm -rf .build/default"
 classes = ["local-filesystem-delete"]
 
@@ -476,6 +656,36 @@ classes = ["system-store-destruction"]
 [[probes]]
 surface = "investigator"
 tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "investigator"
+tool = "bash"
 input = "rm -rf .build/default"
 classes = ["local-filesystem-delete"]
 
@@ -530,6 +740,36 @@ classes = ["system-store-destruction"]
 [[probes]]
 surface = "security-reviewer"
 tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "security-reviewer"
+tool = "bash"
 input = "rm -rf .build/default"
 classes = ["local-filesystem-delete"]
 
@@ -580,6 +820,36 @@ surface = "security-reviewer"
 tool = "bash"
 input = "nix store delete /nix/store/example"
 classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "rm generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "rm -f generated.tmp"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "rm -r build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "rm -rf build/cache"
+classes = ["local-filesystem-delete"]
+
+[[probes]]
+surface = "scout"
+tool = "bash"
+input = "rmdir empty-generated-dir"
+classes = ["local-filesystem-delete"]
 
 [[probes]]
 surface = "scout"

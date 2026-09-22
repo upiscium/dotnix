@@ -35,14 +35,17 @@ MANDATORY_CLASSES = {
     "system-store-destruction",
 }
 LOCAL_INPUTS = (
+    "rm generated.tmp",
+    "rm -f generated.tmp",
+    "rm -r build/cache",
+    "rm -rf build/cache",
+    "rmdir empty-generated-dir",
     "rm -rf .build/default",
     "rm -r .build/default",
     "rmdir .build/default",
 )
 BASE_PROBE_CLASS_BY_INPUT = {
-    LOCAL_INPUTS[0]: "local-filesystem-delete",
-    LOCAL_INPUTS[1]: "local-filesystem-delete",
-    LOCAL_INPUTS[2]: "local-filesystem-delete",
+    **{input_value: "local-filesystem-delete" for input_value in LOCAL_INPUTS},
     "git reset --hard HEAD": "repository-history-destruction",
     "git clean -fd": "repository-history-destruction",
     "git push --force origin main": "remote-destructive-operation",
@@ -83,7 +86,8 @@ SHELL_COMPOSITION_INPUTS = (
     "bash -c 'git branch -D issue-52-test'",
     "sh -c 'rm -rf /tmp/dotnix-52'",
     "git -C . branch -D issue-52-test",
-    "git -c core.fsmonitor=./evil status",
+    "git -C . reset --hard HEAD",
+    "git -c core.fsmonitor=./evil clean -fd",
     "git diff --no-index /dev/null ./payload --output=/tmp/dotnix-52-output",
     "git diff-tree HEAD --output=/tmp/dotnix-52-output",
     "git diff-index HEAD --output=/tmp/dotnix-52-output",
@@ -95,16 +99,11 @@ SHELL_COMPOSITION_INPUTS = (
     "eval 'rm -rf /tmp/dotnix-52'",
     "exec git branch -D issue-52-test",
 )
-UNRELATED_LOCAL_DELETE_INPUTS = (
-    "rm -rf /tmp/unrelated",
-    "rm -rf .build/other",
-    "rm -rf .build/default/child",
-    "rm -r .build/default/child",
-    "rmdir .build/other",
-)
 SAFE_READ_INPUTS = (
     "git status --short",
     "git --no-pager status --short",
+    "git -C /tmp/dotnix-repo status --short",
+    "git -c core.fsmonitor=true status --short",
     "command -v git",
 )
 STRUCTURAL_INPUTS = tuple(
@@ -397,34 +396,36 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
         self.assertEqual(contract_node["locked"]["repo"], "OpencodeContract")
         self.assertEqual(contract_node["locked"]["type"], "github")
 
-    def test_build_local_delete_resolves_ask_from_the_effective_stack(self) -> None:
+    def test_build_direct_local_delete_resolves_ask_without_cache_special_case(
+        self,
+    ) -> None:
         surface = self.surfaces()["build"]
         base_permission, agent_permission = self.source_permissions(surface)
         base_bash = base_permission["bash"]
         self.assertEqual(base_bash["rm*"], "deny")
         self.assertEqual(base_bash["rm -rf*"], "deny")
+        self.assertEqual(base_bash["rm *"], "ask")
+        self.assertEqual(base_bash["rmdir *"], "ask")
         self.assertNotIn("bash", agent_permission)
 
         for probe in self.probes()["build"]:
             if probe["input"] in LOCAL_INPUTS:
                 with self.subTest(input=probe["input"]):
-                    self.assertEqual(
-                        _effective_action(
-                            base_permission,
-                            agent_permission,
-                            probe["tool"],
-                            probe["input"],
-                        ),
-                        "ask",
+                    action = _effective_action(
+                        base_permission,
+                        agent_permission,
+                        probe["tool"],
+                        probe["input"],
                     )
+                    self.assertEqual(action, "ask")
+                    self.assertNotEqual(action, "allow")
 
-        for input_value in UNRELATED_LOCAL_DELETE_INPUTS:
-            with self.subTest(input=input_value):
-                self.assertEqual(
-                    _effective_action(
-                        base_permission, agent_permission, "bash", input_value
-                    ),
-                    "deny",
+        permission_keys = list(base_bash)
+        for ask_pattern in ("rm *", "rmdir *"):
+            with self.subTest(pattern=ask_pattern):
+                self.assertLess(
+                    permission_keys.index(ask_pattern),
+                    permission_keys.index("*;*"),
                 )
 
     def test_safe_read_allowlist_remains_explicit(self) -> None:
@@ -437,6 +438,29 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
                         base_permission, agent_permission, "bash", input_value
                     ),
                     "allow",
+                )
+
+    def test_safe_git_wrappers_remain_read_only_and_destructive_forms_deny(self) -> None:
+        surface = self.surfaces()["build"]
+        base_permission, agent_permission = self.source_permissions(surface)
+        for input_value in SAFE_READ_INPUTS[2:4]:
+            with self.subTest(input=input_value):
+                self.assertEqual(
+                    _effective_action(
+                        base_permission, agent_permission, "bash", input_value
+                    ),
+                    "allow",
+                )
+        for input_value in (
+            "git -C . reset --hard HEAD",
+            "git -c core.fsmonitor=./evil clean -fd",
+        ):
+            with self.subTest(input=input_value):
+                self.assertEqual(
+                    _effective_action(
+                        base_permission, agent_permission, "bash", input_value
+                    ),
+                    "deny",
                 )
 
     def test_all_leaf_probes_resolve_deny(self) -> None:
