@@ -80,6 +80,28 @@ NORMAL_SCRIPT_EXECUTION = (
     "bash scripts/check.sh",
     "node scripts/check.js",
 )
+ASK_MUTATIONS = (
+    "cp source.txt copy.txt",
+    "mv old.txt new.txt",
+    "mkdir generated",
+    "touch generated.flag",
+    "sed -i 's/old/new/' file.txt",
+)
+VALIDATION_ALLOW = (
+    "pytest -q",
+    "python -m pytest -q",
+    "python3 -m unittest discover -s tests",
+    "ruff check .",
+    "python -m ruff check .",
+    "mypy src",
+    "python3 -m mypy src",
+    "npm ci",
+    "npm test",
+    "npm run test",
+    "npm run lint",
+    "npm run typecheck",
+    "npm run check",
+)
 
 
 def _frontmatter_bash_permission(path: Path) -> Any:
@@ -286,6 +308,17 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
         for command in NORMAL_SCRIPT_EXECUTION:
             with self.subTest(command=command):
                 self.assertEqual(self.action("build", command), "ask")
+
+    def test_common_local_mutations_are_ask(self) -> None:
+        for command in ASK_MUTATIONS:
+            with self.subTest(command=command):
+                self.assertEqual(self.action("build", command), "ask")
+
+    def test_validation_commands_are_allow_for_build_and_verifier(self) -> None:
+        for surface in ("build", "verifier"):
+            for command in VALIDATION_ALLOW:
+                with self.subTest(surface=surface, command=command):
+                    self.assertEqual(self.action(surface, command), "allow")
 
     def test_leaf_prompts_keep_noninteractive_escalation_contract(self) -> None:
         for leaf in LEAVES:
