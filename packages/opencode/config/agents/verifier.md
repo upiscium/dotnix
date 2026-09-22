@@ -33,6 +33,7 @@ permission:
     "git rebase*": deny
     "git filter-branch*": deny
     "git reflog expire*": deny
+    "git reflog delete*": deny
     "git branch -d*": deny
     "git branch -D*": deny
     "git tag -d*": deny
@@ -41,9 +42,46 @@ permission:
     "git worktree remove*": deny
     "git worktree prune*": deny
     "gh pr merge*--delete-branch*": deny
+    "* git commit*": deny
+    "* git add*": deny
+    "* git push*": deny
+    "* git pull*": deny
+    "* git fetch*": deny
+    "* git merge*": deny
+    "* git reset*": deny
+    "* git clean*": deny
+    "* git checkout*": deny
+    "* git switch*": deny
+    "* git rebase*": deny
+    "* git filter-branch*": deny
+    "* git reflog expire*": deny
+    "* git reflog delete*": deny
+    "* git branch -d*": deny
+    "* git branch -D*": deny
+    "* git tag -d*": deny
+    "* git stash drop*": deny
+    "* git stash clear*": deny
+    "* git worktree remove*": deny
+    "* git worktree prune*": deny
+    "* gh pr merge*--delete-branch*": deny
+    "* gh issue delete*": deny
+    "* gh repo delete*": deny
+    "* gh release delete*": deny
     "rm*": deny
+    "* rm*": deny
+    "* rmdir*": deny
     "sudo*": deny
+    "* sudo*": deny
     "nix store delete*": deny
+    "nix store gc*": deny
+    "* nix store delete*": deny
+    "* nix store gc*": deny
+    "* env *": deny
+    "* bash -c*": deny
+    "* sh -c*": deny
+    "* zsh -c*": deny
+    "* eval*": deny
+    "* exec*": deny
     "*;*": deny
     "*&*": deny
     "*|*": deny

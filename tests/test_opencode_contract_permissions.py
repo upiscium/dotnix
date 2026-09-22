@@ -88,6 +88,15 @@ SHELL_COMPOSITION_INPUTS = (
     "git -C . branch -D issue-52-test",
     "git -C . reset --hard HEAD",
     "git -c core.fsmonitor=./evil clean -fd",
+    "GIT_OPTIONAL_LOCKS=0 git reset --hard HEAD",
+    "GIT_OPTIONAL_LOCKS=0 git clean -fd",
+    "GIT_OPTIONAL_LOCKS=0 git push --mirror origin",
+    "GIT_OPTIONAL_LOCKS=0 git reflog delete refs/heads/main",
+    "GIT_OPTIONAL_LOCKS=0 git branch -D issue-52-test",
+    "FOO=bar gh issue delete 52",
+    "NIX_CONFIG=foo nix store gc",
+    "FOO=bar rm -rf /tmp/dotnix-52",
+    "FOO=bar bash -c 'rm -rf /tmp/dotnix-52'",
     "git diff --no-index /dev/null ./payload --output=/tmp/dotnix-52-output",
     "git diff-tree HEAD --output=/tmp/dotnix-52-output",
     "git diff-index HEAD --output=/tmp/dotnix-52-output",
@@ -422,11 +431,21 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
 
         permission_keys = list(base_bash)
         for ask_pattern in ("rm *", "rmdir *"):
-            with self.subTest(pattern=ask_pattern):
-                self.assertLess(
-                    permission_keys.index(ask_pattern),
-                    permission_keys.index("*;*"),
-                )
+            for deny_pattern in (
+                "*;*",
+                "*&*",
+                "*|*",
+                "*>*",
+                "*<*",
+                "*$(*",
+                "*`*",
+                "*\n*",
+            ):
+                with self.subTest(pattern=ask_pattern, deny=deny_pattern):
+                    self.assertLess(
+                        permission_keys.index(ask_pattern),
+                        permission_keys.index(deny_pattern),
+                    )
 
     def test_safe_read_allowlist_remains_explicit(self) -> None:
         surface = self.surfaces()["build"]
@@ -454,6 +473,7 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
         for input_value in (
             "git -C . reset --hard HEAD",
             "git -c core.fsmonitor=./evil clean -fd",
+            "git -c core.fsmonitor=./evil status --short",
         ):
             with self.subTest(input=input_value):
                 self.assertEqual(
