@@ -59,6 +59,19 @@ class OpenCodeBuildPermissionSemanticsTest(unittest.TestCase):
             with self.subTest(field=field):
                 self.assertIn(f"`{field}`", self.prompt)
 
+    def test_ask_requires_canonical_containment_and_mount_validation(self) -> None:
+        for requirement in (
+            "canonical path resolution",
+            "strict containment",
+            "same filesystem",
+            "symlink",
+            "mount-point",
+            "unresolved shell-expansion",
+            "return `BLOCKED` instead of asking",
+        ):
+            with self.subTest(requirement=requirement):
+                self.assertIn(requirement, self.prompt)
+
 
 if __name__ == "__main__":
     unittest.main()

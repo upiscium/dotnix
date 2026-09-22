@@ -170,6 +170,372 @@ classes = ["repository-history-destruction"]
 [[probes]]
 surface = "build"
 tool = "bash"
+input = "git remote set-head origin -d"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git remote set-head origin --delete"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git remote prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git remote update --prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git remote update -p origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git remote remove origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git remote rm origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fetch --prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fetch -p origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git prune --expire now"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git gc --prune=now"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git gc"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git gc --auto"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git maintenance run --task=gc"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git notes remove HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git notes prune"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = 'git remote "$MODE" origin'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = 'git maintenance run --task="$TASK"'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = 'git notes "$MODE" HEAD'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = 'git fetch "$PRUNE" origin'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = 'git fetch origin "$REF"'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fetch -qpf origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git --git-dir=.git remote prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git --work-tree=. fetch --prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git --git-dir .git notes remove HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git --work-tree . gc"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tremote remove origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tnotes remove HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tfetch -p origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tfetch \"$PRUNE\" origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tremote update --prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tremote set-head origin -d"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tmaintenance run --task=gc"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tfetch -qpf origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fetch -P origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fetch -qp origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fetch -fp origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tremote \"$MODE\" origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fetch -vp origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fetch -np origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git symbolic-ref --delete refs/remotes/origin/HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git replace -d deadbeef"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git branch -vv -f feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git tag -f release HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git tag --force release HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fsck \"--lost-found\""
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fsck \"$FSCK_MODE\""
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git checkout -B feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git branch \"$MODE\" feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git checkout \"$MODE\" feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git switch \"$MODE\" feature"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git tag \"$MODE\" release HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git switch -C feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git fsck --lost-found"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git branch -f feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git branch --verbose --force feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git branch -M old new"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git branch -m old new"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git branch -c old new"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git\tbranch\t-D issue-52-test"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git${IFS}branch${IFS}-D issue-52-test"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
 input = "git push --force origin main"
 classes = ["remote-destructive-operation"]
 
@@ -182,8 +548,80 @@ classes = ["remote-destructive-operation"]
 [[probes]]
 surface = "build"
 tool = "bash"
+input = "git push origin +feature:feature"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git push origin \"$REF\""
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = 'git push origin \:issue-52-test'
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git send-pack --force origin refs/heads/main:refs/heads/main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "/usr/bin/git push origin :issue-52-test"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "/usr/bin/git\tpush\t:issue-52-test"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "git${IFS}push${IFS}:issue-52-test"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
 input = "gh pr merge 52 --delete-branch"
 classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "doas id"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "pkexec id"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "su -c id"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "runuser -u root id"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "su --command=id"
+classes = ["privilege-escalation"]
 
 [[probes]]
 surface = "build"
@@ -560,6 +998,372 @@ classes = ["repository-history-destruction"]
 [[probes]]
 surface = "verifier"
 tool = "bash"
+input = "git remote set-head origin -d"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git remote set-head origin --delete"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git remote prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git remote update --prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git remote update -p origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git remote remove origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git remote rm origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fetch --prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fetch -p origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git prune --expire now"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git gc --prune=now"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git gc"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git gc --auto"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git maintenance run --task=gc"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git notes remove HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git notes prune"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = 'git remote "$MODE" origin'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = 'git maintenance run --task="$TASK"'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = 'git notes "$MODE" HEAD'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = 'git fetch "$PRUNE" origin'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = 'git fetch origin "$REF"'
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fetch -qpf origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git --git-dir=.git remote prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git --work-tree=. fetch --prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git --git-dir .git notes remove HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git --work-tree . gc"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tremote remove origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tnotes remove HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tfetch -p origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tfetch \"$PRUNE\" origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tremote update --prune origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tremote set-head origin -d"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tmaintenance run --task=gc"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tfetch -qpf origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fetch -P origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fetch -qp origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fetch -fp origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tremote \"$MODE\" origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fetch -vp origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fetch -np origin"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git symbolic-ref --delete refs/remotes/origin/HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git replace -d deadbeef"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git branch -vv -f feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git tag -f release HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git tag --force release HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fsck \"--lost-found\""
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fsck \"$FSCK_MODE\""
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git checkout -B feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git branch \"$MODE\" feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git checkout \"$MODE\" feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git switch \"$MODE\" feature"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git tag \"$MODE\" release HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git switch -C feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git fsck --lost-found"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git branch -f feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git branch --verbose --force feature HEAD"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git branch -M old new"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git branch -m old new"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git branch -c old new"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git\tbranch\t-D issue-52-test"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git${IFS}branch${IFS}-D issue-52-test"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
 input = "git push --force origin main"
 classes = ["remote-destructive-operation"]
 
@@ -572,8 +1376,80 @@ classes = ["remote-destructive-operation"]
 [[probes]]
 surface = "verifier"
 tool = "bash"
+input = "git push origin +feature:feature"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git push origin \"$REF\""
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = 'git push origin \:issue-52-test'
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git send-pack --force origin refs/heads/main:refs/heads/main"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "/usr/bin/git push origin :issue-52-test"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "/usr/bin/git\tpush\t:issue-52-test"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "git${IFS}push${IFS}:issue-52-test"
+classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
 input = "gh pr merge 52 --delete-branch"
 classes = ["remote-destructive-operation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "doas id"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "pkexec id"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "su -c id"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "runuser -u root id"
+classes = ["privilege-escalation"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "su --command=id"
+classes = ["privilege-escalation"]
 
 [[probes]]
 surface = "verifier"

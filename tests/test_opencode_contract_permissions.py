@@ -44,6 +44,16 @@ LOCAL_INPUTS = (
     "rm -r .build/default",
     "rmdir .build/default",
 )
+OUT_OF_AUTHORITY_LOCAL_INPUTS = (
+    "rm -rf /",
+    "rm -rf /tmp/dotnix-52",
+    "rmdir /tmp/dotnix-52",
+    "rm -rf ../outside",
+    'rm -rf "$HOME"/outside',
+    "rm -rf ~",
+    "rm -rf .",
+    "rm -rf ..",
+)
 BASE_PROBE_CLASS_BY_INPUT = {
     **{input_value: "local-filesystem-delete" for input_value in LOCAL_INPUTS},
     "git reset --hard HEAD": "repository-history-destruction",
@@ -62,7 +72,80 @@ EXTRA_PROBE_CLASS_BY_SURFACE = {
         "git worktree remove .worktrees/test": "repository-history-destruction",
         "git worktree prune": "repository-history-destruction",
         "git update-ref -d refs/heads/main": "repository-history-destruction",
+        "git remote set-head origin -d": "repository-history-destruction",
+        "git remote set-head origin --delete": "repository-history-destruction",
+        "git remote prune origin": "repository-history-destruction",
+        "git remote update --prune origin": "repository-history-destruction",
+        "git remote update -p origin": "repository-history-destruction",
+        "git remote remove origin": "repository-history-destruction",
+        "git remote rm origin": "repository-history-destruction",
+        "git fetch --prune origin": "repository-history-destruction",
+        "git fetch -p origin": "repository-history-destruction",
+        "git prune --expire now": "repository-history-destruction",
+        "git gc --prune=now": "repository-history-destruction",
+        "git gc": "repository-history-destruction",
+        "git gc --auto": "repository-history-destruction",
+        "git maintenance run --task=gc": "repository-history-destruction",
+        "git notes remove HEAD": "repository-history-destruction",
+        "git notes prune": "repository-history-destruction",
+        'git remote "$MODE" origin': "repository-history-destruction",
+        'git maintenance run --task="$TASK"': "repository-history-destruction",
+        'git notes "$MODE" HEAD': "repository-history-destruction",
+        'git fetch "$PRUNE" origin': "repository-history-destruction",
+        'git fetch origin "$REF"': "repository-history-destruction",
+        "git fetch -qpf origin": "repository-history-destruction",
+        "git --git-dir=.git remote prune origin": "repository-history-destruction",
+        "git --work-tree=. fetch --prune origin": "repository-history-destruction",
+        "git --git-dir .git notes remove HEAD": "repository-history-destruction",
+        "git --work-tree . gc": "repository-history-destruction",
+        "git\tremote remove origin": "repository-history-destruction",
+        "git\tnotes remove HEAD": "repository-history-destruction",
+        "git\tfetch -p origin": "repository-history-destruction",
+        'git\tfetch "$PRUNE" origin': "repository-history-destruction",
+        "git\tremote update --prune origin": "repository-history-destruction",
+        "git\tremote set-head origin -d": "repository-history-destruction",
+        "git\tmaintenance run --task=gc": "repository-history-destruction",
+        "git\tfetch -qpf origin": "repository-history-destruction",
+        "git fetch -P origin": "repository-history-destruction",
+        "git fetch -qp origin": "repository-history-destruction",
+        "git fetch -fp origin": "repository-history-destruction",
+        "git fetch -vp origin": "repository-history-destruction",
+        "git fetch -np origin": "repository-history-destruction",
+        'git\tremote "$MODE" origin': "repository-history-destruction",
+        "git symbolic-ref --delete refs/remotes/origin/HEAD": "repository-history-destruction",
+        "git replace -d deadbeef": "repository-history-destruction",
+        "git branch -vv -f feature HEAD": "repository-history-destruction",
+        "git branch -f feature HEAD": "repository-history-destruction",
+        "git branch --verbose --force feature HEAD": "repository-history-destruction",
+        "git branch -M old new": "repository-history-destruction",
+        "git branch -m old new": "repository-history-destruction",
+        "git branch -c old new": "repository-history-destruction",
+        "git\tbranch\t-D issue-52-test": "repository-history-destruction",
+        "git${IFS}branch${IFS}-D issue-52-test": "repository-history-destruction",
+        "git tag -f release HEAD": "repository-history-destruction",
+        "git tag --force release HEAD": "repository-history-destruction",
+        "git fsck --lost-found": "repository-history-destruction",
+        "git fsck \"--lost-found\"": "repository-history-destruction",
+        "git fsck \"$FSCK_MODE\"": "repository-history-destruction",
+        "git checkout -B feature HEAD": "repository-history-destruction",
+        "git switch -C feature HEAD": "repository-history-destruction",
+        "git branch \"$MODE\" feature HEAD": "repository-history-destruction",
+        "git checkout \"$MODE\" feature HEAD": "repository-history-destruction",
+        "git switch \"$MODE\" feature": "repository-history-destruction",
+        "git tag \"$MODE\" release HEAD": "repository-history-destruction",
         "gh pr merge 52 --delete-branch": "remote-destructive-operation",
+        "git push origin +feature:feature": "remote-destructive-operation",
+        "git push origin \"$REF\"": "remote-destructive-operation",
+        "git push origin \\:issue-52-test": "remote-destructive-operation",
+        "git send-pack --force origin refs/heads/main:refs/heads/main": "remote-destructive-operation",
+        "/usr/bin/git push origin :issue-52-test": "remote-destructive-operation",
+        "/usr/bin/git\tpush\t:issue-52-test": "remote-destructive-operation",
+        "git${IFS}push${IFS}:issue-52-test": "remote-destructive-operation",
+        "doas id": "privilege-escalation",
+        "pkexec id": "privilege-escalation",
+        "su -c id": "privilege-escalation",
+        "runuser -u root id": "privilege-escalation",
+        "su --command=id": "privilege-escalation",
         "nix-collect-garbage -d": "system-store-destruction",
     },
     "verifier": {
@@ -73,7 +156,80 @@ EXTRA_PROBE_CLASS_BY_SURFACE = {
         "git worktree remove .worktrees/test": "repository-history-destruction",
         "git worktree prune": "repository-history-destruction",
         "git update-ref -d refs/heads/main": "repository-history-destruction",
+        "git remote set-head origin -d": "repository-history-destruction",
+        "git remote set-head origin --delete": "repository-history-destruction",
+        "git remote prune origin": "repository-history-destruction",
+        "git remote update --prune origin": "repository-history-destruction",
+        "git remote update -p origin": "repository-history-destruction",
+        "git remote remove origin": "repository-history-destruction",
+        "git remote rm origin": "repository-history-destruction",
+        "git fetch --prune origin": "repository-history-destruction",
+        "git fetch -p origin": "repository-history-destruction",
+        "git prune --expire now": "repository-history-destruction",
+        "git gc --prune=now": "repository-history-destruction",
+        "git gc": "repository-history-destruction",
+        "git gc --auto": "repository-history-destruction",
+        "git maintenance run --task=gc": "repository-history-destruction",
+        "git notes remove HEAD": "repository-history-destruction",
+        "git notes prune": "repository-history-destruction",
+        'git remote "$MODE" origin': "repository-history-destruction",
+        'git maintenance run --task="$TASK"': "repository-history-destruction",
+        'git notes "$MODE" HEAD': "repository-history-destruction",
+        'git fetch "$PRUNE" origin': "repository-history-destruction",
+        'git fetch origin "$REF"': "repository-history-destruction",
+        "git fetch -qpf origin": "repository-history-destruction",
+        "git --git-dir=.git remote prune origin": "repository-history-destruction",
+        "git --work-tree=. fetch --prune origin": "repository-history-destruction",
+        "git --git-dir .git notes remove HEAD": "repository-history-destruction",
+        "git --work-tree . gc": "repository-history-destruction",
+        "git\tremote remove origin": "repository-history-destruction",
+        "git\tnotes remove HEAD": "repository-history-destruction",
+        "git\tfetch -p origin": "repository-history-destruction",
+        'git\tfetch "$PRUNE" origin': "repository-history-destruction",
+        "git\tremote update --prune origin": "repository-history-destruction",
+        "git\tremote set-head origin -d": "repository-history-destruction",
+        "git\tmaintenance run --task=gc": "repository-history-destruction",
+        "git\tfetch -qpf origin": "repository-history-destruction",
+        "git fetch -P origin": "repository-history-destruction",
+        "git fetch -qp origin": "repository-history-destruction",
+        "git fetch -fp origin": "repository-history-destruction",
+        "git fetch -vp origin": "repository-history-destruction",
+        "git fetch -np origin": "repository-history-destruction",
+        'git\tremote "$MODE" origin': "repository-history-destruction",
+        "git symbolic-ref --delete refs/remotes/origin/HEAD": "repository-history-destruction",
+        "git replace -d deadbeef": "repository-history-destruction",
+        "git branch -vv -f feature HEAD": "repository-history-destruction",
+        "git branch -f feature HEAD": "repository-history-destruction",
+        "git branch --verbose --force feature HEAD": "repository-history-destruction",
+        "git branch -M old new": "repository-history-destruction",
+        "git branch -m old new": "repository-history-destruction",
+        "git branch -c old new": "repository-history-destruction",
+        "git\tbranch\t-D issue-52-test": "repository-history-destruction",
+        "git${IFS}branch${IFS}-D issue-52-test": "repository-history-destruction",
+        "git tag -f release HEAD": "repository-history-destruction",
+        "git tag --force release HEAD": "repository-history-destruction",
+        "git fsck --lost-found": "repository-history-destruction",
+        "git fsck \"--lost-found\"": "repository-history-destruction",
+        "git fsck \"$FSCK_MODE\"": "repository-history-destruction",
+        "git checkout -B feature HEAD": "repository-history-destruction",
+        "git switch -C feature HEAD": "repository-history-destruction",
+        "git branch \"$MODE\" feature HEAD": "repository-history-destruction",
+        "git checkout \"$MODE\" feature HEAD": "repository-history-destruction",
+        "git switch \"$MODE\" feature": "repository-history-destruction",
+        "git tag \"$MODE\" release HEAD": "repository-history-destruction",
         "gh pr merge 52 --delete-branch": "remote-destructive-operation",
+        "git push origin +feature:feature": "remote-destructive-operation",
+        "git push origin \"$REF\"": "remote-destructive-operation",
+        "git push origin \\:issue-52-test": "remote-destructive-operation",
+        "git send-pack --force origin refs/heads/main:refs/heads/main": "remote-destructive-operation",
+        "/usr/bin/git push origin :issue-52-test": "remote-destructive-operation",
+        "/usr/bin/git\tpush\t:issue-52-test": "remote-destructive-operation",
+        "git${IFS}push${IFS}:issue-52-test": "remote-destructive-operation",
+        "doas id": "privilege-escalation",
+        "pkexec id": "privilege-escalation",
+        "su -c id": "privilege-escalation",
+        "runuser -u root id": "privilege-escalation",
+        "su --command=id": "privilege-escalation",
         "nix-collect-garbage -d": "system-store-destruction",
     },
 }
@@ -97,6 +253,41 @@ SHELL_COMPOSITION_INPUTS = (
     "/usr/bin/git\tbranch\t-D issue-52-test",
     "/usr/bin/sudo id",
     "git update-ref -d refs/heads/main",
+    "git symbolic-ref --delete refs/remotes/origin/HEAD",
+    "git replace -d deadbeef",
+    "git branch -vv -f feature HEAD",
+    "git branch -vv -M old new",
+    "git\tbranch\t-vv\t-f feature HEAD",
+    "git branch -f feature HEAD",
+    "git branch --verbose --force feature HEAD",
+    "git branch -M old new",
+    "git branch -m old new",
+    "git branch -c old new",
+    "git branch \"-f\" feature HEAD",
+    "git branch '-M' old new",
+    "git${IFS}branch${IFS}-D issue-52-test",
+    "git tag -f release HEAD",
+    "git tag --force release HEAD",
+    "git tag \"-f\" release HEAD",
+    "git fsck --lost-found",
+    "git fsck \"--lost-found\"",
+    "git fsck \\--lost-found",
+    "git fsck \"$FSCK_MODE\"",
+    "git checkout -B feature HEAD",
+    "git switch -C feature HEAD",
+    "git branch \"$MODE\" feature HEAD",
+    "git checkout \"$MODE\" feature HEAD",
+    "git switch \"$MODE\" feature",
+    "git tag \"$MODE\" release HEAD",
+    "git push origin +feature:feature",
+    "git push origin \":issue-52-test\"",
+    "git push origin ':issue-52-test'",
+    "git push origin \"$REF\"",
+    "git push origin \\:issue-52-test",
+    "git send-pack --force origin refs/heads/main:refs/heads/main",
+    "/usr/bin/git push origin :issue-52-test",
+    "/usr/bin/git\tpush\t:issue-52-test",
+    "git${IFS}push${IFS}:issue-52-test",
     "nix-collect-garbage -d",
     "/bin/rm -rf /tmp/dotnix-52",
     "git --work-tree=. reset --hard HEAD",
@@ -104,10 +295,65 @@ SHELL_COMPOSITION_INPUTS = (
     "git --work-tree=. branch --delete issue-52-test",
     "git --work-tree=. tag --delete issue-52-test",
     "git --work-tree=. diff -o /tmp/dotnix-52-output",
+    "git remote set-head origin -d",
+    "git remote set-head origin --delete",
+    "git remote prune origin",
+    "git remote update --prune origin",
+    "git remote update -p origin",
+    "git remote remove origin",
+    "git remote rm origin",
+    "git fetch --prune origin",
+    "git fetch -p origin",
+    "/usr/bin/git remote prune origin",
+    "/usr/bin/git remote remove origin",
+    "git\tremote\tprune origin",
+    "git${IFS}remote${IFS}rm origin",
+    "git${IFS}fetch${IFS}--prune origin",
+    "git prune --expire now",
+    "git gc --prune=now",
+    "git gc",
+    "git gc --auto",
+    "git maintenance run --task=gc",
+    "git notes remove HEAD",
+    "git notes prune",
+    "/usr/bin/git prune --expire now",
+    "/usr/bin/git notes prune",
+    "/usr/bin/git gc --auto",
+    "git\tprune\t--expire now",
+    "git${IFS}gc${IFS}--prune=now",
+    "git${IFS}maintenance${IFS}run${IFS}--task=gc",
+    "git${IFS}notes${IFS}remove HEAD",
+    'git remote "$MODE" origin',
+    'git maintenance run --task="$TASK"',
+    'git notes "$MODE" HEAD',
+    'git fetch "$PRUNE" origin',
+    'git fetch origin "$REF"',
+    "git fetch -qpf origin",
+    "git\tremote prune origin",
+    "git remote\tprune origin",
+    "git remote${IFS}prune origin",
+    "git --git-dir=.git remote prune origin",
+    "git --work-tree=. fetch --prune origin",
+    "git --git-dir .git notes remove HEAD",
+    "git --work-tree . gc",
+    "git\tremote remove origin",
+    "git remote\tremove origin",
+    "git\tnotes remove HEAD",
+    "git notes\tprune",
+    "git\tfetch -p origin",
+    'git\tfetch "$PRUNE" origin',
+    "git fetch\t-p origin",
+    "git\tremote update --prune origin",
+    "git\tremote set-head origin -d",
+    "git\tmaintenance run --task=gc",
+    "git\tfetch -qpf origin",
+    "FOO=bar git prune --expire now",
+    "FOO=bar git gc",
     "git\treset --hard HEAD",
     "FOO=bar\tgit\treset --hard HEAD",
     "FOO=bar\trm -rf /tmp/dotnix-52",
     "/usr/bin/rm${IFS}-rf${IFS}/tmp/dotnix-52",
+    "/bin/rm$IFS-rf$IFS/tmp/dotnix-52",
     "FOO=bar\tsudo id",
     "GIT_OPTIONAL_LOCKS=0 git reset --hard HEAD",
     "GIT_OPTIONAL_LOCKS=0 git clean -fd",
@@ -118,6 +364,26 @@ SHELL_COMPOSITION_INPUTS = (
     "NIX_CONFIG=foo nix store gc",
     "FOO=bar rm -rf /tmp/dotnix-52",
     "FOO=bar bash -c 'rm -rf /tmp/dotnix-52'",
+    "rm -rf .git",
+    'rm -rf -- "/tmp/dotnix-52"',
+    "rm -rf -- '/tmp/dotnix-52'",
+    "find . -delete",
+    "find\t.\t-delete",
+    "unlink /tmp/dotnix-52",
+    "shred /tmp/dotnix-52",
+    "truncate -s 0 /tmp/dotnix-52",
+    "dd if=/dev/zero of=/tmp/dotnix-52",
+    "doas id",
+    "pkexec id",
+    "su -c id",
+    "su\t-c id",
+    "su --command=id",
+    "runuser -u root id",
+    "python3 -c '__import__(\"os\").remove(\"/tmp/dotnix-52\")'",
+    "/bin/dd if=/dev/zero of=/dev/sda",
+    "dd${IFS}if=/dev/zero of=/dev/sda",
+    "python3 /tmp/payload.py",
+    "node --eval='require(\"fs\").writeFileSync(\"/tmp/x\",\"x\")'",
     "git diff --no-index /dev/null ./payload --output=/tmp/dotnix-52-output",
     "git diff -o /tmp/dotnix-52-output",
     "git diff-tree HEAD --output=/tmp/dotnix-52-output",
@@ -127,8 +393,21 @@ SHELL_COMPOSITION_INPUTS = (
     "git stash list -p --output=/tmp/dotnix-52-output",
     "git stash show --output=/tmp/dotnix-52-output",
     "git reflog show -p --output=/tmp/dotnix-52-output",
+    "git --work-tree=. log --grep=needle --output=/tmp/out",
+    "git --work-tree . log --grep=needle -o /tmp/out",
     "eval 'rm -rf /tmp/dotnix-52'",
     "exec git branch -D issue-52-test",
+)
+VERIFIER_INHERITED_DENY_INPUTS = (
+    "cp source target",
+    "sed -i 's/old/new/' file",
+    "mkdir generated-dir",
+    "touch generated.tmp",
+    "gh repo create dotnix-test",
+    "git fsck --lost-found",
+    "git fsck \"--lost-found\"",
+    "git fsck \"$FSCK_MODE\"",
+    "gh repo clone owner/repo",
 )
 SAFE_READ_INPUTS = (
     "git status --short",
@@ -139,7 +418,22 @@ SAFE_READ_INPUTS = (
     "git branch --list",
     "git branch -vv",
     "command -v git",
+    "git config --get gc.auto",
+    "git config --get remote.$MODE",
+    "git log --grep='remote prune'",
+    "git --git-dir=.git status --short",
+    "git --git-dir .git config --get gc.auto",
+    "git --work-tree=. log --grep='remote prune'",
+    "git config --get remote.prune",
+    "git show refs/remotes/origin/prune",
+    "git diff remote-prune",
+    "git rev-parse refs/remotes/origin/prune",
+    "git log --grep='--output'",
+    "git --work-tree=. log --grep='-o'",
+    "git log --grep='--output=/tmp'",
+    "git --work-tree=. log --grep='--output'",
 )
+BUILD_ASK_INPUTS = ("git fetch --no-prune origin",)
 STRUCTURAL_INPUTS = tuple(
     input_value
     for input_value in {
@@ -472,6 +766,19 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
                         permission_keys.index(deny_pattern),
                     )
 
+    def test_out_of_authority_local_delete_resolves_deny(self) -> None:
+        for surface_id in SURFACE_IDS:
+            surface = self.surfaces()[surface_id]
+            base_permission, agent_permission = self.source_permissions(surface)
+            for input_value in OUT_OF_AUTHORITY_LOCAL_INPUTS:
+                with self.subTest(surface=surface_id, input=input_value):
+                    self.assertEqual(
+                        _effective_action(
+                            base_permission, agent_permission, "bash", input_value
+                        ),
+                        "deny",
+                    )
+
     def test_safe_read_allowlist_remains_explicit(self) -> None:
         surface = self.surfaces()["build"]
         base_permission, agent_permission = self.source_permissions(surface)
@@ -482,6 +789,26 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
                         base_permission, agent_permission, "bash", input_value
                     ),
                     "allow",
+                )
+
+    def test_git_prune_patterns_preserve_safe_reads_and_non_pruning_fetch(self) -> None:
+        surface = self.surfaces()["build"]
+        base_permission, agent_permission = self.source_permissions(surface)
+        for input_value in SAFE_READ_INPUTS[-2:]:
+            with self.subTest(input=input_value):
+                self.assertEqual(
+                    _effective_action(
+                        base_permission, agent_permission, "bash", input_value
+                    ),
+                    "allow",
+                )
+        for input_value in BUILD_ASK_INPUTS:
+            with self.subTest(input=input_value):
+                self.assertEqual(
+                    _effective_action(
+                        base_permission, agent_permission, "bash", input_value
+                    ),
+                    "ask",
                 )
 
     def test_safe_git_wrappers_remain_read_only_and_destructive_forms_deny(self) -> None:
@@ -599,17 +926,30 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
                         "deny",
                     )
 
-    def test_verifier_later_rm_deny_overrides_bash_wildcard_ask(self) -> None:
+    def test_verifier_preserves_inherited_denies_and_local_delete_deny(self) -> None:
         surface = self.surfaces()["verifier"]
         _, agent_permission = self.source_permissions(surface)
         verifier_bash = agent_permission["bash"]
-        self.assertEqual(verifier_bash["*"], "ask")
+        self.assertNotIn("*", verifier_bash)
         self.assertEqual(verifier_bash["rm*"], "deny")
-        self.assertLess(
-            list(verifier_bash).index("*"), list(verifier_bash).index("rm*")
-        )
 
         base_permission, agent_permission = self.source_permissions(surface)
+        for input_value in VERIFIER_INHERITED_DENY_INPUTS:
+            with self.subTest(input=input_value):
+                self.assertEqual(
+                    _effective_action(
+                        base_permission, agent_permission, "bash", input_value
+                    ),
+                    "deny",
+                )
+        for input_value in (*SAFE_READ_INPUTS[1:4], *SAFE_READ_INPUTS[-3:]):
+            with self.subTest(input=input_value):
+                self.assertEqual(
+                    _effective_action(
+                        base_permission, agent_permission, "bash", input_value
+                    ),
+                    "allow",
+                )
         for input_value in LOCAL_INPUTS:
             with self.subTest(input=input_value):
                 self.assertEqual(

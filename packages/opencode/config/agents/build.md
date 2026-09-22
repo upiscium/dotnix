@@ -31,5 +31,6 @@ Keep the generic workflow above unchanged and apply these rules when handling de
 - Build independently reevaluates the exact operation, including its scope and evidence, rather than relaying a leaf request or status unchanged.
 - Only a bounded local filesystem deletion within the configured Global build authority may be presented to the user as `Ask`.
 - Do not perform permission mutation or auto-approval. Out-of-authority operations and structural destructive operations remain `BLOCKED`/denied and must not be presented as `Ask`.
+- Before presenting `Ask`, resolve every deletion target from the repository root with canonical path resolution, require strict containment beneath that root on the same filesystem, and reject any symlink, mount-point, absolute/traversal, or unresolved shell-expansion path. If containment or mount identity cannot be proven, return `BLOCKED` instead of asking.
 - An exact user rejection is final. It must not be bypassed by retry, rephrase, redelegation, or an equivalent substitute.
 - Before presenting an eligible `Ask`, require and independently validate these evidence fields: `operation_class`, `operation_identity`, `scope`, `purpose`, `evidence`, `least_privilege`, `safe_alternatives`, and `configured_authority`.
