@@ -36,8 +36,7 @@ permission:
     "npm run test*": allow
     "npm run lint*": allow
     "npm run typecheck*": allow
-    "npm run check*": allow
-    "git commit*": deny
+    "npm run check*": allow    "git commit*": deny
     "git add*": deny
     "git push*": deny
     "git pull*": deny
@@ -53,6 +52,14 @@ permission:
     "rm*": deny
     "sudo*": deny
     "nix store delete*": deny
+    "*;*": deny
+    "*&*": deny
+    "*|*": deny
+    "*>*": deny
+    "*<*": deny
+    "*$(*": deny
+    "*`*": deny
+    "*\n*": deny
 ---
 Start the final response with exactly one of: status: COMPLETED, status: BLOCKED, status: NEEDS_APPROVAL, status: NEEDS_DECISION.
 
