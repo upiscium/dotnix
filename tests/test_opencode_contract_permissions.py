@@ -61,7 +61,9 @@ EXTRA_PROBE_CLASS_BY_SURFACE = {
         "git stash clear": "repository-history-destruction",
         "git worktree remove .worktrees/test": "repository-history-destruction",
         "git worktree prune": "repository-history-destruction",
+        "git update-ref -d refs/heads/main": "repository-history-destruction",
         "gh pr merge 52 --delete-branch": "remote-destructive-operation",
+        "nix-collect-garbage -d": "system-store-destruction",
     },
     "verifier": {
         "git branch -D issue-52-test": "repository-history-destruction",
@@ -70,7 +72,9 @@ EXTRA_PROBE_CLASS_BY_SURFACE = {
         "git stash clear": "repository-history-destruction",
         "git worktree remove .worktrees/test": "repository-history-destruction",
         "git worktree prune": "repository-history-destruction",
+        "git update-ref -d refs/heads/main": "repository-history-destruction",
         "gh pr merge 52 --delete-branch": "remote-destructive-operation",
+        "nix-collect-garbage -d": "system-store-destruction",
     },
 }
 SHELL_COMPOSITION_INPUTS = (
@@ -88,6 +92,12 @@ SHELL_COMPOSITION_INPUTS = (
     "git -C . branch -D issue-52-test",
     "git -C . reset --hard HEAD",
     "git -c core.fsmonitor=./evil clean -fd",
+    "/usr/bin/git push -f origin main",
+    "git push -d origin issue-52-test",
+    "/usr/bin/git\tbranch\t-D issue-52-test",
+    "/usr/bin/sudo id",
+    "git update-ref -d refs/heads/main",
+    "nix-collect-garbage -d",
     "/bin/rm -rf /tmp/dotnix-52",
     "git --work-tree=. reset --hard HEAD",
     "git --work-tree=. clean -fd",
@@ -97,6 +107,8 @@ SHELL_COMPOSITION_INPUTS = (
     "git\treset --hard HEAD",
     "FOO=bar\tgit\treset --hard HEAD",
     "FOO=bar\trm -rf /tmp/dotnix-52",
+    "/usr/bin/rm${IFS}-rf${IFS}/tmp/dotnix-52",
+    "FOO=bar\tsudo id",
     "GIT_OPTIONAL_LOCKS=0 git reset --hard HEAD",
     "GIT_OPTIONAL_LOCKS=0 git clean -fd",
     "GIT_OPTIONAL_LOCKS=0 git push --mirror origin",
@@ -123,6 +135,9 @@ SAFE_READ_INPUTS = (
     "git --no-pager status --short",
     "git -C /tmp/dotnix-repo status --short",
     "git -c core.fsmonitor=true status --short",
+    "git branch --show-current",
+    "git branch --list",
+    "git branch -vv",
     "command -v git",
 )
 STRUCTURAL_INPUTS = tuple(

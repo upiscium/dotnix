@@ -34,7 +34,12 @@ permission:
     "git filter-branch*": deny
     "git reflog expire*": deny
     "git reflog delete*": deny
+    "git update-ref*": deny
     "git push*--mirror*": deny
+    "git push* -f*": deny
+    "git push*-f*": deny
+    "git push* -d*": deny
+    "git push*-d*": deny
     "git branch -d*": deny
     "git branch -D*": deny
     "git branch --delete*": deny
@@ -99,6 +104,21 @@ permission:
     "*git*worktree*prune*": deny
     "*git*reflog*expire*": deny
     "*git*reflog*delete*": deny
+    "*git*update-ref*": deny
+    "*git*push* -f*": deny
+    "*git*push*-f*": deny
+    "*git*push* -d*": deny
+    "*git*push*-d*": deny
+    "*/git*push* -f*": deny
+    "*/git*push*-f*": deny
+    "*/git*push* -d*": deny
+    "*/git*push*-d*": deny
+    "*/git*branch*-d*": deny
+    "*/git*branch*-D*": deny
+    "*/git*branch*--delete*": deny
+    "*/git*tag*-d*": deny
+    "*/git*tag*--delete*": deny
+    "*/git*update-ref*": deny
     "* gh issue delete*": deny
     "* gh repo delete*": deny
     "* gh release delete*": deny
@@ -113,12 +133,17 @@ permission:
     "*rmdir *": deny
     "*rm\t*": deny
     "*rmdir\t*": deny
+    "*rm*${IFS}*": deny
+    "*rmdir*${IFS}*": deny
     "sudo*": deny
     "* sudo*": deny
+    "*sudo*": deny
     "nix store delete*": deny
     "nix store gc*": deny
     "* nix store delete*": deny
     "* nix store gc*": deny
+    "nix-collect-garbage*": deny
+    "*nix-collect-garbage*": deny
     "nix*store*delete*": deny
     "nix*store*gc*": deny
     "*nix*store*delete*": deny

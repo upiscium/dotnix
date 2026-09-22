@@ -164,6 +164,12 @@ classes = ["repository-history-destruction"]
 [[probes]]
 surface = "build"
 tool = "bash"
+input = "git update-ref -d refs/heads/main"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
 input = "git push --force origin main"
 classes = ["remote-destructive-operation"]
 
@@ -189,6 +195,12 @@ classes = ["privilege-escalation"]
 surface = "build"
 tool = "bash"
 input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "build"
+tool = "bash"
+input = "nix-collect-garbage -d"
 classes = ["system-store-destruction"]
 
 [[probes]]
@@ -542,6 +554,12 @@ classes = ["repository-history-destruction"]
 [[probes]]
 surface = "verifier"
 tool = "bash"
+input = "git update-ref -d refs/heads/main"
+classes = ["repository-history-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
 input = "git push --force origin main"
 classes = ["remote-destructive-operation"]
 
@@ -567,6 +585,12 @@ classes = ["privilege-escalation"]
 surface = "verifier"
 tool = "bash"
 input = "nix store delete /nix/store/example"
+classes = ["system-store-destruction"]
+
+[[probes]]
+surface = "verifier"
+tool = "bash"
+input = "nix-collect-garbage -d"
 classes = ["system-store-destruction"]
 
 [[probes]]
