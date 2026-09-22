@@ -33,9 +33,43 @@ permission:
     "git rebase*": deny
     "git filter-branch*": deny
     "git reflog expire*": deny
+    "git branch -d*": deny
+    "git branch -D*": deny
+    "git tag -d*": deny
+    "git stash drop*": deny
+    "git stash clear*": deny
+    "git worktree remove*": deny
+    "git worktree prune*": deny
+    "gh pr merge*--delete-branch*": deny
     "rm*": deny
     "sudo*": deny
     "nix store delete*": deny
+    "*;*": deny
+    "*&*": deny
+    "*|*": deny
+    "*>*": deny
+    "*<*": deny
+    "*$(*": deny
+    "*`*": deny
+    "*\n*": deny
+    "git -C *": deny
+    "git -c *": deny
+    "git --no-pager *": deny
+    "env *": deny
+    "bash -c*": deny
+    "sh -c*": deny
+    "zsh -c*": deny
+    "command *": deny
+    "eval*": deny
+    "exec*": deny
+    "git diff*--output*": deny
+    "git diff-tree*--output*": deny
+    "git diff-index*--output*": deny
+    "git log*--output*": deny
+    "git show*--output*": deny
+    "git stash list*--output*": deny
+    "git stash show*--output*": deny
+    "git reflog show*--output*": deny
 ---
 Start the final response with exactly one of: status: COMPLETED, status: BLOCKED, status: NEEDS_APPROVAL, status: NEEDS_DECISION.
 
