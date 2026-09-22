@@ -36,7 +36,8 @@ permission:
     "npm run test*": allow
     "npm run lint*": allow
     "npm run typecheck*": allow
-    "npm run check*": allow    "git commit*": deny
+    "npm run check*": allow
+    "git commit*": deny
     "git add*": deny
     "git push*": deny
     "git pull*": deny
