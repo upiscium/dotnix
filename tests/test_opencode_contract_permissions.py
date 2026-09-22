@@ -103,6 +103,15 @@ VALIDATION_ALLOW = (
     "npm run check",
 )
 
+VALIDATION_COMPOSED = (
+    "pytest -q; rm generated.tmp",
+    "npm test && git reset --hard HEAD",
+    "ruff check . | cat",
+    "mypy src > report.txt",
+    "python -m pytest $(printf -- -q)",
+    "pytest -q\nrm generated.tmp",
+)
+
 
 def _frontmatter_bash_permission(path: Path) -> Any:
     text = path.read_text(encoding="utf-8")
@@ -319,6 +328,12 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
             for command in VALIDATION_ALLOW:
                 with self.subTest(surface=surface, command=command):
                     self.assertEqual(self.action(surface, command), "allow")
+
+    def test_validation_allow_does_not_allow_shell_composition(self) -> None:
+        for surface in ("build", "verifier"):
+            for command in VALIDATION_COMPOSED:
+                with self.subTest(surface=surface, command=command):
+                    self.assertEqual(self.action(surface, command), "deny")
 
     def test_leaf_prompts_keep_noninteractive_escalation_contract(self) -> None:
         for leaf in LEAVES:
