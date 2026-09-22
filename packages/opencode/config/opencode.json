@@ -158,6 +158,23 @@
       "git remote -v": "allow",
       "git rev-parse --show-toplevel": "allow",
       "git ls-files": "allow",
+      "pytest*": "allow",
+      "python -m pytest*": "allow",
+      "python3 -m pytest*": "allow",
+      "python -m unittest*": "allow",
+      "python3 -m unittest*": "allow",
+      "ruff*": "allow",
+      "python -m ruff*": "allow",
+      "python3 -m ruff*": "allow",
+      "mypy*": "allow",
+      "python -m mypy*": "allow",
+      "python3 -m mypy*": "allow",
+      "npm ci*": "allow",
+      "npm test*": "allow",
+      "npm run test*": "allow",
+      "npm run lint*": "allow",
+      "npm run typecheck*": "allow",
+      "npm run check*": "allow",
       "git push*": "ask",
       "git merge*": "ask",
       "git push * main*": "deny",
@@ -232,15 +249,15 @@
       "rmdir *<*": "deny",
       "rm *$(*": "deny",
       "rmdir *$(*": "deny",
-      "sed -i*": "deny",
+      "sed -i*": "ask",
       "echo >*": "deny",
       "echo * >*": "deny",
       "cat >*": "deny",
       "cat * > *": "deny",
-      "cp *": "deny",
-      "mv *": "deny",
-      "mkdir *": "deny",
-      "touch *": "deny",
+      "cp *": "ask",
+      "mv *": "ask",
+      "mkdir *": "ask",
+      "touch *": "ask",
       "gh pr create*": "ask",
       "gh pr comment*": "ask",
       "gh pr edit*": "ask",
@@ -288,7 +305,10 @@
       "models": {
         "qwen3.6-35b-a3b-nvfp4": {
           "name": "qwen3.6-35b-a3b-nvfp4",
-          "limit": { "context": 32768, "output": 4096 },
+          "limit": {
+            "context": 32768,
+            "output": 4096
+          },
           "tool_call": true
         }
       }
@@ -302,7 +322,10 @@
       "models": {
         "gemma4-12b-it-q4km-3060": {
           "name": "gemma4-12b-it-q4km-3060",
-          "limit": { "context": 32768, "output": 4096 },
+          "limit": {
+            "context": 32768,
+            "output": 4096
+          },
           "tool_call": true
         }
       }
@@ -316,7 +339,10 @@
       "models": {
         "gemma4-12b-it-q4km-1080ti": {
           "name": "gemma4-12b-it-q4km-1080ti",
-          "limit": { "context": 32768, "output": 4096 },
+          "limit": {
+            "context": 32768,
+            "output": 4096
+          },
           "tool_call": true
         }
       }
