@@ -37,6 +37,14 @@ hl.config({
     },
 })
 
+-- Keep the primary workspace strip stable even when workspaces are empty.
+for i = 1, 6 do
+    hl.workspace_rule({
+        workspace = tostring(i),
+        persistent = true,
+    })
+end
+
 hl.curve("motion", {
     type = "bezier",
     points = {
