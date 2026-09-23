@@ -51,8 +51,8 @@ window#waybar.bottom {
 
 /* Workspaces */
 #workspaces {
-  padding: 2px 4px;
-  margin: 3px 6px;
+  padding: 1px 3px 0;
+  margin: 2px 5px 1px;
   border: 1px solid #3a0000;
   border-radius: 10px;
   background: #090000;
@@ -61,9 +61,9 @@ window#waybar.bottom {
 }
 
 #workspaces button {
-  min-width: 28px;
-  margin: 1px 2px;
-  padding: 0 8px;
+  min-width: 22px;
+  margin: 1px 1px 0;
+  padding: 0 6px;
   border-radius: 8px;
   color: #c75b5b;
   background: transparent;
