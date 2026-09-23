@@ -84,6 +84,12 @@ window#waybar.bottom {
   box-shadow: inset 0 -2px #8a0000;
 }
 
+#workspaces button.workspace-hover {
+  color: #ffffff;
+  background: #440000;
+  box-shadow: inset 0 -2px #ff0000;
+}
+
 #workspaces button.active {
   color: #ffffff;
   background: #a80000;
@@ -91,12 +97,6 @@ window#waybar.bottom {
   box-shadow:
     inset 0 -2px #ff5555,
     0 0 8px rgba(255, 0, 0, 0.35);
-}
-
-#workspaces button.workspace-hover {
-  color: #ffffff;
-  background: #440000;
-  box-shadow: inset 0 -2px #ff0000;
 }
 
 #workspaces button.urgent {
