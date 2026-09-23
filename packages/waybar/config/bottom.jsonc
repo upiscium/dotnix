@@ -13,17 +13,10 @@
   ],
 
   "hyprland/workspaces": {
-    "format": "{name}{icon}",
+    "format": "{name}",
     "disable-scroll": true,
-    "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "",
-      "6": "",
-      "active": ""
-    }
+    "sort-by-number": true,
+    "on-click": "activate"
   },
 
   "wlr/taskbar": {
