@@ -15,8 +15,7 @@
   "hyprland/workspaces": {
     "format": "{name}",
     "disable-scroll": true,
-    "sort-by-number": true,
-    "on-click": "activate"
+    "sort-by": "number"
   },
 
   "wlr/taskbar": {
