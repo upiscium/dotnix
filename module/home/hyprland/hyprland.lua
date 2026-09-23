@@ -1,4 +1,5 @@
 local laptopKbEnabled = true
+local persistentWorkspaceCount = 6
 
 hl.device({
     name = "asue120d:00-04f3:31fb-touchpad",
@@ -38,7 +39,7 @@ hl.config({
 })
 
 -- Keep the primary workspace strip stable even when workspaces are empty.
-for i = 1, 6 do
+for i = 1, persistentWorkspaceCount do
     hl.workspace_rule({
         workspace = tostring(i),
         persistent = true,
