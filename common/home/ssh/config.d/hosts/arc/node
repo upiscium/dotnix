@@ -1,28 +1,28 @@
-Host Raphael
+Host raphael
   HostName 192.168.100.1
   User root
   Port 22
   PasswordAuthentication no
 
-Host Uriel
+Host uriel
   HostName 192.168.100.2
   User root
   Port 22
   PasswordAuthentication no
 
-Host Gabriel
+Host gabriel
   HostName 192.168.100.3
   User root
   Port 22
   PasswordAuthentication no
 
-Host Metatron
+Host metatron
   HostName 192.168.100.4
   User root
   Port 22
   PasswordAuthentication no
 
-Host Sandalphon
+Host sandalphon
   HostName 192.168.100.5
   User root
   Port 22
