@@ -6,13 +6,18 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hyprland.url = "github:hyprwm/Hyprland";
+    opencode-discord-bridge = {
+      url = "github:upiscium/DisCode/6b936f6c7c6cfbb5995a44cbff9361b9d72e4bc2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs:
     let
       mkNixosSystem = (import ../utils.nix { inherit inputs; }).mkNixosSystem;
       mkHomeManagerConfiguration = (import ../utils.nix { inherit inputs; }).mkHomeManagerConfiguration;
-      hostname = "Eve";
+      hostname = "adam";
       username = "upiscium";
     in
     {
