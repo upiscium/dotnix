@@ -56,12 +56,6 @@ Host immich
   StrictHostKeyChecking yes
   ForwardAgent no
 
-Host agent-runtime
-  HostName 10.12.2.9
-  Port 22
-  User root
-  PasswordAuthentication no
-
 Host obsidian-automation
   HostName 10.12.2.10
   Port 22
@@ -76,6 +70,42 @@ Host obsidian-snapshot-taker
 
 Host gitea-runner
   HostName 10.12.2.12
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host astrum-control
+  HostName 10.12.2.13
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host sirius
+  HostName 10.12.2.20
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host vega
+  HostName 10.12.2.21
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host altair
+  HostName 10.12.2.22
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host deneb
+  HostName 10.12.2.23
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host astrum-db
+  HostName 10.12.2.24
   Port 22
   User root
   PasswordAuthentication no
