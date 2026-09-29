@@ -88,9 +88,9 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
 
     def test_canonical_assignments_remain_immutable(self) -> None:
         canonical = {
-            "build": "openai/gpt-5.6-sol",
+            "build": "openai/gpt-6-sol",
             "plan": "openai/gpt-6-luna",
-            "architect": "openai/gpt-5.6-sol",
+            "architect": "openai/gpt-6-sol",
             "reviewer": "openai/gpt-6-luna",
             "investigator": "openai/gpt-6-luna",
             "security-reviewer": "openai/gpt-5.6-terra",

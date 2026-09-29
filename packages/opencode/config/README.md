@@ -27,7 +27,7 @@ OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package m
 
 | Role | Model |
 | --- | --- |
-| `build`, `architect` | `openai/gpt-5.6-sol` |
+| `build`, `architect` | `openai/gpt-6-sol` |
 | `security-reviewer` | `openai/gpt-5.6-terra` |
 | `plan`, `reviewer`, `investigator`, `general`, `explore`, `verifier`, `scout` | `openai/gpt-6-luna` (`reasoningEffort: max`) |
 

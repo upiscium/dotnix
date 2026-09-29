@@ -8,8 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 AGENTS = ROOT / "packages" / "opencode" / "config" / "agents"
 LUNA_AGENTS = {"plan", "reviewer", "investigator", "general", "explore", "verifier", "scout"}
 RETAINED_MODELS = {
-    "build": "openai/gpt-5.6-sol",
-    "architect": "openai/gpt-5.6-sol",
+    "build": "openai/gpt-6-sol",
+    "architect": "openai/gpt-6-sol",
     "security-reviewer": "openai/gpt-5.6-terra",
 }
 

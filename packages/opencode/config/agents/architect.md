@@ -2,7 +2,7 @@
 description: Independently reviews consequential cross-module architecture and boundary changes
 mode: subagent
 hidden: true
-model: openai/gpt-5.6-sol
+model: openai/gpt-6-sol
 permission:
   edit: deny
   task: deny

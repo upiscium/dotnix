@@ -1,7 +1,7 @@
 ---
 description: Primary implementation and integration agent
 mode: primary
-model: openai/gpt-5.6-sol
+model: openai/gpt-6-sol
 permission:
   edit: allow
   task: ask
