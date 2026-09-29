@@ -42,15 +42,17 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         }
         self.assertEqual(WORKERS, bindings)
 
-    def test_single_runtime_has_no_agent_pool_proxy(self) -> None:
+    def test_single_runtime_has_no_agent_pool_proxy_or_ssh_alias(self) -> None:
         self.assertNotIn("ollama-agent", self.config["provider"])
         config_text = (CONFIG / "opencode.json").read_text()
         self.assertNotIn("https://ollama-agent.arc.upiscium.dev/v1", config_text)
 
         ssh_service = SSH_SERVICE.read_text()
-        self.assertIn("Host agent-runtime\n  HostName 10.12.2.9", ssh_service)
-        for obsolete in ("agent-runtime-1", "ollama-agent-proxy"):
-            self.assertNotIn(obsolete, ssh_service)
+        for obsolete in ("agent-runtime", "agent-runtime-1", "ollama-agent-proxy"):
+            self.assertNotRegex(
+                ssh_service,
+                rf"(?m)^Host {re.escape(obsolete)}$",
+            )
         self.assertNotRegex(ssh_service, r"(?m)^Host ollama-agent(?:-[0-9]+)?$")
         self.assertNotRegex(ssh_service, r"(?m)^Host agent-runtime-[0-9]+$")
 
