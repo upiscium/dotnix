@@ -1,7 +1,7 @@
 ---
 description: Runs project-standard tests, lint, type checks, and builds without editing code
 mode: subagent
-model: openai/gpt-5.6-luna
+model: openai/gpt-6-luna
 reasoningEffort: max
 permission:
   edit: deny

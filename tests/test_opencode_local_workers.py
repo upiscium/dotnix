@@ -87,9 +87,20 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         self.assertIn("retry_reason", self.manifest["metrics"]["metadata"])
 
     def test_canonical_assignments_remain_immutable(self) -> None:
-        canonical = {"build": "sol", "plan": "luna", "architect": "sol", "reviewer": "luna", "investigator": "luna", "security-reviewer": "terra", "general": "luna", "explore": "luna", "verifier": "luna", "scout": "luna"}
+        canonical = {
+            "build": "openai/gpt-5.6-sol",
+            "plan": "openai/gpt-6-luna",
+            "architect": "openai/gpt-5.6-sol",
+            "reviewer": "openai/gpt-6-luna",
+            "investigator": "openai/gpt-6-luna",
+            "security-reviewer": "openai/gpt-5.6-terra",
+            "general": "openai/gpt-6-luna",
+            "explore": "openai/gpt-6-luna",
+            "verifier": "openai/gpt-6-luna",
+            "scout": "openai/gpt-6-luna",
+        }
         for agent, model in canonical.items():
-            self.assertIn(f"model: openai/gpt-5.6-{model}", (CONFIG / "agents" / f"{agent}.md").read_text())
+            self.assertIn(f"model: {model}", (CONFIG / "agents" / f"{agent}.md").read_text())
         skill = (CONFIG / "skills/local-workers/SKILL.md").read_text()
         self.assertIn("There is no\nfallback", skill)
         self.assertIn("same configured model", skill)
