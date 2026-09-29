@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "packages/opencode/config"
 MANIFEST = CONFIG / "opencode-contract-permissions.toml"
 LOCK = ROOT / "flake.lock"
-EXPECTED_CONTRACT_REVISION = "edbe4e553e8de183acc11578dd485a5f97917338"
+EXPECTED_CONTRACT_REVISION = "3be73a24a6ca7b0175b3711afa2da3d72580f10a"
 
 SURFACES = (
     "build",

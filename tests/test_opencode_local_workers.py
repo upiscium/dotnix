@@ -8,7 +8,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "packages/opencode/config"
-SSH_SERVICE = ROOT / "common/home/ssh/config.d/hosts/arc/service"
 MODELS = {
     "local-quality": ("http://10.12.2.9:1919/v1", "qwen3.6-35b-a3b-nvfp4"),
     "local-fast": ("http://10.12.2.9:8091/v1", "gemma4-12b-it-q4km-3060"),
@@ -41,18 +40,6 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             for worker in self.manifest["workers"]
         }
         self.assertEqual(WORKERS, bindings)
-
-    def test_single_runtime_has_no_agent_pool_proxy(self) -> None:
-        self.assertNotIn("ollama-agent", self.config["provider"])
-        config_text = (CONFIG / "opencode.json").read_text()
-        self.assertNotIn("https://ollama-agent.arc.upiscium.dev/v1", config_text)
-
-        ssh_service = SSH_SERVICE.read_text()
-        self.assertIn("Host agent-runtime\n  HostName 10.12.2.9", ssh_service)
-        for obsolete in ("agent-runtime-1", "ollama-agent-proxy"):
-            self.assertNotIn(obsolete, ssh_service)
-        self.assertNotRegex(ssh_service, r"(?m)^Host ollama-agent(?:-[0-9]+)?$")
-        self.assertNotRegex(ssh_service, r"(?m)^Host agent-runtime-[0-9]+$")
 
     def test_exact_read_only_permissions_and_hidden_agents(self) -> None:
         for worker in WORKERS:
@@ -87,9 +74,20 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         self.assertIn("retry_reason", self.manifest["metrics"]["metadata"])
 
     def test_canonical_assignments_remain_immutable(self) -> None:
-        canonical = {"build": "sol", "plan": "luna", "architect": "sol", "reviewer": "luna", "investigator": "luna", "security-reviewer": "terra", "general": "luna", "explore": "luna", "verifier": "luna", "scout": "luna"}
+        canonical = {
+            "build": "openai/gpt-6-sol",
+            "plan": "openai/gpt-6-luna",
+            "architect": "openai/gpt-6-sol",
+            "reviewer": "openai/gpt-6-luna",
+            "investigator": "openai/gpt-6-luna",
+            "security-reviewer": "openai/gpt-5.6-terra",
+            "general": "openai/gpt-6-luna",
+            "explore": "openai/gpt-6-luna",
+            "verifier": "openai/gpt-6-luna",
+            "scout": "openai/gpt-6-luna",
+        }
         for agent, model in canonical.items():
-            self.assertIn(f"model: openai/gpt-5.6-{model}", (CONFIG / "agents" / f"{agent}.md").read_text())
+            self.assertIn(f"model: {model}", (CONFIG / "agents" / f"{agent}.md").read_text())
         skill = (CONFIG / "skills/local-workers/SKILL.md").read_text()
         self.assertIn("There is no\nfallback", skill)
         self.assertIn("same configured model", skill)

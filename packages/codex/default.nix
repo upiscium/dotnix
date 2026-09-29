@@ -59,7 +59,7 @@ writeShellApplication {
 
     defaults=()
     if (( ! model_set )); then
-      defaults+=(--model gpt-5.6-luna)
+      defaults+=(--model gpt-6-luna)
     fi
     if (( ! effort_set )); then
       defaults+=(--config 'model_reasoning_effort="max"')
