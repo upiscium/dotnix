@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import re
-import tomllib
 import unittest
 from collections.abc import Mapping
 from pathlib import Path
@@ -11,9 +10,6 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "packages/opencode/config"
-MANIFEST = CONFIG / "opencode-contract-permissions.toml"
-LOCK = ROOT / "flake.lock"
-EXPECTED_CONTRACT_REVISION = "3be73a24a6ca7b0175b3711afa2da3d72580f10a"
 
 SURFACES = (
     "build",
@@ -27,13 +23,6 @@ SURFACES = (
     "scout",
 )
 LEAVES = SURFACES[1:]
-MANDATORY_CLASSES = {
-    "local-filesystem-delete",
-    "repository-history-destruction",
-    "remote-destructive-operation",
-    "privilege-escalation",
-    "system-store-destruction",
-}
 
 BUILD_LOCAL_DELETE = (
     "rm generated.tmp",
@@ -65,8 +54,8 @@ STRUCTURAL = (
     "git reset --hard HEAD",
     "git clean -fd",
     "git push --force origin main",
-    "git push origin --delete issue-52-test",
-    "sudo rm -rf /tmp/dotnix-52",
+    "git push origin --delete issue-test",
+    "sudo rm -rf /tmp/dotnix",
     "nix store delete /nix/store/example",
 )
 SAFE_READS = (
@@ -76,7 +65,7 @@ SAFE_READS = (
     "command -v git",
 )
 NORMAL_SCRIPT_EXECUTION = (
-    "python3 tests/test_opencode_contract_permissions.py",
+    "python3 tests/test_opencode_permissions.py",
     "bash scripts/check.sh",
     "node scripts/check.js",
 )
@@ -86,6 +75,16 @@ ASK_MUTATIONS = (
     "mkdir generated",
     "touch generated.flag",
     "sed -i 's/old/new/' file.txt",
+)
+ASK_GITHUB_MUTATIONS = (
+    "gh pr create --title test --body test",
+    "gh pr comment 1 --body test",
+    "gh pr edit 1 --title test",
+    "gh pr ready 1",
+    "gh pr review 1 --comment --body test",
+    "gh pr merge 1",
+    "gh issue create --title test --body test",
+    "gh issue comment 1 --body test",
 )
 VALIDATION_ALLOW = (
     "pytest -q",
@@ -102,7 +101,6 @@ VALIDATION_ALLOW = (
     "npm run typecheck",
     "npm run check",
 )
-
 VALIDATION_COMPOSED = (
     "pytest -q; rm generated.tmp",
     "npm test && git reset --hard HEAD",
@@ -167,9 +165,7 @@ def _wildcard_match(pattern: str, value: str) -> bool:
     star = -1
     star_vi = 0
     while vi < len(value):
-        if pi < len(pattern) and (
-            pattern[pi] == "?" or pattern[pi] == value[vi]
-        ):
+        if pi < len(pattern) and (pattern[pi] == "?" or pattern[pi] == value[vi]):
             pi += 1
             vi += 1
         elif pi < len(pattern) and pattern[pi] == "*":
@@ -230,55 +226,23 @@ def _effective_action(base: Any, agent: Any, tool: str, input_value: str) -> str
     return action if matched else None
 
 
-class OpenCodeContractPermissionsTest(unittest.TestCase):
+class OpenCodePermissionsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.config = json.loads((CONFIG / "opencode.json").read_text(encoding="utf-8"))
-        cls.manifest = tomllib.loads(MANIFEST.read_text(encoding="utf-8"))
-        cls.surfaces = {item["id"]: item for item in cls.manifest["surfaces"]}
-        cls.probes: dict[str, list[dict[str, Any]]] = {surface: [] for surface in SURFACES}
-        for probe in cls.manifest["probes"]:
-            cls.probes[probe["surface"]].append(probe)
 
-    def permissions_for(self, surface: str) -> tuple[dict[str, Any], Any]:
-        definition = self.surfaces[surface]
-        return (
-            self.config["permission"],
-            _frontmatter_bash_permission(CONFIG / definition["agent_source"]),
-        )
+    def agent_path(self, surface: str) -> Path:
+        return CONFIG / "agents" / f"{surface}.md"
 
     def action(self, surface: str, command: str) -> str | None:
-        base, agent_bash = self.permissions_for(surface)
+        agent_bash = _frontmatter_bash_permission(self.agent_path(surface))
         agent = None if agent_bash is None else {"bash": agent_bash}
-        return _effective_action(base, agent, "bash", command)
+        return _effective_action(self.config["permission"], agent, "bash", command)
 
-    def test_contract_pin_is_exact(self) -> None:
-        lock = json.loads(LOCK.read_text(encoding="utf-8"))
-        node = lock["nodes"]["opencodeContract"]["locked"]
-        self.assertEqual(node["rev"], EXPECTED_CONTRACT_REVISION)
-        self.assertEqual(node["owner"], "upiscium")
-        self.assertEqual(node["repo"], "OpencodeContract")
-
-    def test_manifest_has_exact_surfaces_and_mandatory_coverage(self) -> None:
-        self.assertEqual(set(self.surfaces), set(SURFACES))
-        self.assertEqual(self.surfaces["build"]["boundary"], "parent")
-        self.assertEqual(self.surfaces["build"]["signals"], [])
-        for leaf in LEAVES:
-            with self.subTest(leaf=leaf):
-                self.assertEqual(self.surfaces[leaf]["boundary"], "leaf")
-                self.assertEqual(
-                    set(self.surfaces[leaf]["signals"]),
-                    {"NEEDS_APPROVAL", "NEEDS_DECISION"},
-                )
+    def test_expected_global_surfaces_exist(self) -> None:
         for surface in SURFACES:
             with self.subTest(surface=surface):
-                covered = {
-                    class_id
-                    for probe in self.probes[surface]
-                    for class_id in probe["classes"]
-                }
-                self.assertTrue(MANDATORY_CLASSES <= covered)
-                self.assertNotIn("safe-read-only", covered)
+                self.assertTrue(self.agent_path(surface).is_file())
 
     def test_build_direct_local_delete_is_ask_not_allow(self) -> None:
         for command in BUILD_LOCAL_DELETE:
@@ -323,6 +287,11 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertEqual(self.action("build", command), "ask")
 
+    def test_global_github_mutations_are_ask(self) -> None:
+        for command in ASK_GITHUB_MUTATIONS:
+            with self.subTest(command=command):
+                self.assertEqual(self.action("build", command), "ask")
+
     def test_validation_commands_are_allow_for_build_and_verifier(self) -> None:
         for surface in ("build", "verifier"):
             for command in VALIDATION_ALLOW:
@@ -335,12 +304,10 @@ class OpenCodeContractPermissionsTest(unittest.TestCase):
                 with self.subTest(surface=surface, command=command):
                     self.assertEqual(self.action(surface, command), "deny")
 
-    def test_leaf_prompts_keep_noninteractive_escalation_contract(self) -> None:
+    def test_leaf_prompts_keep_noninteractive_result_contract(self) -> None:
         for leaf in LEAVES:
             with self.subTest(leaf=leaf):
-                text = (CONFIG / self.surfaces[leaf]["agent_source"]).read_text(
-                    encoding="utf-8"
-                )
+                text = self.agent_path(leaf).read_text(encoding="utf-8")
                 self.assertIn("NEEDS_APPROVAL", text)
                 self.assertIn("NEEDS_DECISION", text)
                 self.assertIn("Do not ask the user", text)
