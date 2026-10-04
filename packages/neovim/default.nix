@@ -19,6 +19,7 @@ let
     pkgs.nodejs
     pkgs.tree-sitter
     pkgs.imagemagick
+    pkgs.ghostscript
     pkgs.git
     pkgs.uv
     pkgs.zsh

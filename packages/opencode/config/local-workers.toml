@@ -1,0 +1,57 @@
+# Phase 1 local-worker manifest. Nothing here is automatic: dispatch is manual
+# or shadow-only and the parent owns routing, evidence checks, and retry.
+schema_version = 1
+profile = "global"
+enabled_by_default = false
+opt_in = "explicit-manual"
+dispatch = "manual-or-shadow"
+max_in_flight = 1
+required_tools = ["read", "grep"]
+retry_limit = 1
+retry_eligibility = "normal_successful_response_with_required_tool_call_count_0"
+retry_exclusions = ["api_failure", "runtime_failure", "model_failure", "permission_failure", "schema_failure", "wrong_evidence", "blocked_response", "approval_or_decision", "non_normal_response", "required_tool_call_count_gt_0"]
+retry_model_policy = "same_agent_same_model_only"
+fallback = "none"
+
+[[workers]]
+class = "local-investigator"
+provider = "local-quality"
+model = "qwen3.6-35b-a3b-nvfp4"
+role = "read-only advisory"
+
+[[workers]]
+class = "local-tracer"
+provider = "local-fast"
+model = "gemma4-12b-it-q4km-3060"
+role = "read-only advisory"
+
+[[workers]]
+class = "local-background"
+provider = "local-background"
+model = "gemma4-12b-it-q4km-1080ti"
+role = "read-only advisory"
+
+[metrics]
+counters = [
+  "local_task_total",
+  "local_task_completed",
+  "local_task_rejected",
+  "local_task_retried",
+  "local_tool_required_miss",
+  "local_wrong_answer_detected",
+  "local_runtime_failure",
+]
+optional_observations = [
+  "local_task_latency_ms",
+  "local_input_tokens",
+  "local_output_tokens",
+]
+metadata = [
+  "attempts",
+  "retry_reason",
+  "worker",
+  "configured_model",
+  "required_tool",
+  "required_tool_call_count",
+  "failure_class",
+]

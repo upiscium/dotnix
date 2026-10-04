@@ -211,25 +211,26 @@ in
 
       push.autoSetupRemote = true;
       pull.rebase = false;
-      credential.helper = "store";
+      credential = {
+        # GitHub以外では既存の credential store を維持する。
+        helper = "store";
+
+        # GitHub では global helper をリセットして GitHub CLI に委譲する。
+        "https://github.com".helper = [
+          ""
+          "!${pkgs.gh}/bin/gh auth git-credential"
+        ];
+      };
       fetch.prune = true;
       submodule.recurse = true;
       init.defaultBranch = "main";
-      ghq = {
-        root = "~/src";
-      };
-      # signing = {
-      #   signByDefault = true;
-      #   format = "openpgp";
-      #   key = "1B42AFA71A8CB553923473DF504D64B90F5356C1";
-      # };
-      # commit.gpgSign = true;
-      # tag.gpgSign = true;
+      ghq.root = "~/src";
     };
   };
 
   programs.gh = {
     enable = true;
+    gitCredentialHelper.enable = false;
 
     extensions = with pkgs; [
       gh-markdown-preview

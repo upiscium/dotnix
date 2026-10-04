@@ -1,0 +1,6 @@
+table inet opencode_local {
+  chain input {
+    type filter hook input priority filter; policy accept;
+    ip saddr != 10.12.0.1 tcp dport { 1919, 8090, 8091 } reject with tcp reset
+  }
+}

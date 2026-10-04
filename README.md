@@ -21,27 +21,26 @@ The root flake targets:
 
 `x86_64-darwin` is deliberately excluded because the pinned Nixpkgs line no longer supports Intel Darwin. Platform-specific dependencies stay inside package definitions and must not leak into callers.
 
-Configured packages are auto-discovered from `packages/<name>/default.nix`. A package may restrict publication with `packages/<name>/systems.nix` when its supported platform subset is narrower than the root contract.
+Configured packages are auto-discovered from `packages/<name>/default.nix`. A package may restrict publication with `packages/<name>/systems.nix` when its supported platform subset is narrower than the root contract. Use `just list` or inspect the flake outputs for the canonical, currently available package set.
 
-Current configured packages include:
+The current human-readable package overview is:
 
-- `neovim`: Linux + Apple Silicon Darwin
-- `tmux`: Linux + Apple Silicon Darwin
 - `kitty`: Linux only
-- `starship`: Linux + Apple Silicon Darwin
-- `waybar`: Linux only
+- `neovim`: Linux + Apple Silicon Darwin
 - `opencode`: Linux + Apple Silicon Darwin
+- `starship`: Linux + Apple Silicon Darwin
+- `tmux`: Linux + Apple Silicon Darwin
+- `waybar`: Linux only
 
 `just` is exposed separately as a bootstrap utility.
 
 ## Direct installation
 
+Install any exposed package directly. These are representative examples, not an exhaustive package inventory:
+
 ```sh
 nix profile add github:upiscium/dotnix#neovim
-nix profile add github:upiscium/dotnix#tmux
-nix profile add github:upiscium/dotnix#kitty
-nix profile add github:upiscium/dotnix#starship
-nix profile add github:upiscium/dotnix#opencode
+nix profile add github:upiscium/dotnix#waybar
 ```
 
 The installer app installs from the exact dotnix revision used to launch it:
@@ -68,10 +67,13 @@ just install-remote opencode
 just profile
 ```
 
+`just check` runs the normal no-build repository validation: repository contract tests, the package registry contract tests, and all-system flake evaluation. CI reuses the same validation authority and keeps build-time gates separate.
+
 Without Just installed:
 
 ```sh
 nix develop -c just list
+nix develop -c just check
 nix develop -c just build opencode
 ```
 
@@ -92,6 +94,10 @@ Retained inactive configuration does not imply that the corresponding applicatio
 ### Neovim
 
 `packages/neovim/` owns the configured editor, Lua configuration, providers, LSP/tooling closure, and MCPHub configuration. `lazy.nvim` plugin acquisition remains runtime-managed.
+
+### Tmux
+
+`packages/tmux/` owns the configured Tmux wrapper and immutable `config/tmux.conf`; the wrapper starts Tmux with that package-owned configuration. `packages/tmux/home.nix` only installs the configured package rather than maintaining a second Tmux configuration.
 
 ### Kitty
 
@@ -115,37 +121,32 @@ The launcher deliberately does not use `OPENCODE_CONFIG_DIR` for the global base
 
 Home Manager only installs the configured package through `packages/opencode/home.nix`; it no longer recursively deploys the global OpenCode implementation from a root configuration directory.
 
-## OpenCodePolicy
+## OpenCode repository boundary
 
-dotnix pins [`upiscium/OpenCodePolicy`](https://github.com/upiscium/OpenCodePolicy) through the root `flake.lock` and explicitly conforms to the `global` profile. OpenCodePolicy owns shared policy/compatibility contracts; dotnix remains implementation owner of the global OpenCode layer under `packages/opencode/config/`.
+dotnix owns only the Global/user OpenCode baseline under `packages/opencode/`.
+That baseline must be independently coherent for generic repositories, but it is
+not a policy authority for repository-local systems.
 
-The dependency is validation-only. It does not generate or materialize agents, prompts, commands, skills, provider settings, or TUI configuration.
+Repository-local OpenCode configurations own their own correctness, permissions,
+agent lifecycle, guarded operations, and validation. They may consume capabilities
+provided by the current environment—such as provider credentials, model
+assignments, Local-LLM-backed agents, caches, or accelerators—but those
+capabilities are optional unless the repository explicitly declares a functional
+dependency on them. Their absence must not silently weaken repository-local
+correctness or safety.
 
-The global profile enforces fixed Sol/Terra/Luna assignments. Spark, fallback agents, model substitution, and alternate-model retry are not part of the contract; an unavailable configured model must report the exact provider/model failure and return `BLOCKED`.
+There is intentionally no upiscium-owned cross-repository OpenCode policy
+contract. Similar role names, model choices, or permission rules may be duplicated
+across repositories when each repository needs them. Such similarity does not
+create shared ownership or synchronization requirements.
 
-After `nix develop`:
-
-```sh
-opencode-policy validate
-opencode-policy audit-consumer --profile global --consumer . --strict
-```
-
-## Updating policy
-
-OpenCodePolicy advances only through an explicit dependency update. The recommended path is the manual **GitHub Actions → Update OpenCodePolicy → Run workflow** action on `main`, or:
-
-```sh
-gh workflow run update-opencode-policy.yml \
-  --repo upiscium/dotnix \
-  --ref main
-```
-
-For a local update:
+For Global OpenCode changes, validate the dotnix-owned configuration directly:
 
 ```sh
-nix flake update opencodePolicy
-nix flake check --no-update-lock-file
-opencode-policy audit-consumer --profile global --consumer . --strict
+python3 -m unittest discover -s tests -p 'test_opencode*.py' -v
+nix flake check --all-systems --no-build --no-update-lock-file
 ```
 
-Review the root `flake.lock` diff before merging. Host-local lockfiles must not be updated as part of the policy workflow.
+Local provider/model/endpoint definitions remain dotnix-owned environment
+configuration. Repository-local consumers must not require access to those
+details merely to remain functional.

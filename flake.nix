@@ -3,14 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-
-    opencodePolicy = {
-      url = "github:upiscium/OpenCodePolicy";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, opencodePolicy }:
+  outputs = { self, nixpkgs }:
     let
       lib = nixpkgs.lib;
       systems = [
@@ -77,10 +72,6 @@
             packageChecks = lib.mapAttrs'
               (name: package: lib.nameValuePair "${name}-package" package)
               portablePackages;
-            policy =
-              if builtins.hasAttr system opencodePolicy.packages
-              then opencodePolicy.packages.${system}.opencode-policy
-              else null;
           in
           packageChecks
           // {
@@ -90,29 +81,19 @@
               just --justfile ${./justfile} --list > "$out"
             '';
           }
-          // lib.optionalAttrs (policy != null) {
-            opencode-policy = pkgs.runCommand "dotnix-opencode-policy" {
-              nativeBuildInputs = [ policy ];
-            } ''
-              opencode-policy audit-consumer \
-                --profile global \
-                --consumer ${self} \
-                --strict
-              touch "$out"
-            '';
+          // lib.optionalAttrs (system == "x86_64-linux") {
+            package-registry-contract = import ./tests/package-registry {
+              inherit lib pkgs;
+            };
           });
 
       devShells = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          policy =
-            if builtins.hasAttr system opencodePolicy.packages
-            then opencodePolicy.packages.${system}.opencode-policy
-            else null;
         in
         {
           default = pkgs.mkShell {
-            packages = [ pkgs.just ] ++ lib.optional (policy != null) policy;
+            packages = [ pkgs.just pkgs.python3 ];
           };
         });
     };

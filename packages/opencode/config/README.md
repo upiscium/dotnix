@@ -7,8 +7,9 @@ This directory is the package-owned source for dotnix's global OpenCode configur
 - Dotnix owns the **global user baseline** for generic repositories.
 - Repository-local OpenCode configuration remains authoritative and may impose stronger rules.
 - Agent-ready repositories are detected when both `.automation/VERSION` and `.automation/INIT.md` exist.
-- Templates owns Agent Core behavior; do not duplicate Templates-specific lifecycle or repository policy here.
-- OpenCodePolicy owns shared compatibility contracts, not the complete implementation.
+- Repository-local systems own their own lifecycle, permissions, safety policy, and validation; do not duplicate those contracts here.
+- There is no shared upiscium-owned OpenCode policy authority between dotnix and repository-local configurations.
+- Environment capabilities provided here may be consumed opportunistically, but their presence does not define repository-local correctness.
 
 Keeping this configuration in the standard global OpenCode path is intentional. OpenCode loads the global layer before repository-local `.opencode` configuration, so repository-local configuration can continue to override this baseline.
 
@@ -19,6 +20,7 @@ Keeping this configuration in the standard global OpenCode path is intentional. 
 - `agents/*.md` defines persistent agent role/model/permission properties.
 - `skills/*/SKILL.md` defines reusable workflows.
 - `commands/*.md` defines thin user-invoked entry points into skills.
+- `local-workers.toml` defines the disabled-by-default, manual/shadow local-worker manifest. Local roles are available only through the explicit local-worker workflow.
 
 OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package metadata, and lock files are not package-owned and are preserved by the dotnix launcher.
 
@@ -26,11 +28,13 @@ OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package m
 
 | Role | Model |
 | --- | --- |
-| `build`, `plan`, `architect` | `openai/gpt-5.6-sol` |
-| `reviewer`, `investigator`, `security-reviewer` | `openai/gpt-5.6-terra` |
-| `general`, `explore`, `verifier`, `scout` | `openai/gpt-5.6-luna` |
+| `build`, `architect` | `openai/gpt-6-sol` |
+| `security-reviewer` | `openai/gpt-5.6-terra` |
+| `plan`, `reviewer`, `investigator`, `general`, `explore`, `verifier`, `scout` | `openai/gpt-6-luna` (`reasoningEffort: max`) |
 
 Each global role has exactly one configured model. Model substitution, fallback agents, and retrying work under an alternate model are not part of this layer. If the configured provider/model cannot execute the task, report the exact failure and return `BLOCKED`.
+
+The three local workers are separate OpenAI-compatible provider identities with conservative 32768-context/4096-output limits. They are Phase 1 manual/shadow advisory workers, not fallback capacity. OpenCode v1.18.16's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
 
 ## Authority boundary
 
@@ -62,6 +66,7 @@ Only roles explicitly configured for implementation retain edit authority. Revie
 | Audit this configuration | `/agent-audit` |
 | Start a task workflow | `/task-start <goal-or-scope>` |
 | Execute a scoped workflow/task | `/task-run <workflow-or-task-id>` |
+| Explicit local-worker dispatch | `/local-worker <worker> <read-or-grep> <bounded-objective>` |
 
 Commands remain thin entry points. Agent-ready repositories may override command semantics with their guarded local lifecycle.
 
@@ -73,7 +78,7 @@ Refresh the provider model list before changing IDs:
 opencode models openai --refresh --verbose
 ```
 
-Use exact provider-prefixed IDs reported by OpenCode and keep OpenCodePolicy conformity intact.
+Use exact provider-prefixed IDs reported by OpenCode. Model/provider choices in this Global layer are dotnix-owned environment configuration, not a cross-repository contract.
 
 ## Validation
 
@@ -95,11 +100,12 @@ XDG_CONFIG_HOME="$TMP_CONFIG" ./result/bin/opencode debug config
 
 The wrapper should create `$TMP_CONFIG/opencode`, materialize the package-owned entries there, and leave OpenCode-generated dependency/runtime files writable.
 
-Validate repository policy and package publication from the root flake:
+Validate the dotnix-owned Global permission and agent contracts, then evaluate
+the root flake:
 
 ```sh
+python3 -m unittest discover -s tests -p 'test_opencode*.py' -v
 nix flake check --all-systems --no-build --no-update-lock-file
-opencode-policy audit-consumer --profile global --consumer . --strict
 ```
 
 For Home Manager integration, build/switch an actual host and verify that `which opencode` resolves to the configured package. Restart OpenCode after source changes because configuration is loaded at startup.

@@ -28,51 +28,84 @@ Host stirling-pdf
   User root
   PasswordAuthentication no
 
+Host nas
+  HostName 10.12.2.6
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host nextcloud
+  HostName 10.12.2.6
+  Port 22
+  User root
+  PasswordAuthentication no
+  StrictHostKeyChecking yes
+  ForwardAgent no
+
 Host gitea-lxc
   HostName 10.12.2.7
   Port 22
   User root
   PasswordAuthentication no
 
-Host ollama-agent-proxy
+Host immich
   HostName 10.12.2.8
   Port 22
   User root
   PasswordAuthentication no
+  StrictHostKeyChecking yes
+  ForwardAgent no
 
-Host ollama-agent-1
-  HostName 10.12.2.9
-  Port 22
-  User root
-  PasswordAuthentication no
-
-Host ollama-agent-2
+Host obsidian-automation
   HostName 10.12.2.10
   Port 22
   User root
   PasswordAuthentication no
 
-Host ollama-agent-3
+Host obsidian-snapshot-taker
   HostName 10.12.2.11
   Port 22
   User root
   PasswordAuthentication no
 
-Host ollama-agent-4
+Host gitea-runner
   HostName 10.12.2.12
   Port 22
   User root
   PasswordAuthentication no
 
-Host ollama-agent-5
+Host astrum-control
   HostName 10.12.2.13
   Port 22
   User root
   PasswordAuthentication no
 
-Host ollama-agent-6
-  HostName 10.12.2.14
+Host sirius
+  HostName 10.12.2.20
   Port 22
   User root
   PasswordAuthentication no
 
+Host vega
+  HostName 10.12.2.21
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host altair
+  HostName 10.12.2.22
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host deneb
+  HostName 10.12.2.23
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host astrum-db
+  HostName 10.12.2.24
+  Port 22
+  User root
+  PasswordAuthentication no

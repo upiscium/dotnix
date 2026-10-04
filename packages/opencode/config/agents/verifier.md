@@ -1,7 +1,8 @@
 ---
 description: Runs project-standard tests, lint, type checks, and builds without editing code
 mode: subagent
-model: openai/gpt-5.6-luna
+model: openai/gpt-6-luna
+reasoningEffort: max
 permission:
   edit: deny
   task: deny
@@ -19,6 +20,23 @@ permission:
   lsp: allow
   bash:
     "*": ask
+    "pytest*": allow
+    "python -m pytest*": allow
+    "python3 -m pytest*": allow
+    "python -m unittest*": allow
+    "python3 -m unittest*": allow
+    "ruff*": allow
+    "python -m ruff*": allow
+    "python3 -m ruff*": allow
+    "mypy*": allow
+    "python -m mypy*": allow
+    "python3 -m mypy*": allow
+    "npm ci*": allow
+    "npm test*": allow
+    "npm run test*": allow
+    "npm run lint*": allow
+    "npm run typecheck*": allow
+    "npm run check*": allow
     "git commit*": deny
     "git add*": deny
     "git push*": deny
@@ -35,6 +53,14 @@ permission:
     "rm*": deny
     "sudo*": deny
     "nix store delete*": deny
+    "*;*": deny
+    "*&*": deny
+    "*|*": deny
+    "*>*": deny
+    "*<*": deny
+    "*$(*": deny
+    "*`*": deny
+    "*\n*": deny
 ---
 Start the final response with exactly one of: status: COMPLETED, status: BLOCKED, status: NEEDS_APPROVAL, status: NEEDS_DECISION.
 

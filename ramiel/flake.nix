@@ -1,0 +1,40 @@
+{
+  inputs = {
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    home-manager = {
+      # url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland.url = "github:hyprwm/Hyprland/2effd2da48e8e7bd1485eac589329e8f82f13c41";
+  };
+
+  outputs = inputs:
+    let
+      mkNixosSystem = (import ../utils.nix { inherit inputs; }).mkNixosSystem;
+      mkHomeManagerConfiguration = (import ../utils.nix { inherit inputs; }).mkHomeManagerConfiguration;
+      hostname = "ramiel";
+      username = "upiscium";
+    in
+    {
+      nixosConfigurations.host = mkNixosSystem {
+        system = "x86_64-linux";
+        hostname = hostname;
+        username = username;
+        modules = [
+          ./host
+        ];
+      };
+
+      homeConfigurations.home = mkHomeManagerConfiguration {
+        system = "x86_64-linux";
+        hostname = hostname;
+        username = username;
+        modules = [
+          ./home
+        ];
+      };
+    };
+}
