@@ -12,6 +12,9 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
+  boot.extraModprobeConfig = ''
+    options nvidia NVreg_EnableGpuFirmware=0
+  '';
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/ec8c28cf-e993-4425-ab0a-3379227996a0";
