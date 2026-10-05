@@ -14,7 +14,7 @@ LEGACY_IDENTITIES = (
 )
 
 
-class OpencodeContractIdentityTest(unittest.TestCase):
+class OpenCodeIdentityTest(unittest.TestCase):
     def test_source_tree_contains_no_legacy_consumer_identity(self) -> None:
         result = subprocess.run(
             [
