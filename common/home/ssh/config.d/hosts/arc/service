@@ -80,32 +80,8 @@ Host astrum-control
   User root
   PasswordAuthentication no
 
-Host sirius
-  HostName 10.12.2.20
-  Port 22
-  User root
-  PasswordAuthentication no
-
-Host vega
-  HostName 10.12.2.21
-  Port 22
-  User root
-  PasswordAuthentication no
-
-Host altair
-  HostName 10.12.2.22
-  Port 22
-  User root
-  PasswordAuthentication no
-
-Host deneb
-  HostName 10.12.2.23
-  Port 22
-  User root
-  PasswordAuthentication no
-
 Host astrum-db
-  HostName 10.12.2.24
+  HostName 10.12.2.14
   Port 22
   User root
   PasswordAuthentication no
