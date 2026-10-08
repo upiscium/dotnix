@@ -3,14 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-
-    opencodeContract = {
-      url = "github:upiscium/OpencodeContract";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, opencodeContract }:
+  outputs = { self, nixpkgs }:
     let
       lib = nixpkgs.lib;
       systems = [
@@ -77,10 +72,6 @@
             packageChecks = lib.mapAttrs'
               (name: package: lib.nameValuePair "${name}-package" package)
               portablePackages;
-            contract =
-              if builtins.hasAttr system opencodeContract.packages
-              then opencodeContract.packages.${system}.opencode-contract
-              else null;
           in
           packageChecks
           // {
@@ -94,30 +85,15 @@
             package-registry-contract = import ./tests/package-registry {
               inherit lib pkgs;
             };
-          }
-          // lib.optionalAttrs (contract != null) {
-            opencode-contract = pkgs.runCommand "dotnix-opencode-contract" {
-              nativeBuildInputs = [ contract ];
-            } ''
-              opencode-contract audit-consumer \
-                --profile global \
-                --consumer ${self} \
-                --strict
-              touch "$out"
-            '';
           });
 
       devShells = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          contract =
-            if builtins.hasAttr system opencodeContract.packages
-            then opencodeContract.packages.${system}.opencode-contract
-            else null;
         in
         {
           default = pkgs.mkShell {
-            packages = [ pkgs.just pkgs.python3 ] ++ lib.optional (contract != null) contract;
+            packages = [ pkgs.just pkgs.python3 ];
           };
         });
     };

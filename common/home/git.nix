@@ -205,7 +205,7 @@ in
     enable = true;
     settings = {
       user = {
-        name = "uPiscium";
+        name = "upiscium";
         email = "upiscium@gmail.com";
       };
 
