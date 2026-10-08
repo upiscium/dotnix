@@ -1,0 +1,5 @@
+Host comp-gateway
+  HostName 10.255.255.61
+  Port 22
+  IdentityFile ~/secrets/private-key/comp
+  User upiscium
