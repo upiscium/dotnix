@@ -3,3 +3,10 @@ Host comp-gateway
   Port 22
   IdentityFile ~/secrets/private-key/comp
   User upiscium
+
+Host s03
+  HostName 10.0.2.3
+  Port 22
+  ProxyJump comp-gateway
+  IdentityFile ~/secrets/private-key/comp
+  User comp-staff
