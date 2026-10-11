@@ -36,7 +36,7 @@ let
     pkgs.typescript-language-server
     pkgs.omnisharp-roslyn
     pkgs.basedpyright
-    pkgs.python312Packages.debugpy
+    # pkgs.python312Packages.debugpy
     pkgs.ruff
     pkgs.rust-analyzer
     pkgs.glsl_analyzer
