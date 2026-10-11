@@ -7,6 +7,7 @@
     ../../module/home/hyprland.nix
     ../../module/home/uwsm-nvidia.nix
 
+    ./moonlight.nix
     ./packages.nix
   ];
 }

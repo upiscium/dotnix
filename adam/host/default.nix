@@ -11,10 +11,11 @@
       ./hardware.nix
       ./ipfix.nix
       ./opencode-discord-bridge.nix
-      # ./sunshine.nix
+      ./sunshine.nix
       ./wireguard.nix
 
       ../../common/host
+      ../../module/host/desktop.nix
       ../../module/host/ollama.nix
       ../../module/host/proxmox.nix
       ../../module/host/docker/rootless.nix
@@ -71,6 +72,9 @@
   ];
 
   services.xserver.displayManager.lightdm.enable = false;
+
+  # Keep the screencast portal on the compositor's pinned version as well.
+  programs.hyprland.portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

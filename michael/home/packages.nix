@@ -13,7 +13,7 @@
     # jetbrains-toolbox
     # modrinth-app
     # krita
-    # moonlight-qt
+    moonlight-qt
     obsidian
     obs-studio
     obs-studio-plugins.droidcam-obs
