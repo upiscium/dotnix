@@ -1,5 +1,5 @@
 Host comp-gateway
-  HostName 10.255.255.61
+  HostName 10.255.255.62
   Port 22
   IdentityFile ~/secrets/private-key/comp
   User upiscium
