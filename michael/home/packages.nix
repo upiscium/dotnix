@@ -5,8 +5,8 @@
     # blender
     claude-code
     droidcam
-    # discord
-    vesktop
+    vesktop # discord
+    firefox
     # gdlauncher-carbon
     gpu-screen-recorder
     gpu-screen-recorder-gtk
