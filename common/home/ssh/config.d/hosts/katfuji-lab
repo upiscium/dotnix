@@ -1,3 +1,6 @@
+Host kls-*
+  ProxyJump MacbookSub
+
 Host suzuka
   HostName 165.93.137.219
   Port 22
