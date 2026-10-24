@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, lib, pkgs, ... }:
 let
   screenshot = pkgs.writeShellApplication {
     name = "hypr-screenshot";
@@ -25,10 +25,39 @@ let
       notify-send "Screenshot copied to clipboard."
     '';
   };
+
+  adamHyprlandSessionReady = pkgs.writeShellApplication {
+    name = "adam-hyprland-session-ready";
+    runtimeInputs = [
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+      pkgs.uwsm
+      pkgs.jq
+      pkgs.coreutils
+    ];
+    text = ''
+      if ! timeout --kill-after=1s 3s hyprctl monitors -j | jq -e 'any(.[]; .name == "SUNSHINE")' >/dev/null; then
+        if ! timeout --kill-after=1s 3s hyprctl output create headless SUNSHINE; then
+          echo "Failed to create the SUNSHINE headless output." >&2
+        fi
+      fi
+
+      exec uwsm finalize
+    '';
+  };
 in
 {
   imports = [ ../../module/home/hyprland.nix ];
 
-  # Only the additional tools used by the shared screenshot/recording bindings.
-  home.packages = with pkgs; [ screenshot slurp gpu-screen-recorder gpu-screen-recorder-gtk ];
+  home.file.".config/uwsm/env".text = lib.mkAfter ''
+    export AQ_DRM_DEVICES=/dev/dri/adam-nvidia
+  '';
+
+  # Keep the session helper and tools used by the shared screenshot/recording bindings.
+  home.packages = with pkgs; [
+    screenshot
+    slurp
+    gpu-screen-recorder
+    gpu-screen-recorder-gtk
+    adamHyprlandSessionReady
+  ];
 }
