@@ -2,7 +2,7 @@
 description: Reproduces failures and identifies root causes without modifying code
 mode: subagent
 model: openai/gpt-6-luna
-reasoningEffort: max
+reasoningEffort: high
 permission:
   edit: deny
   task: deny

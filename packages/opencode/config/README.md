@@ -26,11 +26,11 @@ OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package m
 
 ## Models
 
-| Role | Model |
-| --- | --- |
-| `build`, `architect` | `openai/gpt-6-sol` |
-| `security-reviewer` | `openai/gpt-5.6-terra` |
-| `plan`, `reviewer`, `investigator`, `general`, `explore`, `verifier`, `scout` | `openai/gpt-6-luna` (`reasoningEffort: max`) |
+| Role | Model | Reasoning effort |
+| --- | --- | --- |
+| `build`, `plan`, `architect`, `security-reviewer` | `openai/gpt-6.1-sol` | `high` |
+| `reviewer`, `investigator` | `openai/gpt-6-luna` | `high` |
+| `general`, `explore`, `scout`, `verifier` | `openai/gpt-6-luna` | `medium` |
 
 Each global role has exactly one configured model. Model substitution, fallback agents, and retrying work under an alternate model are not part of this layer. If the configured provider/model cannot execute the task, report the exact failure and return `BLOCKED`.
 
