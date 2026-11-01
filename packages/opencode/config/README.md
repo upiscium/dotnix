@@ -34,7 +34,18 @@ OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package m
 
 Each global role has exactly one configured model. Model substitution, fallback agents, and retrying work under an alternate model are not part of this layer. If the configured provider/model cannot execute the task, report the exact failure and return `BLOCKED`.
 
-The three local workers are separate OpenAI-compatible provider identities with conservative 32768-context/4096-output limits. They are Phase 1 manual/shadow advisory workers, not fallback capacity. OpenCode v1.18.16's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
+The three hidden local workers use the shared `tsumgi` OpenAI-compatible provider, with explicitly pinned model IDs. They remain Phase 1 manual/shadow read-only advisory workers, not fallback capacity. TSUMGI owns deployment routing and scheduling; `local-tracer` and `local-background` currently share the `bonsai2-27b` serving profile, with no separate speed or GPU-affinity guarantee. The original `ollama` and `local-quality` / `local-fast` / `local-background` provider definitions and `agent-runtime` services are retained temporarily for a controlled rollback, but the active local-worker manifest does not reference them. OpenCode v1.18.16's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
+
+## TSUMGI model access (verified 2026-11-01)
+
+The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. Live `GET /v1/models` from Adam returned exactly `qwen3.8-27b` and `bonsai2-27b`, each advertising `tools`, 6,144 input tokens, 2,048 output tokens, 8,192 total tokens and a 65,536-byte request limit. The OpenCode `limit.context` value is the 8,192-token total budget, not the separate 6,144-token input limit.
+
+Both models passed bounded plain chat, streamed chat, and structured tool-call HTTP probes. An isolated OpenCode 1.18.35 `run` plain-chat probe passed for each model. These checks do not establish arbitrary coding quality, automatic dispatch or workload performance.
+
+Choose `--agent tsumgi-qwen` or `--agent tsumgi-bonsai` for manual TSUMGI sessions. Both new primary agents are read-only and omit `reasoningEffort`: passing an OpenAI-tuned primary agent's `reasoningEffort: high` option to the TSUMGI model was observed to yield HTTP 400 (`unsupported_field`). Do not switch the existing OpenAI `build` or `plan` Agent to a TSUMGI model without separately resolving this mismatch. The canonical OpenAI Agent assignments remain unchanged.
+
+No API key was needed for the verified requests from Adam; consequently the `tsumgi` provider has no embedded token. Verify gateway ingress restrictions independently before treating this as safe for arbitrary network clients. If TSUMGI client authentication is enabled in the future, supply a client token via a protected environment variable (for example `{env:TSUMGI_CLIENT_TOKEN}`), not a committed secret.
+
 
 ## Authority boundary
 

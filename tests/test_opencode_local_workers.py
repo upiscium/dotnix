@@ -14,9 +14,9 @@ MODELS = {
     "local-background": ("http://10.12.2.9:8090/v1", "gemma4-12b-it-q4km-1080ti"),
 }
 WORKERS = {
-    "local-investigator": "local-quality/qwen3.6-35b-a3b-nvfp4",
-    "local-tracer": "local-fast/gemma4-12b-it-q4km-3060",
-    "local-background": "local-background/gemma4-12b-it-q4km-1080ti",
+    "local-investigator": "tsumgi/qwen3.8-27b",
+    "local-tracer": "tsumgi/bonsai2-27b",
+    "local-background": "tsumgi/bonsai2-27b",
 }
 DENIED = {"glob", "list", "lsp", "bash", "edit", "task", "question", "webfetch", "websearch", "skill", "todowrite", "external_directory", "doom_loop"}
 
@@ -40,6 +40,28 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             for worker in self.manifest["workers"]
         }
         self.assertEqual(WORKERS, bindings)
+
+    def test_tsumgi_provider_and_manual_primary_agents(self) -> None:
+        provider = self.config["provider"]["tsumgi"]
+        self.assertEqual("@ai-sdk/openai-compatible", provider["npm"])
+        self.assertEqual("https://tsumgi.arc.upiscium.dev/v1", provider["options"]["baseURL"])
+        self.assertNotIn("apiKey", provider["options"])
+        self.assertEqual({"qwen3.8-27b", "bonsai2-27b"}, set(provider["models"]))
+        for model in ("qwen3.8-27b", "bonsai2-27b"):
+            configured = provider["models"][model]
+            self.assertEqual({"context": 8192, "output": 2048}, configured["limit"])
+            self.assertTrue(configured["tool_call"])
+        for agent, model in (
+            ("tsumgi-qwen", "qwen3.8-27b"),
+            ("tsumgi-bonsai", "bonsai2-27b"),
+        ):
+            agent_text = (CONFIG / "agents" / f"{agent}.md").read_text()
+            self.assertIn("mode: primary", agent_text)
+            self.assertIn(f"model: tsumgi/{model}", agent_text)
+            self.assertNotIn("reasoningEffort:", agent_text)
+            self.assertIn('  "*": deny', agent_text)
+            self.assertIn("  edit: deny", agent_text)
+            self.assertIn("  task: deny", agent_text)
 
     def test_exact_read_only_permissions_and_hidden_agents(self) -> None:
         for worker in WORKERS:

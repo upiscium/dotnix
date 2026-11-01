@@ -1,4 +1,5 @@
-# Phase 1 local-worker manifest. Nothing here is automatic: dispatch is manual
+# Phase 1 local-worker manifest. TSUMGI scheduling replaces fixed GPU routes.
+# Nothing here is automatic: dispatch is manual
 # or shadow-only and the parent owns routing, evidence checks, and retry.
 schema_version = 1
 profile = "global"
@@ -15,20 +16,20 @@ fallback = "none"
 
 [[workers]]
 class = "local-investigator"
-provider = "local-quality"
-model = "qwen3.6-35b-a3b-nvfp4"
+provider = "tsumgi"
+model = "qwen3.8-27b"
 role = "read-only advisory"
 
 [[workers]]
 class = "local-tracer"
-provider = "local-fast"
-model = "gemma4-12b-it-q4km-3060"
+provider = "tsumgi"
+model = "bonsai2-27b"
 role = "read-only advisory"
 
 [[workers]]
 class = "local-background"
-provider = "local-background"
-model = "gemma4-12b-it-q4km-1080ti"
+provider = "tsumgi"
+model = "bonsai2-27b"
 role = "read-only advisory"
 
 [metrics]

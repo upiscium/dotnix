@@ -271,6 +271,25 @@
     }
   },
   "provider": {
+    "tsumgi": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "TSUMGI",
+      "options": {
+        "baseURL": "https://tsumgi.arc.upiscium.dev/v1"
+      },
+      "models": {
+        "qwen3.8-27b": {
+          "name": "Qwen3.8 27B (TSUMGI)",
+          "limit": { "context": 8192, "output": 2048 },
+          "tool_call": true
+        },
+        "bonsai2-27b": {
+          "name": "Bonsai 2 27B (TSUMGI)",
+          "limit": { "context": 8192, "output": 2048 },
+          "tool_call": true
+        }
+      }
+    },
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Ollama",
