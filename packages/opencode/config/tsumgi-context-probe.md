@@ -1,0 +1,90 @@
+# TSUMGI #68 — Synthetic input-token probe
+
+This source-only tool runs OpenCode against a short-lived loopback-only fake
+ChatCompletions server, returning hard-coded SSE. It never invokes the public
+TSUMGI Chat API, creates a durable Job, changes installed Agent configuration,
+alters a GPU or performs inference. The TSUMGI provider URL is overridden
+only in the child process using temporary XDG data/cache/state directories.
+
+Only the first **main request containing Tools** and a fixed synthetic user
+marker is selected; initial auxiliary requests are excluded. Output is
+limited to numeric request/message/Tool byte lengths, counts and flags.
+No raw system prompt, Tool schemas, user messages, HTTP headers, model
+storage identifier or request body is written to files, stdout or stderr.
+Temporary session directories are removed on exit.
+
+## Shape-only mode (does not need GPU Worker access)
+
+From a dotnix checkout with the existing OpenCode config installed:
+
+    python3 tools/tsumgi-context-probe.py --agent plan
+    python3 tools/tsumgi-context-probe.py --agent tsumgi-qwen
+    python3 tools/tsumgi-context-probe.py --agent tsumgi-bonsai
+
+The plan choice is *ephemerally* tested against TSUMGI Qwen; the canonical
+OpenAI plan model assignment is never modified. The two dedicated Agents
+retain their respective Qwen/Bonsai selections. The same harmless fixed
+instruction is used throughout.
+
+When no native tokenizer is available the result explicitly shows
+native_token_measurement: null, **not zero**. Byte sizes and Tool counts
+are not tokenizer counts and cannot prove a 6,144 input-token overflow.
+The OpenCode exit code is reported rather than hidden.
+
+## Optional exact native tokenizer counting — requires authorized access
+
+The TSUMGI v0.1.3 Worker calls the pinned native llama.cpp endpoint
+POST /v1/chat/completions/input_tokens before executing a Chat Job.
+This endpoint is **not available on the public TSUMGI Gateway**.
+Only perform native counting after existing approved access to the
+correct, already-running GPU Worker has been restored. An approved
+read-only loopback port-forward may be used; do not create a public
+listener or bypass native authentication.
+
+The probe checks the authorized backend GET /v1/models response and
+requires **exactly one loaded model** before any tokenizer request.
+The native ID is held in memory only, never printed or put on the
+command line. Multiple models or an invalid identity cause BLOCKED.
+Do not assume the Gateway model alias equals the native alias.
+
+    python3 tools/tsumgi-context-probe.py \
+      --agent tsumgi-qwen \
+      --native-token-url http://127.0.0.1:LOCAL_PORT/v1/chat/completions/input_tokens \
+      --acknowledge-native-target \
+      --ablate-tools
+
+Replace LOCAL_PORT with the authorized local forwarding port. The tool
+rejects non-loopback, HTTPS, credential-bearing, noncanonical
+and unexpected endpoint URLs and
+disables inherited HTTP proxy use. It does not obtain private tokens,
+configure SSH, bypass a protected UDS or copy model weights. If the
+native endpoint requires unavailable credentials, report BLOCKED.
+
+The token request is an **explicit projection** of the synthetic
+OpenCode main request onto the native token-relevant fields:
+messages, tools, tool_choice, max_tokens, temperature, stream and the
+automatically resolved native model alias. The public model alias, stream_options and
+inert reasoning_effort are omitted. Full input token counts are compared
+to the published 6,144-token input limit. Optional --ablate-tools
+requests a *second*, counterfactual tokenizer count without Tool
+definitions, to estimate Tool overhead. Removing Tools is not the
+real Agent execution contract; instructions may still mention Tools.
+
+These are **not byte-identical gateway Job traces**. Only the pinned
+model's tokenizer can substantiate token counts. Qwen and Bonsai need
+separate measurements; matching past failed Job shapes remains
+correlation, not proof of which Agent sent a past request.
+
+## Acceptance and safety constraints
+
+- Synthetic instruction only: never use real personal, company or
+  production prompts.
+- Never store or publish HTTP bodies, prompts, Tool JSON, bearer headers,
+  native model paths or raw device identifiers.
+- No provider fallback, model switching, deployment, profile change,
+  GPU config modification, restart or production DB mutation.
+- Failure errors reveal only a class, never a response body.
+- Unit tests exercise a fake local SSE server and fake native tokenizer;
+  this does not qualify a real GPU endpoint.
+
+References: dotnix Issue #68 and documentation-only Draft PR #69.
