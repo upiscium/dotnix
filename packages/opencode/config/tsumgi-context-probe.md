@@ -81,9 +81,42 @@ definitions, to estimate Tool overhead. Removing Tools is not the
 real Agent execution contract; instructions may still mention Tools.
 
 These are **not byte-identical gateway Job traces**. Only the pinned
-model's tokenizer can substantiate token counts. Qwen and Bonsai need
-separate measurements; matching past failed Job shapes remains
-correlation, not proof of which Agent sent a past request.
+model's tokenizer can substantiate token counts. Matching historical
+failed Job shapes remains correlation, not proof of which Agent sent
+a past request.
+
+## Qwen native tokenizer evidence (2026-11-05 JST)
+
+After authorized Sirius RDC access returned, a separate transient
+in-memory probe recreated the same synthetic OpenCode 1.18.35 main
+requests on Adam, then counted them on the **already-running pinned
+Qwen Runtime**, using its actual local
+`/v1/chat/completions/input_tokens` API. The native model identity
+was retrieved privately from `/v1/models`. The payload was projected
+onto the same token-relevant fields as the tool above. No actual
+inference, Gateway Chat/Job, Worker restart, package/config alteration
+or model download occurred. This was a **separate one-shot diagnostic**,
+not a claim that the present CLI was deployed onto the GPU host.
+
+| Synthetic Qwen main request | Full input tokens | Without Tool schemas | Tool-schema contribution |
+| --- | ---: | ---: | ---: |
+| OpenAI-oriented `plan` overridden to Qwen | **7,841** | 4,967 | **2,874** |
+| Dedicated `tsumgi-qwen` | **1,504** | 253 | 1,251 |
+
+The effective input limit is **6,144 tokens**. Therefore, the
+synthetic `plan` request is **1,697 tokens over the limit**, while
+the dedicated Qwen request fits with **4,640 tokens of headroom**.
+Removing the Tool schemas alone moves the synthetic `plan` request
+below the limit. That confirms their contribution is sufficient to
+trigger the rejection **for this specific synthetic request**; it
+does not establish which Agent generated historical failed Jobs,
+or that any Tool deletion would preserve the full `plan` workflow.
+
+**Bonsai remains unmeasured.** Deneb's RDC is still offline, and
+Spica is experiencing a CUDA initialization/recovery incident
+([TSUMGI #229](https://github.com/upiscium/TSUMGI/issues/229)).
+Do not use Qwen's measured token numbers as Bonsai tokenizer results.
+Keep this CLI and the native measurement path separately qualified.
 
 ## Acceptance and safety constraints
 
