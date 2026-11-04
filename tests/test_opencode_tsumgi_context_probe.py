@@ -56,6 +56,40 @@ class TokenBackendHandler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
 
 
+class RedirectNativeHandler(BaseHTTPRequestHandler):
+    destination = "http://not-loopback.invalid/unsafe"
+
+    def log_message(self, *_args):
+        pass
+
+    def do_GET(self):
+        self.send_response(302)
+        self.send_header("Location", self.destination)
+        self.end_headers()
+
+    def do_POST(self):
+        self.send_response(302)
+        self.send_header("Location", self.destination)
+        self.end_headers()
+
+
+class RedirectSentinelHandler(BaseHTTPRequestHandler):
+    hits = 0
+
+    def log_message(self, *_args):
+        pass
+
+    def do_GET(self):
+        type(self).hits += 1
+        self.send_response(200)
+        self.end_headers()
+
+    def do_POST(self):
+        type(self).hits += 1
+        self.send_response(200)
+        self.end_headers()
+
+
 class ProbeTests(unittest.TestCase):
     @staticmethod
     def sample(*, tools: int = 3) -> dict:
@@ -151,6 +185,34 @@ class ProbeTests(unittest.TestCase):
             native.shutdown()
             native.server_close()
             thread.join(timeout=3)
+
+    def test_native_redirect_is_rejected_before_leaving_loopback(self):
+        RedirectSentinelHandler.hits = 0
+        sentinel = ThreadingHTTPServer(("127.0.0.1", 0), RedirectSentinelHandler)
+        sentinel_thread = threading.Thread(target=sentinel.serve_forever, daemon=True)
+        sentinel_thread.start()
+        RedirectNativeHandler.destination = (
+            f"http://127.0.0.1:{sentinel.server_address[1]}/unsafe"
+        )
+        server = ThreadingHTTPServer(("127.0.0.1", 0), RedirectNativeHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            url = f"http://127.0.0.1:{server.server_address[1]}{probe.NATIVE_PATH}"
+            with self.assertRaises(ValueError):
+                probe.resolve_single_native_model(url)
+            with self.assertRaises(ValueError):
+                probe.count_native_tokens(
+                    url, probe.native_token_projection(self.sample(), "native")
+                )
+            self.assertEqual(RedirectSentinelHandler.hits, 0)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=3)
+            sentinel.shutdown()
+            sentinel.server_close()
+            sentinel_thread.join(timeout=3)
 
     def test_capture_server_returns_fake_sse_without_logging_raw(self):
         server = probe.CaptureServer(probe.AGENTS["tsumgi-qwen"])
@@ -250,7 +312,8 @@ class ProbeTests(unittest.TestCase):
         with mock.patch.object(probe.shutil, "which", return_value="/bin/opencode"), \
              mock.patch.object(probe.subprocess, "run", side_effect=fake_subprocess):
             outcome = probe.run_probe(args)
-        self.assertEqual(outcome["real_inference_calls"], 0)
+        self.assertEqual(outcome["fake_receiver_forwarded_requests"], 0)
+        self.assertFalse(outcome["child_network_egress_restricted"])
         self.assertEqual(outcome["main_request"]["tool_count"], 3)
         self.assertEqual(outcome["auxiliary_request_count"], 1)
         self.assertIsNone(outcome["native_token_measurement"])

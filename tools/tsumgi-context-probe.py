@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Inspect synthetic OpenCode request shape, optionally count native llama.cpp tokens.
 
-No user prompt input or request-body persistence. No TSUMGI Chat/Job request is sent.
+No arbitrary user prompt or request-body persistence. The fake listener does
+not forward requests; the OpenCode child is not an egress-restricted sandbox.
 A native token-count request requires an explicitly supplied loopback-only endpoint.
 """
 from __future__ import annotations
@@ -17,7 +18,7 @@ import sys
 import tempfile
 import threading
 from urllib.parse import urlsplit
-from urllib.request import ProxyHandler, Request, build_opener
+from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
 MARKER = "TSUMGI_SYNTHETIC_CHECK"
 PROMPT = f"Reply with exactly {MARKER}. Do not read or modify files."
@@ -59,7 +60,7 @@ def resolve_single_native_model(url: str) -> str:
     """Require exactly one loaded native model; keep its ID in memory only."""
     require_loopback_native_url(url)
     models_url = url.removesuffix(NATIVE_PATH) + "/v1/models"
-    with build_opener(ProxyHandler({})).open(
+    with build_opener(ProxyHandler({}), RejectRedirects()).open(
         Request(models_url, method="GET"), timeout=7
     ) as response:
         models = json.load(response)
@@ -125,6 +126,13 @@ def native_token_projection(data: dict, native_model: str, *, without_tools: boo
     return request
 
 
+class RejectRedirects(HTTPRedirectHandler):
+    """Do not allow native HTTP counting to escape an approved local listener."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise ValueError("native tokenizer redirects are forbidden")
+
+
 def count_native_tokens(url: str, body: dict) -> int:
     require_loopback_native_url(url)
     request = Request(
@@ -134,7 +142,7 @@ def count_native_tokens(url: str, body: dict) -> int:
         data=json.dumps(body, ensure_ascii=False, separators=(",", ":")).encode("utf-8"),
     )
     # Never send the (in-memory) synthetic Agent request through ambient proxies.
-    with build_opener(ProxyHandler({})).open(request, timeout=12) as response:
+    with build_opener(ProxyHandler({}), RejectRedirects()).open(request, timeout=12) as response:
         result = json.load(response)
     if not isinstance(result, dict):
         raise ValueError("native token result is not an object")
@@ -292,7 +300,8 @@ def run_probe(args: argparse.Namespace) -> dict:
         "agent": args.agent,
         "logical_model": expected_model,
         "fixed_synthetic_input": True,
-        "real_inference_calls": 0,
+        "fake_receiver_forwarded_requests": 0,
+        "child_network_egress_restricted": False,
         "opencode_exit_code": return_code,
         "auxiliary_request_count": server.auxiliary_requests,
         "main_request": server.main_metrics,
