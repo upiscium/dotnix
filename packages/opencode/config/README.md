@@ -42,7 +42,23 @@ The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. Live `
 
 Both models passed bounded plain chat, streamed chat, and structured tool-call HTTP probes. An isolated OpenCode 1.18.35 `run` plain-chat probe passed for each model. These checks do not establish arbitrary coding quality, automatic dispatch or workload performance.
 
-Choose `--agent tsumgi-qwen` or `--agent tsumgi-bonsai` for manual TSUMGI sessions. Both new primary agents are read-only and omit `reasoningEffort`: passing an OpenAI-tuned primary agent's `reasoningEffort: high` option to the TSUMGI model was observed to yield HTTP 400 (`unsupported_field`). Do not switch the existing OpenAI `build` or `plan` Agent to a TSUMGI model without separately resolving this mismatch. The canonical OpenAI Agent assignments remain unchanged.
+Choose `--agent tsumgi-qwen` or `--agent tsumgi-bonsai` for manual TSUMGI sessions. Both primary agents are read-only and omit `reasoningEffort`. The old HTTP 400 `unsupported_field` observation applied **before** [TSUMGI #209](https://github.com/upiscium/TSUMGI/issues/209); as of v0.1.3, the Gateway accepts bounded `reasoning_effort: low|medium|high` as a **no-effect compatibility hint**, not as a model reasoning-budget control. An independent input-budget failure can still occur when overriding the OpenAI-oriented `plan` Agent's model. The canonical OpenAI `build` and `plan` model assignments must not be changed or silently routed to TSUMGI. Track the client-specific context issue in [dotnix #68](https://github.com/upiscium/dotnix/issues/68).
+
+### TSUMGI input-context budget: bounded investigation (#68)
+
+Both logical models advertise **6,144 effective input tokens**, **2,048 output tokens**, **8,192 total context tokens**, and a separate **65,536-byte HTTP request limit**. This is not a promise that 8,192 tokens can be used for the input. In particular, Tool schemas and agent/system instructions contribute to actual prompt tokens. A JSON request below the byte limit can still exceed the input-token limit and fail closed with `context_length_exceeded`.
+
+On 2026-11-04 JST, OpenCode **1.18.35** on Adam (dotnix `c1b30e6`) sent synthetic requests for a single identical, harmless instruction to a loopback-only ChatCompletions receiver. The receiver returned fabricated SSE data; **no production inference or model request was sent, and raw prompts, Tool schemas, keys and client headers were not retained**. The first automatic 0-tool auxiliary request was distinguished from the subsequent main Agent request. Numeric main-request shapes were:
+
+| Selected Agent and model | Main request bytes | Messages bytes | Tool schema bytes | Tool count | `reasoning_effort` |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `plan` forced onto `tsumgi/qwen3.8-27b` | 29,654 | 18,536 | 10,955 | 6 | `high` (no effect) |
+| `tsumgi-qwen` with `tsumgi/qwen3.8-27b` | 5,218 | 1,046 | 4,035 | 3 | absent |
+| `tsumgi-bonsai` with `tsumgi/bonsai2-27b` | 5,220 | 1,048 | 4,035 | 3 | absent |
+
+The `plan` request is about **5.7×** larger in bytes than the dedicated local Qwen request; it uses a longer system/Agent prompt and more tools. The ~29.7 KB request size and six-tool shape also resemble previous rejected production jobs. These measurements establish **request shape, not exact model-tokenizer counts, client attribution or a causal proof**. The deployed llama.cpp backend enforces its input budget using the tokenizer-aware `/v1/chat/completions/input_tokens` endpoint, which was not directly accessible during this probe.
+
+**Operator guidance:** use explicit dedicated `tsumgi-qwen` / `tsumgi-bonsai` Agents for bounded local tasks; use canonical OpenAI `plan` for workflows requiring its larger prompt and tool surface. Do not reassign `plan` to TSUMGI, automatically fall back to a different model, delete tools without workflow review, weaken Gateway validation, or silently increase GPU context/VRAM commitments. Before adjusting routing, measure a reproducible main-request **actual input-token count** with the pinned model's tokenizer and compare against 6,144, including the Tool schemas and system instructions, without capturing user prompts or secrets. Source of investigation and aggregate fleet evidence: [dotnix #68](https://github.com/upiscium/dotnix/issues/68).
 
 No API key was needed for the verified requests from Adam; consequently the `tsumgi` provider has no embedded token. Verify gateway ingress restrictions independently before treating this as safe for arbitrary network clients. If TSUMGI client authentication is enabled in the future, supply a client token via a protected environment variable (for example `{env:TSUMGI_CLIENT_TOKEN}`), not a committed secret.
 
