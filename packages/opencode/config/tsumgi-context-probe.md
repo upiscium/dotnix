@@ -1,17 +1,27 @@
 # TSUMGI #68 — Synthetic input-token probe
 
 This source-only tool runs OpenCode against a short-lived loopback-only fake
-ChatCompletions server, returning hard-coded SSE. It never invokes the public
-TSUMGI Chat API, creates a durable Job, changes installed Agent configuration,
-alters a GPU or performs inference. The TSUMGI provider URL is overridden
-only in the child process using temporary XDG data/cache/state directories.
+ChatCompletions server, returning hard-coded SSE. The **fake receiver never
+forwards Chat requests** to a live TSUMGI model or creates durable Jobs.
+It does not modify installed Agents, GPU profiles or TSUMGI services.
+The provider URL is overridden only in the child process using temporary
+XDG data/cache/state directories.
+
+**This is not an egress sandbox.** OpenCode can still make other outbound
+requests (for startup, provider metadata, other loaded configuration, etc.).
+Run only on a trusted operator host where outbound traffic is already
+controlled. Loopback provider configuration is not proof that the whole
+OpenCode subprocess is network-isolated.
 
 Only the first **main request containing Tools** and a fixed synthetic user
-marker is selected; initial auxiliary requests are excluded. Output is
-limited to numeric request/message/Tool byte lengths, counts and flags.
-No raw system prompt, Tool schemas, user messages, HTTP headers, model
-storage identifier or request body is written to files, stdout or stderr.
-Temporary session directories are removed on exit.
+marker is selected; initial auxiliary requests are excluded. The probe
+prints only numeric request/message/Tool byte lengths, counts and flags.
+The probe itself does not log raw messages, Tool schemas, HTTP headers,
+private model IDs or request bodies. OpenCode **may write temporary
+session records containing the synthetic request** inside the isolated
+XDG directories; those directories are deleted on exit, not securely
+erased from the filesystem. Use only harmless synthetic input on a
+trusted operator host.
 
 ## Shape-only mode (does not need GPU Worker access)
 
@@ -55,8 +65,8 @@ Do not assume the Gateway model alias equals the native alias.
 
 Replace LOCAL_PORT with the authorized local forwarding port. The tool
 rejects non-loopback, HTTPS, credential-bearing, noncanonical
-and unexpected endpoint URLs and
-disables inherited HTTP proxy use. It does not obtain private tokens,
+and unexpected endpoint URLs. Native HTTP redirects are always refused
+before following them, and inherited HTTP proxy use is disabled. It does not obtain private tokens,
 configure SSH, bypass a protected UDS or copy model weights. If the
 native endpoint requires unavailable credentials, report BLOCKED.
 
@@ -82,7 +92,9 @@ correlation, not proof of which Agent sent a past request.
 - Never store or publish HTTP bodies, prompts, Tool JSON, bearer headers,
   native model paths or raw device identifiers.
 - No provider fallback, model switching, deployment, profile change,
-  GPU config modification, restart or production DB mutation.
+  GPU config modification, restart or production DB mutation by the probe.
+- No outbound-network isolation for OpenCode is claimed. Use existing
+  host egress controls; never treat this as a safe untrusted-plugin sandbox.
 - Failure errors reveal only a class, never a response body.
 - Unit tests exercise a fake local SSE server and fake native tokenizer;
   this does not qualify a real GPU endpoint.
