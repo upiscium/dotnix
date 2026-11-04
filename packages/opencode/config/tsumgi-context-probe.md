@@ -76,9 +76,10 @@ messages, tools, tool_choice, max_tokens, temperature, stream and the
 automatically resolved native model alias. The public model alias, stream_options and
 inert reasoning_effort are omitted. Full input token counts are compared
 to the published 6,144-token input limit. Optional --ablate-tools
-requests a *second*, counterfactual tokenizer count without Tool
-definitions, to estimate Tool overhead. Removing Tools is not the
-real Agent execution contract; instructions may still mention Tools.
+requests a *second*, counterfactual tokenizer count without both
+`tools` and `tool_choice`, to estimate their combined token overhead.
+This is not the real Agent execution contract; instructions may still
+mention Tools.
 
 These are **not byte-identical gateway Job traces**. Only the pinned
 model's tokenizer can substantiate token counts. Matching historical
@@ -98,7 +99,7 @@ inference, Gateway Chat/Job, Worker restart, package/config alteration
 or model download occurred. This was a **separate one-shot diagnostic**,
 not a claim that the present CLI was deployed onto the GPU host.
 
-| Synthetic Qwen main request | Full input tokens | Without Tool schemas | Tool-schema contribution |
+| Synthetic Qwen main request | Full input tokens | Without `tools` and `tool_choice` | Combined tool-related delta |
 | --- | ---: | ---: | ---: |
 | OpenAI-oriented `plan` overridden to Qwen | **7,841** | 4,967 | **2,874** |
 | Dedicated `tsumgi-qwen` | **1,504** | 253 | 1,251 |
@@ -106,11 +107,12 @@ not a claim that the present CLI was deployed onto the GPU host.
 The effective input limit is **6,144 tokens**. Therefore, the
 synthetic `plan` request is **1,697 tokens over the limit**, while
 the dedicated Qwen request fits with **4,640 tokens of headroom**.
-Removing the Tool schemas alone moves the synthetic `plan` request
-below the limit. That confirms their contribution is sufficient to
-trigger the rejection **for this specific synthetic request**; it
-does not establish which Agent generated historical failed Jobs,
-or that any Tool deletion would preserve the full `plan` workflow.
+Removing **both** `tools` and `tool_choice` moves the synthetic
+`plan` request below the limit. Their **combined** token contribution
+is sufficient to trigger rejection **for this synthetic request**;
+this does not isolate each field's contribution, identify the Agent
+behind historical failed Jobs, or show that Tool removal preserves
+the original `plan` workflow.
 
 **Bonsai remains unmeasured.** Deneb's RDC is still offline, and
 Spica is experiencing a CUDA initialization/recovery incident
