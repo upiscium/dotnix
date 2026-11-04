@@ -63,6 +63,30 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             self.assertIn("  edit: deny", agent_text)
             self.assertIn("  task: deny", agent_text)
 
+    def test_tsumgi_context_budget_documentation_is_current_and_bounded(self) -> None:
+        readme = (CONFIG / "README.md").read_text()
+        self.assertIn("6,144 effective input tokens", readme)
+        self.assertIn("2,048 output tokens", readme)
+        self.assertIn("8,192 total context tokens", readme)
+        self.assertIn("65,536-byte HTTP request limit", readme)
+        self.assertIn("TSUMGI #209", readme)
+        self.assertIn("no-effect compatibility hint", readme)
+        self.assertIn("dotnix #68", readme)
+        self.assertIn("context_length_exceeded", readme)
+        self.assertIn("29,654", readme)
+        self.assertIn("5,218", readme)
+        self.assertIn("5,220", readme)
+        self.assertIn("not exact model-tokenizer counts", readme)
+        self.assertIn("no production inference", readme)
+        self.assertIn("Do not reassign `plan` to TSUMGI", readme)
+        self.assertNotIn("was observed to yield HTTP 400 (`unsupported_field`)", readme)
+        self.assertIn("Both primary agents are read-only and omit `reasoningEffort`", readme)
+        # Documentation of this limitation must never silently change model
+        # assignment, global Agent prompts, runtime limits, or permissions.
+        canonical = (CONFIG / "agents" / "plan.md").read_text()
+        self.assertIn("model: openai/gpt-6.1-sol", canonical)
+        self.assertIn("reasoningEffort: high", canonical)
+
     def test_exact_read_only_permissions_and_hidden_agents(self) -> None:
         for worker in WORKERS:
             text = (CONFIG / "agents" / f"{worker}.md").read_text()
