@@ -114,11 +114,40 @@ this does not isolate each field's contribution, identify the Agent
 behind historical failed Jobs, or show that Tool removal preserves
 the original `plan` workflow.
 
-**Bonsai remains unmeasured.** Deneb's RDC is still offline, and
-Spica is experiencing a CUDA initialization/recovery incident
-([TSUMGI #229](https://github.com/upiscium/TSUMGI/issues/229)).
-Do not use Qwen's measured token numbers as Bonsai tokenizer results.
-Keep this CLI and the native measurement path separately qualified.
+## Bonsai native tokenizer evidence (2026-11-05 JST)
+
+After an operator-authorized physical Proxmox host reboot restored CUDA,
+both Deneb and Spica were independently READY and their existing native
+Bonsai Runtime returned expected short synthetic completions. A separate
+one-shot, in-memory probe then recreated OpenCode 1.18.35 synthetic
+`plan`-override and dedicated `tsumgi-bonsai` main requests on Adam,
+and counted those requests using **each recovered model's own native
+`/v1/chat/completions/input_tokens` endpoint**, without generating
+text during token counting. The native model alias was selected from
+the single existing `/v1/models` record privately.
+
+| Synthetic Bonsai main request | Deneb input tokens | Spica input tokens | Without `tools` and `tool_choice` | Combined tool-related delta |
+| --- | ---: | ---: | ---: | ---: |
+| OpenAI-oriented `plan` overridden to Bonsai | **7,843** | **7,843** | 4,969 | **2,874** |
+| Dedicated `tsumgi-bonsai` | **1,504** | **1,504** | 253 | 1,251 |
+
+Both native backends agree. The **6,144-token input cap** rejects the
+synthetic `plan` request by **1,699 tokens**, while dedicated Bonsai
+fits with **4,640-token headroom**. As above, the counterfactual
+removed **both `tools` and `tool_choice`**, and the combined
+contribution cannot be attributed to either field separately.
+
+These measurements apply to fixed, harmless synthetic inputs;
+requests were explicitly projected onto the native token-relevant
+fields. They do **not** attribute historical failed Jobs to a client,
+qualify multi-step Agent quality or prove that changing production
+`plan` routing is appropriate. They were produced by a **separate
+transient one-shot diagnostic**, not by deploying this PR's CLI to
+the Worker. A VRAM-gated 12K context canary is tracked separately:
+[TSUMGI Qwen #230](https://github.com/upiscium/TSUMGI/issues/230)
+and [TSUMGI Bonsai #232](https://github.com/upiscium/TSUMGI/issues/232).
+Keep the native measurement path and any service-impacting context
+change independently qualified.
 
 ## Acceptance and safety constraints
 
