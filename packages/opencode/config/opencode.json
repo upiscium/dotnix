@@ -280,7 +280,7 @@
       "models": {
         "qwen3.8-27b": {
           "name": "Qwen3.8 27B (TSUMGI)",
-          "limit": { "context": 8192, "output": 2048 },
+          "limit": { "context": 12288, "output": 2048 },
           "tool_call": true
         },
         "bonsai2-27b": {

@@ -47,9 +47,13 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         self.assertEqual("https://tsumgi.arc.upiscium.dev/v1", provider["options"]["baseURL"])
         self.assertNotIn("apiKey", provider["options"])
         self.assertEqual({"qwen3.8-27b", "bonsai2-27b"}, set(provider["models"]))
-        for model in ("qwen3.8-27b", "bonsai2-27b"):
+        expected_limits = {
+            "qwen3.8-27b": {"context": 12288, "output": 2048},
+            "bonsai2-27b": {"context": 8192, "output": 2048},
+        }
+        for model, limits in expected_limits.items():
             configured = provider["models"][model]
-            self.assertEqual({"context": 8192, "output": 2048}, configured["limit"])
+            self.assertEqual(limits, configured["limit"])
             self.assertTrue(configured["tool_call"])
         for agent, model in (
             ("tsumgi-qwen", "qwen3.8-27b"),

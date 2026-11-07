@@ -38,7 +38,9 @@ The three hidden local workers use the shared `tsumgi` OpenAI-compatible provide
 
 ## TSUMGI model access (verified 2026-11-01)
 
-The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. Live `GET /v1/models` from Adam returned exactly `qwen3.8-27b` and `bonsai2-27b`, each advertising `tools`, 6,144 input tokens, 2,048 output tokens, 8,192 total tokens and a 65,536-byte request limit. The OpenCode `limit.context` value is the 8,192-token total budget, not the separate 6,144-token input limit.
+The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. On November 8, 2026 (JST), an approved reversible production cutover completed on Sirius and the shared Control: live `GET /v1/models` advertises `qwen3.8-27b` with **10,240 input / 2,048 output / 12,288 total** tokens and a 65,536-byte request limit. The existing `bonsai2-27b` remains **6,144 input / 2,048 output / 8,192 total** tokens and 65,536 bytes. The OpenCode `limit.context` value is the *total* model budget: **12,288 for Qwen**, 8,192 for Bonsai, not the separate maximum input tokens. Actual Sirius Native and Gateway long-input (~10,143 tokens), Chat, Tool Call, streaming and negative over-limit checks passed under TSUMGI Issue #230. OpenCode's global OpenAI `plan` model, provider permissions and Bonsai must remain unchanged.
+
+Because dotnix's OpenCode launcher restores package-owned global configuration on each invocation, editing `~/.config/opencode/opencode.json` directly will not persist. Change this source file and deploy the reviewed dotnix package instead. Until then, any private 12K override is diagnostic and does not represent an updated installed dotnix baseline.
 
 Both models passed bounded plain chat, streamed chat, and structured tool-call HTTP probes. An isolated OpenCode 1.18.35 `run` plain-chat probe passed for each model. These checks do not establish arbitrary coding quality, automatic dispatch or workload performance.
 
