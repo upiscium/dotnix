@@ -7,6 +7,7 @@
     droidcam
     vesktop # discord
     firefox
+    freecad
     # gdlauncher-carbon
     gpu-screen-recorder
     gpu-screen-recorder-gtk
