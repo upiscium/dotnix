@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Claude Enter Remap",
+  "version": "0.1.0",
+  "description": "claude.ai: Enter inserts a newline, Ctrl/Cmd+Enter sends. IME composition is left untouched.",
+  "content_scripts": [
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
