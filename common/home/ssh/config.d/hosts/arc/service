@@ -85,3 +85,15 @@ Host astrum-db
   Port 22
   User root
   PasswordAuthentication no
+
+Host obsidian-control
+  HostName 10.12.2.15
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host penpot
+  HostName 10.12.2.16
+  Port 22
+  User root
+  PasswordAuthentication no
