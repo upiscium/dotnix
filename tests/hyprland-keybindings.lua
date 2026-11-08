@@ -16,19 +16,25 @@ local function serialize(value)
 end
 
 local function capture(path)
-    local bindings, monitors, startupCommands = {}, {}, {}
+    local bindings, monitors, workspaceRules, startupCommands = {}, {}, {}, {}
     local function dispatcher(name)
         return function(value)
             return { dispatcher = name, value = value }
         end
     end
     hl = {
+        config = function(config)
+            assert(type(config) == "table")
+        end,
         bind = function(key, action)
             assert(not bindings[key], "Duplicate key: " .. key)
             bindings[key] = serialize(action)
         end,
         monitor = function(config)
             monitors[#monitors + 1] = serialize(config)
+        end,
+        workspace_rule = function(config)
+            workspaceRules[#workspaceRules + 1] = serialize(config)
         end,
         on = function(event, callback)
             assert(event == "hyprland.start")
@@ -49,11 +55,11 @@ local function capture(path)
         },
     }
     assert(loadfile(path))()
-    return bindings, monitors, startupCommands
+    return bindings, monitors, workspaceRules, startupCommands
 end
 
-local michael, michaelMonitors = capture("module/home/hyprland/platforms/michael.lua")
-local adam, adamMonitors, adamStartup = capture("module/home/hyprland/platforms/adam.lua")
+local michael, michaelMonitors, michaelWorkspaceRules = capture("module/home/hyprland/platforms/michael.lua")
+local adam, adamMonitors, adamWorkspaceRules, adamStartup = capture("module/home/hyprland/platforms/adam.lua")
 local laptopOnly = {
     ["ALT+F2"] = true,
     ["ALT+F3"] = true,
@@ -84,8 +90,16 @@ assert(adam["ALT+Return"] == serialize({ dispatcher = "exec", value = "kitty" })
 assert(adam["ALT+R"] == serialize({ dispatcher = "exec", value = "wofi --show drun" }))
 assert(adam["ALT+F11"] == serialize({ dispatcher = "exec", value = "hyprlock --no-fade-in" }))
 assert(#adamMonitors == 1)
-assert(adamMonitors[1] == serialize({ output = "", mode = "preferred", position = "auto", scale = 1 }))
-assert(serialize(adamStartup) == serialize({ "uwsm finalize" }))
+assert(adamMonitors[1] == serialize({ output = "SUNSHINE", mode = "1920x1080@60", position = "0x0", scale = 1 }))
+assert(#adamWorkspaceRules == 1)
+assert(adamWorkspaceRules[1] == serialize({
+    workspace = "1",
+    monitor = "SUNSHINE",
+    default = true,
+    persistent = true,
+}))
+assert(#michaelWorkspaceRules == 0, "Adam-only workspace rule leaked to Michael")
+assert(serialize(adamStartup) == serialize({ "adam-hyprland-session-ready" }))
 
 if arg[1] then
     local original, originalMonitors = capture(arg[1])
@@ -93,4 +107,4 @@ if arg[1] then
     assert(serialize(originalMonitors) == serialize(michaelMonitors), "Michael monitors changed")
 end
 
-print("PASS: shared bindings, workspace controls, host-specific exclusions and monitors")
+print("PASS: shared bindings, workspace controls, host-specific exclusions, monitors and workspace rules")

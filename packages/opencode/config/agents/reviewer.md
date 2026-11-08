@@ -2,7 +2,7 @@
 description: Reviews changes for correctness, contracts, maintainability, and missing tests
 mode: subagent
 model: openai/gpt-6-luna
-reasoningEffort: max
+reasoningEffort: high
 permission:
   edit: deny
   task: deny

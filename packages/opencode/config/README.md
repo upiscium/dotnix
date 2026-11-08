@@ -26,15 +26,30 @@ OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package m
 
 ## Models
 
-| Role | Model |
-| --- | --- |
-| `build`, `architect` | `openai/gpt-6-sol` |
-| `security-reviewer` | `openai/gpt-5.6-terra` |
-| `plan`, `reviewer`, `investigator`, `general`, `explore`, `verifier`, `scout` | `openai/gpt-6-luna` (`reasoningEffort: max`) |
+| Role | Model | Reasoning effort |
+| --- | --- | --- |
+| `build`, `plan`, `architect`, `security-reviewer` | `openai/gpt-6.1-sol` | `high` |
+| `reviewer`, `investigator` | `openai/gpt-6-luna` | `high` |
+| `general`, `explore`, `scout`, `verifier` | `openai/gpt-6-luna` | `medium` |
 
 Each global role has exactly one configured model. Model substitution, fallback agents, and retrying work under an alternate model are not part of this layer. If the configured provider/model cannot execute the task, report the exact failure and return `BLOCKED`.
 
-The three local workers are separate OpenAI-compatible provider identities with conservative 32768-context/4096-output limits. They are Phase 1 manual/shadow advisory workers, not fallback capacity. OpenCode v1.18.16's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
+The three hidden local workers use the shared `tsumgi` OpenAI-compatible provider, with explicitly pinned model IDs. They remain Phase 1 manual/shadow read-only advisory workers, not fallback capacity. TSUMGI owns deployment routing and scheduling; `local-tracer` and `local-background` currently share the `bonsai2-27b` serving profile, with no separate speed or GPU-affinity guarantee. The original `ollama` and `local-quality` / `local-fast` / `local-background` provider definitions and `agent-runtime` services are retained temporarily for a controlled rollback, but the active local-worker manifest does not reference them. OpenCode v1.18.16's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
+
+## TSUMGI model access (production Qwen 12K verified 2026-11-08)
+
+The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. On November 8, 2026 (JST), an approved reversible production cutover completed on Sirius and the shared Control: live `GET /v1/models` advertises `qwen3.8-27b` with **10,240 input / 2,048 output / 12,288 total** tokens and a 65,536-byte request limit. The existing `bonsai2-27b` remains **6,144 input / 2,048 output / 8,192 total** tokens and 65,536 bytes. The OpenCode `limit.context` value is the *total* model budget: **12,288 for Qwen**, 8,192 for Bonsai, not the separate maximum input tokens. Actual Sirius Native and Gateway long-input (~10,143 tokens), Chat, Tool Call, streaming and negative over-limit checks passed under TSUMGI Issue #230. OpenCode's global OpenAI `plan` model, provider permissions and Bonsai must remain unchanged.
+
+Because dotnix's OpenCode launcher restores package-owned global configuration on each invocation, editing `~/.config/opencode/opencode.json` directly will not persist. Change this source file and deploy the reviewed dotnix package instead. Until then, any private 12K override is diagnostic and does not represent an updated installed dotnix baseline.
+
+**Coupled rollback:** If TSUMGI Qwen/Gateway returns to 8K before this 12K dotnix source is installed, do not activate the revised package. If TSUMGI rolls back *after* the 12K client source has been installed, also restore the Qwen `limit.context` to 8,192 through a reviewed dotnix source revision and redeploy that package on each affected host. Do not rely on manual edits to the generated config, because the launcher overwrites them. Keep Bonsai at 8K throughout. Old running OpenCode sessions may retain their prior model budgets until relaunched, so confirm new sessions after each deployment or rollback. The Gateway's strict token admission must still fail closed while clients are temporarily inconsistent.
+
+The original November 1 pre-cutover 8K setup passed bounded plain chat, streamed chat, structured tool-call HTTP probes and an isolated OpenCode 1.18.35 `run` plain-chat probe for each model. After the November 8 Qwen 12K cutover, the actual Qwen Gateway passed bounded Chat, Tool Call, Streaming, cancellation and a 10,143-token request with per-GPU VRAM measurements (see TSUMGI #230). Separately, OpenCode 1.18.35 using `OPENCODE_CONFIG` pointed at the **proposed 12K dotnix source** completed a real `tsumgi-qwen` plain-chat session (exit 0); a temporary opt-in `opencode-tsumgi-qwen12k` wrapper also passed. Neither probe proves that the ordinary installed dotnix launcher already has the 12K config, nor that the global `plan` agent or general coding workloads work at 12K.
+
+Choose `--agent tsumgi-qwen` or `--agent tsumgi-bonsai` for manual TSUMGI sessions. Both new primary agents are read-only and omit `reasoningEffort`: passing an OpenAI-tuned primary agent's `reasoningEffort: high` option to the TSUMGI model was observed to yield HTTP 400 (`unsupported_field`). Do not switch the existing OpenAI `build` or `plan` Agent to a TSUMGI model without separately resolving this mismatch. The canonical OpenAI Agent assignments remain unchanged.
+
+No API key was needed for the verified requests from Adam; consequently the `tsumgi` provider has no embedded token. Verify gateway ingress restrictions independently before treating this as safe for arbitrary network clients. If TSUMGI client authentication is enabled in the future, supply a client token via a protected environment variable (for example `{env:TSUMGI_CLIENT_TOKEN}`), not a committed secret.
+
 
 ## Authority boundary
 
