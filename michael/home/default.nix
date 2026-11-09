@@ -1,6 +1,7 @@
 { ... }: {
   imports = [
     ../../common/home
+    ../../module/home/claude.nix
 
     ../../module/home/browser.nix
     ../../module/home/gtk.nix
