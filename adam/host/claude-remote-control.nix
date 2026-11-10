@@ -35,8 +35,10 @@ let
     export CLAUDE_CONFIG_DIR=${home}/.claude-personal
     unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN ANTHROPIC_BASE_URL \
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC DISABLE_GROWTHBOOK
+    # No pre-created session: it would run in the main checkout instead of an
+    # isolated worktree.
     while true; do
-      ${claude}/bin/claude remote-control --spawn worktree --name "$1"
+      ${claude}/bin/claude remote-control --spawn worktree --no-create-session-in-dir --name "$1"
       sleep 15
     done
   '';
