@@ -15,7 +15,6 @@ let
   repos = {
     ObsidianAutomation = "${programs}/ObsidianAutomation";
     ObsidianCore = "${programs}/ObsidianCore";
-    TSUZRI = "${programs}/TSUZRI";
     KASANE = "${programs}/KASANE";
     MUSUBI = "${programs}/MUSUBI";
     KUMIKI = "${programs}/KUMIKI";
