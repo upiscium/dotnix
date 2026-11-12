@@ -46,10 +46,11 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         self.assertEqual("@ai-sdk/openai-compatible", provider["npm"])
         self.assertEqual("https://tsumgi.arc.upiscium.dev/v1", provider["options"]["baseURL"])
         self.assertNotIn("apiKey", provider["options"])
-        self.assertEqual({"qwen3.8-27b", "bonsai2-27b"}, set(provider["models"]))
+        self.assertEqual({"qwen3.8-27b", "bonsai2-27b", "bonsai2-27b-12k"}, set(provider["models"]))
         expected_limits = {
             "qwen3.8-27b": {"context": 12288, "output": 2048},
             "bonsai2-27b": {"context": 8192, "output": 2048},
+            "bonsai2-27b-12k": {"context": 12288, "output": 2048},
         }
         for model, limits in expected_limits.items():
             configured = provider["models"][model]
@@ -58,6 +59,7 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         for agent, model in (
             ("tsumgi-qwen", "qwen3.8-27b"),
             ("tsumgi-bonsai", "bonsai2-27b"),
+            ("tsumgi-bonsai-12k", "bonsai2-27b-12k"),
         ):
             agent_text = (CONFIG / "agents" / f"{agent}.md").read_text()
             self.assertIn("mode: primary", agent_text)
