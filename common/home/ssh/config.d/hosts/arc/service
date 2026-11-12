@@ -74,13 +74,13 @@ Host gitea-runner
   User root
   PasswordAuthentication no
 
-Host astrum-control
+Host tsumgi-control
   HostName 10.12.2.13
   Port 22
   User root
   PasswordAuthentication no
 
-Host astrum-db
+Host tsumgi-db
   HostName 10.12.2.14
   Port 22
   User root

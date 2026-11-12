@@ -3,3 +3,10 @@ Host arca-sandbox
   User root
   Port 22
   PasswordAuthentication no
+
+Host kagari-mvi
+  HostName 10.12.30.2
+  User root
+  Port 22
+  PasswordAuthentication no
+
