@@ -121,6 +121,8 @@ The launcher deliberately does not use `OPENCODE_CONFIG_DIR` for the global base
 
 Home Manager only installs the configured package through `packages/opencode/home.nix`; it no longer recursively deploys the global OpenCode implementation from a root configuration directory.
 
+If nixpkgs reports a legacy `opencode-stable.db`, follow the [OpenCode database migration guide](packages/opencode/config/README.md#legacy-nixpkgs-database) before disabling its compatibility workaround.
+
 ## OpenCode repository boundary
 
 dotnix owns only the Global/user OpenCode baseline under `packages/opencode/`.

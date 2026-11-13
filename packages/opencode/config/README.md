@@ -24,6 +24,20 @@ Keeping this configuration in the standard global OpenCode path is intentional. 
 
 OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package metadata, and lock files are not package-owned and are preserved by the dotnix launcher.
 
+## Legacy nixpkgs database
+
+If OpenCode prints `Detected legacy nixpkgs OpenCode database`, it is still using `opencode-stable.db` for compatibility. The [nixpkgs migration instructions](https://github.com/NixOS/nixpkgs/pull/558549) explain that the production channel normally uses `opencode.db`. Dotnix's launcher only synchronizes configuration; it does **not** migrate or back up the database. Changing the flake or setting `NIXPKGS_OPENCODE_DISABLE_LEGACY_DB_WORKAROUND=1` does not migrate sessions: it can make existing sessions appear to be missing.
+
+This is a **manual, one-time migration of user data**, not a Home Manager activation step or a launch-time action:
+
+1. Identify the affected user and data directory (`${XDG_DATA_HOME:-$HOME/.local/share}/opencode`), and check that `OPENCODE_DB` has not been set to a custom path. Stop **all** OpenCode processes for that user, including `opencode web`, and keep them stopped until the rename is complete.
+2. Check that `opencode-stable.db` exists and `opencode.db` does **not** exist. Do not overwrite or merge a pre-existing canonical database; investigate which one has the sessions you need. If either path is a symlink, or SQLite sidecars (`opencode-stable.db-wal`, `opencode-stable.db-shm`, `opencode.db-wal`, or `opencode.db-shm`) remain after shutdown, stop and investigate rather than separating those files from the database or accidentally associating them with the renamed database.
+3. Back up the **entire** OpenCode data directory (including any sidecar files and attachments) to a separate, private location. Check that the backup completed and can be restored before continuing. Keep the backup until the migrated sessions have been verified.
+4. Immediately before changing anything, reconfirm that OpenCode is stopped, the backup is usable, and `opencode.db` is still absent. Rename `opencode-stable.db` to `opencode.db` in that same data directory; do not delete the legacy database or overwrite any existing canonical database. For example, after the checks above, run `mv -i "$data_dir/opencode-stable.db" "$data_dir/opencode.db"` with `data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/opencode"` set for the affected user. **Decline any overwrite prompt.**
+5. Restart OpenCode, verify that `opencode db path` points to `opencode.db`, the expected sessions are present, and the warning is gone; retain the backup until satisfied. If verification fails, stop OpenCode again and plan a restore from the backup; preserve any data created since the backup before restoring, because a whole-directory restore could lose newer sessions. Do not blindly overwrite the migrated directory.
+
+The workaround may be disabled **only if** you intentionally want to use another database or have already verified the migration; disabling it is not a substitute for moving the old sessions.
+
 ## Models
 
 | Role | Model |
