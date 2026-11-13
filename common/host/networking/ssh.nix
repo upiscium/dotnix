@@ -12,4 +12,7 @@
   users.users."upiscium".openssh.authorizedKeys.keyFiles = [
     ../../home/ssh-pubkeys/arc.pub
   ];
+  users.users."upiscium".openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF31E0yYdoDezIurM2fZDOzs03gbZ8PFqC7RGr5Enb/T project-kagya-training-worker"
+  ];
 }
