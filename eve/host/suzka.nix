@@ -1,9 +1,10 @@
 # PROJECT-SUZKA private deployment.
 # The application checkout lives in /opt/project-suzka (owned by the suzka user)
 # and secrets live in /etc/project-suzka/*.env; neither is managed by Nix.
-# Everything listens on loopback only; access it with
+# FastAPI and Next.js listen on loopback only. Caddy serves :8080 on all
+# interfaces; firewall.nix admits it only from the trusted private networks.
+# Open http://<eve>:8080 from those networks, or tunnel with
 #   ssh -L 8080:127.0.0.1:8080 eve
-# and open http://127.0.0.1:8080.
 { pkgs, lib, ... }:
 let
   appDir = "/opt/project-suzka";
@@ -93,8 +94,7 @@ in
     globalConfig = ''
       admin 127.0.0.1:2019
     '';
-    virtualHosts."http://127.0.0.1:8080".extraConfig = ''
-      bind 127.0.0.1
+    virtualHosts.":8080".extraConfig = ''
       encode zstd gzip
 
       reverse_proxy /api/* 127.0.0.1:8000
