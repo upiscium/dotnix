@@ -1,13 +1,13 @@
-# PROJECT-KAGYA private deployment.
-# The application checkout lives in /opt/project-kagya (owned by the kagya user)
-# and secrets live in /etc/project-kagya/*.env; neither is managed by Nix.
+# PROJECT-SUZKA private deployment.
+# The application checkout lives in /opt/project-suzka (owned by the suzka user)
+# and secrets live in /etc/project-suzka/*.env; neither is managed by Nix.
 # Everything listens on loopback only; access it with
 #   ssh -L 8080:127.0.0.1:8080 eve
 # and open http://127.0.0.1:8080.
 { pkgs, lib, ... }:
 let
-  appDir = "/opt/project-kagya";
-  envDir = "/etc/project-kagya";
+  appDir = "/opt/project-suzka";
+  envDir = "/etc/project-suzka";
   python = pkgs.python3;
   nodejs = pkgs.nodejs_22;
 
@@ -20,26 +20,26 @@ let
 
   commonServiceConfig = {
     Type = "simple";
-    User = "kagya";
-    Group = "kagya";
+    User = "suzka";
+    Group = "suzka";
     Restart = "on-failure";
     RestartSec = 5;
   };
 in
 {
-  users.groups.kagya = { };
-  users.users.kagya = {
+  users.groups.suzka = { };
+  users.users.suzka = {
     isSystemUser = true;
-    group = "kagya";
-    home = "/var/lib/kagya";
+    group = "suzka";
+    home = "/var/lib/suzka";
     createHome = true;
     shell = pkgs.bashInteractive;
     extraGroups = [ "video" ];
   };
 
   systemd.tmpfiles.rules = [
-    "d ${appDir} 0750 kagya kagya -"
-    "d ${envDir} 0750 kagya kagya -"
+    "d ${appDir} 0750 suzka suzka -"
+    "d ${envDir} 0750 suzka suzka -"
   ];
 
   # Tools for the manual build steps (uv sync / npm ci / npm run build).
@@ -50,14 +50,14 @@ in
     UV_PYTHON_DOWNLOADS = "never";
   };
 
-  systemd.services.kagya-api = {
-    description = "PROJECT-KAGYA FastAPI backend";
+  systemd.services.suzka-api = {
+    description = "PROJECT-SUZKA FastAPI backend";
     after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     path = [ pkgs.uv python pkgs.git ];
     environment = {
-      HOME = "/var/lib/kagya";
+      HOME = "/var/lib/suzka";
       UV_PYTHON = "${python}/bin/python3";
       UV_PYTHON_DOWNLOADS = "never";
       LD_LIBRARY_PATH = runtimeLibraryPath;
@@ -65,18 +65,18 @@ in
     serviceConfig = commonServiceConfig // {
       WorkingDirectory = appDir;
       EnvironmentFile = "${envDir}/backend.env";
-      ExecStart = "${pkgs.uv}/bin/uv run --frozen --no-dev --no-sync python -m kagya.api.server";
+      ExecStart = "${pkgs.uv}/bin/uv run --frozen --no-dev --no-sync python -m suzka.api.server";
     };
   };
 
-  systemd.services.kagya-frontend = {
-    description = "PROJECT-KAGYA Next.js frontend";
-    after = [ "network-online.target" "kagya-api.service" ];
+  systemd.services.suzka-frontend = {
+    description = "PROJECT-SUZKA Next.js frontend";
+    after = [ "network-online.target" "suzka-api.service" ];
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     path = [ nodejs ];
     environment = {
-      HOME = "/var/lib/kagya";
+      HOME = "/var/lib/suzka";
       HOSTNAME = "127.0.0.1";
       PORT = "3000";
       NODE_ENV = "production";

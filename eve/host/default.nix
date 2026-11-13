@@ -10,7 +10,7 @@
       ./firewall.nix
       ./hardware.nix
       ./ipfix.nix
-      ./kagya.nix
+      ./suzka.nix
 
       ../../common/host
       ../../module/host/nvidia.nix
