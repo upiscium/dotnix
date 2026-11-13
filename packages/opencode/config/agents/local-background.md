@@ -2,7 +2,7 @@
 description: Hidden local background reader for explicit manual advisory dispatch
 mode: subagent
 hidden: true
-model: local-background/gemma4-12b-it-q4km-1080ti
+model: tsumgi/bonsai2-27b
 permission:
   "*": deny
   read: allow

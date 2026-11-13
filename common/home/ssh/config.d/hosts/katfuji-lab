@@ -1,3 +1,9 @@
+Host kls-*
+  ProxyJump MacbookSub
+
+Host katfuji-*
+  ProxyJump MacbookSub
+
 Host suzuka
   HostName 165.93.137.219
   Port 22
@@ -51,6 +57,20 @@ Host katfuji-4
   HostName 165.93.137.182
   Port 22
   User shitakouji
+  PasswordAuthentication no
+  IdentityFile ~/secrets/private-key/katlab
+
+Host kls-pve1
+  HostName 165.93.137.216
+  Port 22
+  User root
+  PasswordAuthentication no
+  IdentityFile ~/secrets/private-key/katlab
+
+Host kls-gateway
+  HostName 165.93.137.208
+  Port 22
+  User root
   PasswordAuthentication no
   IdentityFile ~/secrets/private-key/katlab
 

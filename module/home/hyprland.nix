@@ -28,6 +28,10 @@
     source = ./hyprland/hyprland.lua;
   };
 
+  home.file.".config/hypr/keybindings.lua" = {
+    source = ./hyprland/keybindings.lua;
+  };
+
   home.file.".config/hypr/hyprlock.conf" = {
     source = ./hyprland/hyprlock.conf;
   };

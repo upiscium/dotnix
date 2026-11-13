@@ -5,15 +5,16 @@
     # blender
     claude-code
     droidcam
-    # discord
-    vesktop
+    vesktop # discord
+    firefox
+    freecad
     # gdlauncher-carbon
     gpu-screen-recorder
     gpu-screen-recorder-gtk
     # jetbrains-toolbox
     # modrinth-app
     # krita
-    # moonlight-qt
+    moonlight-qt
     obsidian
     obs-studio
     obs-studio-plugins.droidcam-obs
@@ -22,7 +23,17 @@
     wpsoffice
     libreoffice
     parsec-bin
-    prismlauncher
+    (prismlauncher.overrideAttrs (old: {
+      # Match nvidia-offload for this hybrid-GPU host without forcing other apps.
+      # Do not inherit the session-wide GBM backend into Minecraft.
+      qtWrapperArgs = old.qtWrapperArgs ++ [
+        "--unset GBM_BACKEND"
+        "--set __NV_PRIME_RENDER_OFFLOAD 1"
+        "--set __NV_PRIME_RENDER_OFFLOAD_PROVIDER NVIDIA-G0"
+        "--set __GLX_VENDOR_LIBRARY_NAME nvidia"
+        "--set __VK_LAYER_NV_optimus NVIDIA_only"
+      ];
+    }))
     slack
     unityhub
     # teams-for-linux

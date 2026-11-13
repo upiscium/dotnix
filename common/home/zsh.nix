@@ -98,6 +98,42 @@
       ssht() {
         TERM=xterm-256color ssh "$@"
       }
+
+      # Claude account routing is interactive-shell convenience only.
+      # KAGARI and other noninteractive executors do not use these functions.
+      # The default Claude configuration is the existing company Team login.
+      # Explicitly setting CLAUDE_CONFIG_DIR to ~/.claude is NOT equivalent
+      # to leaving it unset, so preserve the native default for company use.
+      claude() {
+        local work_root actual_dir
+        work_root="$(realpath -e -- "$HOME/Documents/Work")" || {
+          print -u2 "claude: cannot resolve company Work directory"
+          return 1
+        }
+        actual_dir="$(realpath -e -- "$PWD")" || {
+          print -u2 "claude: cannot resolve current directory"
+          return 1
+        }
+        if [[ "$actual_dir" == "$work_root" || "$actual_dir" == "$work_root/"* ]]; then
+          (
+            unset CLAUDE_CONFIG_DIR
+            command claude "$@"
+          )
+        else
+          CLAUDE_CONFIG_DIR="$HOME/.claude-personal" command claude "$@"
+        fi
+      }
+
+      claude-company() {
+        (
+          unset CLAUDE_CONFIG_DIR
+          command claude "$@"
+        )
+      }
+
+      claude-personal() {
+        CLAUDE_CONFIG_DIR="$HOME/.claude-personal" command claude "$@"
+      }
     '';
   };
 }

@@ -2,7 +2,7 @@
 description: Hidden local read-only execution tracer for explicit manual advisory dispatch
 mode: subagent
 hidden: true
-model: local-fast/gemma4-12b-it-q4km-3060
+model: tsumgi/bonsai2-27b
 permission:
   "*": deny
   read: allow

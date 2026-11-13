@@ -1,7 +1,8 @@
 ---
 description: Reviews concrete security risks in code, Nix, CI, containers, and network configuration
 mode: subagent
-model: openai/gpt-5.6-terra
+model: openai/gpt-6.1-sol
+reasoningEffort: high
 permission:
   edit: deny
   task: deny

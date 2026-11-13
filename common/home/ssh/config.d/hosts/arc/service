@@ -74,38 +74,26 @@ Host gitea-runner
   User root
   PasswordAuthentication no
 
-Host astrum-control
+Host tsumgi-control
   HostName 10.12.2.13
   Port 22
   User root
   PasswordAuthentication no
 
-Host sirius
-  HostName 10.12.2.20
+Host tsumgi-db
+  HostName 10.12.2.14
   Port 22
   User root
   PasswordAuthentication no
 
-Host vega
-  HostName 10.12.2.21
+Host obsidian-control
+  HostName 10.12.2.15
   Port 22
   User root
   PasswordAuthentication no
 
-Host altair
-  HostName 10.12.2.22
-  Port 22
-  User root
-  PasswordAuthentication no
-
-Host deneb
-  HostName 10.12.2.23
-  Port 22
-  User root
-  PasswordAuthentication no
-
-Host astrum-db
-  HostName 10.12.2.24
+Host penpot
+  HostName 10.12.2.16
   Port 22
   User root
   PasswordAuthentication no
