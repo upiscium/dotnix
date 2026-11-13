@@ -84,7 +84,7 @@ in
     serviceConfig = commonServiceConfig // {
       WorkingDirectory = "${appDir}/frontend";
       EnvironmentFile = "${envDir}/frontend.env";
-      ExecStart = "${nodejs}/bin/node node_modules/next/dist/bin/next start";
+      ExecStart = "${nodejs}/bin/node node_modules/next/dist/bin/next start -H 127.0.0.1 -p 3000";
     };
   };
 
