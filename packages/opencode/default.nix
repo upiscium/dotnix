@@ -13,7 +13,12 @@ let
   upstreamDisablesSplitting =
     lib.hasInfix "'splitting: false,'" (opencode.postPatch or "");
   runtime =
-    if lib.versionAtLeast bun.version "1.4.0" && !upstreamDisablesSplitting then
+    # Keep the legacy build workaround scoped to OpenCode 1.x.
+    if
+      lib.versionOlder opencode.version "2.0.0"
+      && lib.versionAtLeast bun.version "1.4.0"
+      && !upstreamDisablesSplitting
+    then
       opencode.overrideAttrs (previous: {
         postPatch = (previous.postPatch or "") + ''
           bash ${./disable-code-splitting.sh} packages/opencode/script/build.ts
