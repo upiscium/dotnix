@@ -75,6 +75,9 @@
           in
           packageChecks
           // {
+            opencode-launcher = import ./tests/opencode-launcher {
+              inherit pkgs;
+            };
             justfile = pkgs.runCommand "dotnix-justfile-check" {
               nativeBuildInputs = [ pkgs.just ];
             } ''

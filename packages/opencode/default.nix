@@ -27,7 +27,12 @@ let
     else
       opencode;
 
-  configSource = ./config;
+  # Keep the runtime config in the package closure, independent of the flake
+  # source/checkout. toString on a bare path would discard that dependency.
+  configSource = builtins.path {
+    path = ./config;
+    name = "dotnix-opencode-config";
+  };
   managedEntries = lib.attrNames (builtins.readDir configSource);
   managedManifest = builtins.toFile "dotnix-opencode-managed-entries" (
     lib.concatStringsSep "\n" managedEntries + "\n"

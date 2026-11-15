@@ -24,6 +24,11 @@ fi
 echo "==> Testing package registry contract"
 tests/package-registry/test.sh
 
+echo "==> Testing OpenCode launcher runtime configuration"
+dotnix_system=$(nix eval --impure --raw --expr builtins.currentSystem)
+nix build --no-link --no-update-lock-file \
+  ".#checks.$dotnix_system.opencode-launcher"
+
 echo "==> Evaluating all supported systems"
 nix flake check \
   --all-systems \
