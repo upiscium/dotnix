@@ -14,9 +14,9 @@ MODELS = {
     "local-background": ("http://10.12.2.9:8090/v1", "gemma4-12b-it-q4km-1080ti"),
 }
 WORKERS = {
-    "local-investigator": "tsumgi/qwen3.8-27b",
-    "local-tracer": "tsumgi/bonsai2-27b",
-    "local-background": "tsumgi/bonsai2-27b",
+    "local-investigator": "tsumgi/qwen3.6-35b-a3b-fast",
+    "local-tracer": "tsumgi/qwen3.6-35b-a3b",
+    "local-background": "tsumgi/qwen3.6-35b-a3b-short",
 }
 DENIED = {"glob", "list", "lsp", "bash", "edit", "task", "question", "webfetch", "websearch", "skill", "todowrite", "external_directory", "doom_loop"}
 
@@ -46,18 +46,20 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         self.assertEqual("@ai-sdk/openai-compatible", provider["npm"])
         self.assertEqual("https://tsumgi.arc.upiscium.dev/v1", provider["options"]["baseURL"])
         self.assertNotIn("apiKey", provider["options"])
-        self.assertEqual({"qwen3.8-27b", "bonsai2-27b"}, set(provider["models"]))
         expected_limits = {
-            "qwen3.8-27b": {"context": 12288, "output": 2048},
-            "bonsai2-27b": {"context": 8192, "output": 2048},
+            "qwen3.6-35b-a3b": {"context": 65536, "output": 2048},
+            "qwen3.6-35b-a3b-fast": {"context": 196608, "output": 2048},
+            "qwen3.6-35b-a3b-short": {"context": 12288, "output": 2048},
         }
+        self.assertEqual(set(expected_limits), set(provider["models"]))
         for model, limits in expected_limits.items():
             configured = provider["models"][model]
             self.assertEqual(limits, configured["limit"])
             self.assertTrue(configured["tool_call"])
         for agent, model in (
-            ("tsumgi-qwen", "qwen3.8-27b"),
-            ("tsumgi-bonsai", "bonsai2-27b"),
+            ("tsumgi-qwen", "qwen3.6-35b-a3b"),
+            ("tsumgi-fast", "qwen3.6-35b-a3b-fast"),
+            ("tsumgi-short", "qwen3.6-35b-a3b-short"),
         ):
             agent_text = (CONFIG / "agents" / f"{agent}.md").read_text()
             self.assertIn("mode: primary", agent_text)
@@ -66,6 +68,7 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             self.assertIn('  "*": deny', agent_text)
             self.assertIn("  edit: deny", agent_text)
             self.assertIn("  task: deny", agent_text)
+        self.assertFalse((CONFIG / "agents" / "tsumgi-bonsai.md").exists())
 
     def test_exact_read_only_permissions_and_hidden_agents(self) -> None:
         for worker in WORKERS:
