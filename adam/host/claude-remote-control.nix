@@ -3,7 +3,7 @@
 # Claude Code Remote Control: one `claude remote-control --spawn worktree`
 # server per repository (`--spawn same-dir` for plain directories), kept alive
 # by a loop inside a dedicated tmux socket.
-# Runs as upiscium with the personal Claude account (~/.claude-personal).
+# Runs as upiscium with the personal Claude account (the default ~/.claude).
 # Each repository must have been started once by hand so that the Remote
 # Control, trust and spawn-mode prompts are already answered.
 let
@@ -41,7 +41,7 @@ let
 
   loop = pkgs.writeShellScript "claude-rc-loop" ''
     export PATH=${toolPath}:${home}/.nix-profile/bin:/etc/profiles/per-user/${user}/bin:/run/current-system/sw/bin
-    export CLAUDE_CONFIG_DIR=${home}/.claude-personal
+    unset CLAUDE_CONFIG_DIR
     unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN ANTHROPIC_BASE_URL \
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC DISABLE_GROWTHBOOK
     # No pre-created session: in worktree mode it would run in the main checkout
