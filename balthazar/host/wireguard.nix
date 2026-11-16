@@ -5,7 +5,7 @@
       address = [ "10.255.255.61/32" ];
       # dns = [ "192.168.100.31" ];
       mtu = 1420;
-      privateKeyFile = "/home/upiscium/secrets/wireguard/Adam.key";
+      privateKeyFile = "/home/upiscium/secrets/wireguard/Balthazar.key";
       # postUp = ''
       #   resolvectl dns wg0 192.168.100.31 && resolvectl domain wg0 '~.'
       # '';

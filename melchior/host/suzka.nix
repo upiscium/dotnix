@@ -3,8 +3,8 @@
 # and secrets live in /etc/project-suzka/*.env; neither is managed by Nix.
 # FastAPI and Next.js listen on loopback only. Caddy serves :8080 on all
 # interfaces; firewall.nix admits it only from the trusted private networks.
-# Open http://<eve>:8080 from those networks, or tunnel with
-#   ssh -L 8080:127.0.0.1:8080 eve
+# Open http://<melchior>:8080 from those networks, or tunnel with
+#   ssh -L 8080:127.0.0.1:8080 melchior
 { pkgs, lib, ... }:
 let
   appDir = "/opt/project-suzka";

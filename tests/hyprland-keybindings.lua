@@ -59,7 +59,7 @@ local function capture(path)
 end
 
 local michael, michaelMonitors, michaelWorkspaceRules = capture("module/home/hyprland/platforms/michael.lua")
-local adam, adamMonitors, adamWorkspaceRules, adamStartup = capture("module/home/hyprland/platforms/adam.lua")
+local balthazar, balthazarMonitors, balthazarWorkspaceRules, balthazarStartup = capture("module/home/hyprland/platforms/balthazar.lua")
 local laptopOnly = {
     ["ALT+F2"] = true,
     ["ALT+F3"] = true,
@@ -71,35 +71,35 @@ local laptopOnly = {
 
 for key, action in pairs(michael) do
     if laptopOnly[key] then
-        assert(not adam[key], "Laptop-only binding on Adam: " .. key)
+        assert(not balthazar[key], "Laptop-only binding on Balthazar: " .. key)
     else
         local expected = action:gsub("~/dotnix/scripts/screenshot%.sh", "hypr-screenshot")
-        assert(adam[key] == expected, "Adam/Michael mismatch: " .. key)
+        assert(balthazar[key] == expected, "Balthazar/Michael mismatch: " .. key)
     end
 end
-for key in pairs(adam) do
-    assert(michael[key], "Unexpected Adam binding: " .. key)
+for key in pairs(balthazar) do
+    assert(michael[key], "Unexpected Balthazar binding: " .. key)
 end
 
 for i = 1, 10 do
     local digit = i == 10 and 0 or i
-    assert(adam["ALT+" .. digit], "Missing workspace switch: " .. digit)
-    assert(adam["ALT+SHIFT+" .. digit], "Missing workspace move: " .. digit)
+    assert(balthazar["ALT+" .. digit], "Missing workspace switch: " .. digit)
+    assert(balthazar["ALT+SHIFT+" .. digit], "Missing workspace move: " .. digit)
 end
-assert(adam["ALT+Return"] == serialize({ dispatcher = "exec", value = "kitty" }))
-assert(adam["ALT+R"] == serialize({ dispatcher = "exec", value = "wofi --show drun" }))
-assert(adam["ALT+F11"] == serialize({ dispatcher = "exec", value = "hyprlock --no-fade-in" }))
-assert(#adamMonitors == 1)
-assert(adamMonitors[1] == serialize({ output = "SUNSHINE", mode = "1920x1080@60", position = "0x0", scale = 1 }))
-assert(#adamWorkspaceRules == 1)
-assert(adamWorkspaceRules[1] == serialize({
+assert(balthazar["ALT+Return"] == serialize({ dispatcher = "exec", value = "kitty" }))
+assert(balthazar["ALT+R"] == serialize({ dispatcher = "exec", value = "wofi --show drun" }))
+assert(balthazar["ALT+F11"] == serialize({ dispatcher = "exec", value = "hyprlock --no-fade-in" }))
+assert(#balthazarMonitors == 1)
+assert(balthazarMonitors[1] == serialize({ output = "SUNSHINE", mode = "1920x1080@60", position = "0x0", scale = 1 }))
+assert(#balthazarWorkspaceRules == 1)
+assert(balthazarWorkspaceRules[1] == serialize({
     workspace = "1",
     monitor = "SUNSHINE",
     default = true,
     persistent = true,
 }))
-assert(#michaelWorkspaceRules == 0, "Adam-only workspace rule leaked to Michael")
-assert(serialize(adamStartup) == serialize({ "adam-hyprland-session-ready" }))
+assert(#michaelWorkspaceRules == 0, "Balthazar-only workspace rule leaked to Michael")
+assert(serialize(balthazarStartup) == serialize({ "balthazar-hyprland-session-ready" }))
 
 if arg[1] then
     local original, originalMonitors = capture(arg[1])

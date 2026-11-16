@@ -1,15 +1,15 @@
 { pkgs, ... }:
 let
-  moonlight-adam = pkgs.writeShellApplication {
-    name = "moonlight-adam";
+  moonlight-balthazar = pkgs.writeShellApplication {
+    name = "moonlight-balthazar";
     runtimeInputs = [ pkgs.moonlight-qt ];
     text = ''
       usage() {
         printf '%s\n' \
-          'Usage: moonlight-adam [pair|--help]' \
+          'Usage: moonlight-balthazar [pair|--help]' \
           "" \
-          'With no arguments, stream the logged-in Desktop on adam.' \
-          'Use "moonlight-adam pair" to pair with adam and manually approve the PIN in Sunshine.'
+          'With no arguments, stream the logged-in Desktop on balthazar.' \
+          'Use "moonlight-balthazar pair" to pair with balthazar and manually approve the PIN in Sunshine.'
       }
 
       case "''${1:-}" in
@@ -43,5 +43,5 @@ let
   };
 in
 {
-  home.packages = [ moonlight-adam ];
+  home.packages = [ moonlight-balthazar ];
 }

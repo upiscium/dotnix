@@ -1,10 +1,10 @@
-Host adam
+Host balthazar
   HostName 10.12.0.1
   Port 20000
   User upiscium
   PasswordAuthentication no
 
-Host eve
+Host melchior
   HostName 10.12.0.2
   Port 20000
   User upiscium
