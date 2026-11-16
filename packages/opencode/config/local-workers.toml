@@ -17,19 +17,19 @@ fallback = "none"
 [[workers]]
 class = "local-investigator"
 provider = "tsumgi"
-model = "qwen3.8-27b"
+model = "qwen3.6-35b-a3b-fast"
 role = "read-only advisory"
 
 [[workers]]
 class = "local-tracer"
 provider = "tsumgi"
-model = "bonsai2-27b"
+model = "qwen3.6-35b-a3b"
 role = "read-only advisory"
 
 [[workers]]
 class = "local-background"
 provider = "tsumgi"
-model = "bonsai2-27b"
+model = "qwen3.6-35b-a3b-short"
 role = "read-only advisory"
 
 [metrics]
