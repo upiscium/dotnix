@@ -1,8 +1,7 @@
 ---
 description: Reproduces failures and identifies root causes without modifying code
 mode: subagent
-model: openai/gpt-6-luna
-reasoningEffort: high
+model: tsumgi/qwen3.6-35b-a3b-fast
 permission:
   edit: deny
   task: deny

@@ -1,8 +1,7 @@
 ---
 description: Repository reconnaissance and targeted investigation agent
 mode: subagent
-model: openai/gpt-6-luna
-reasoningEffort: medium
+model: tsumgi/qwen3.6-35b-a3b
 permission:
   edit: deny
   task: deny

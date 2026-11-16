@@ -1,8 +1,7 @@
 ---
 description: Primary implementation and integration agent
 mode: primary
-model: openai/gpt-6.1-sol
-reasoningEffort: high
+model: tsumgi/qwen3.6-35b-a3b-fast
 permission:
   edit: allow
   task: ask

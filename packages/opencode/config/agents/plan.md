@@ -1,8 +1,7 @@
 ---
 description: Read-only requirements, architecture, dependency, and implementation planning agent
 mode: primary
-model: openai/gpt-6.1-sol
-reasoningEffort: high
+model: tsumgi/qwen3.6-35b-a3b-fast
 permission:
   edit: deny
   question: allow

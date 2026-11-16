@@ -1,8 +1,7 @@
 ---
 description: Reviews changes for correctness, contracts, maintainability, and missing tests
 mode: subagent
-model: openai/gpt-6-luna
-reasoningEffort: high
+model: tsumgi/qwen3.6-35b-a3b-fast
 permission:
   edit: deny
   task: deny
