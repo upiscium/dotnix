@@ -270,6 +270,22 @@
       "*\n*": "deny"
     }
   },
+  "mcp": {
+    "kasane": {
+      "type": "local",
+      "command": [
+        "nix", "shell", "nixpkgs#uv", "--command",
+        "uv", "run", "--directory", "{env:HOME}/src/KASANE",
+        "kasane-mcp", "serve", "--allow-write", "--default-scope", "global"
+      ],
+      "environment": {
+        "KASANE_VAULT_PATH": "{env:HOME}/.local/state/KASANE/vault.db",
+        "KASANE_ACTOR": "opencode",
+        "KASANE_MODEL": "openai/gpt-6.1-sol,openai/gpt-6-luna"
+      },
+      "enabled": true
+    }
+  },
   "provider": {
     "tsumgi": {
       "npm": "@ai-sdk/openai-compatible",
