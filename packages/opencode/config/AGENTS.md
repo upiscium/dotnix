@@ -12,8 +12,11 @@ Repository-local `AGENTS.md` and Agent Core rules take precedence over this file
   "budget": {"max_tokens": 2000, "max_bytes": 8000, "max_evidence_items": 5}}`.
   Treat T0–T2 items as hints to check, T3 as approved. Ignore items that do
   not concern the task.
-- After applying a retrieved item, call `kasane_report_outcome` with
-  success or failure and one line on the task. Report failures too.
+- After applying a retrieved item, record whether it held, with one line on
+  the task. Report failures too.
+  - T0 item: call `kasane_verify` with `passed` or `failed`. If it is refused
+    as self-verification (you wrote it), skip it.
+  - T1 or higher: call `kasane_report_outcome` with `success` or `failure`.
 - When you establish a reusable procedure, design rule, situational fix,
   pitfall, or constraint, call `kasane_propose` with
   `vault://project/<project>/<kind>/<slug>` if it only holds for this
