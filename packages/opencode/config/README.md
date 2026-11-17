@@ -56,6 +56,14 @@ Choose `--agent tsumgi-fast`, `--agent tsumgi-qwen` or `--agent tsumgi-short` fo
 
 No API key was needed for the verified requests from Adam; consequently the `tsumgi` provider has no embedded token. Verify gateway ingress restrictions independently before treating this as safe for arbitrary network clients. If TSUMGI client authentication is enabled in the future, supply a client token via a protected environment variable (for example `{env:TSUMGI_CLIENT_TOKEN}`), not a committed secret.
 
+## KASANE knowledge (MCP)
+
+`opencode.json` registers the KASANE MCP server (`kasane`), and `AGENTS.md` holds the global instructions for using it. OpenCode loads `~/.config/opencode/AGENTS.md` as global rules in addition to repository-local `AGENTS.md`; repository-local rules take precedence. The Claude Code side uses the same instruction text in `~/.claude/CLAUDE.md`.
+
+- The server runs from the KASANE checkout at `~/src/KASANE` against `~/.local/state/KASANE/vault.db`. On a host without them, the server fails at startup and OpenCode continues without the `kasane_*` tools.
+- `--default-scope global` only: agents name their project scope in each request, so knowledge from one project is not served to another by default.
+- One server process serves every role in an OpenCode process, so `KASANE_MODEL` cannot name the model of each role. It lists the OpenAI models of the roles (`openai/gpt-6.1-sol,openai/gpt-6-luna`); update it together with the model table above.
+- `KASANE_SESSION` is unset, so each OpenCode process is a new KASANE session (the weak-independence risk documented in KASANE `docs/mcp.md`).
 
 ## Authority boundary
 
