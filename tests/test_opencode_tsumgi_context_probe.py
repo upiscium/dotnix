@@ -48,7 +48,7 @@ class TokenBackendHandler(BaseHTTPRequestHandler):
         length = int(self.headers["Content-Length"])
         data = json.loads(self.rfile.read(length))
         self.seen.append(data)
-        result = {"input_tokens": 6300 if data.get("tools") else 5300}
+        result = {"input_tokens": 11300 if data.get("tools") else 5300}
         payload = json.dumps(result).encode()
         self.send_response(200)
         self.send_header("Content-Length", str(len(payload)))
@@ -113,6 +113,27 @@ class ProbeTests(unittest.TestCase):
             "tool_choice": "auto",
         }
 
+    def test_agents_and_budgets_follow_installed_config(self):
+        self.assertEqual(probe.AGENTS, {
+            "plan": "qwen3.6-35b-a3b-short",
+            "tsumgi-fast": "qwen3.6-35b-a3b-fast",
+            "tsumgi-qwen": "qwen3.6-35b-a3b",
+            "tsumgi-short": "qwen3.6-35b-a3b-short",
+        })
+        self.assertEqual(probe.INPUT_BUDGETS, {
+            "qwen3.6-35b-a3b": 63488,
+            "qwen3.6-35b-a3b-fast": 194560,
+            "qwen3.6-35b-a3b-short": 10240,
+        })
+
+    def test_unknown_model_is_blocked(self):
+        args = type("Args", (), {
+            "agent": "plan", "model": "qwen3.8-27b", "native_token_url": None,
+            "acknowledge_native_target": False, "ablate_tools": False,
+        })()
+        with self.assertRaises(ValueError):
+            probe.run_probe(args)
+
     def test_native_endpoints_only_literal_loopback(self):
         good = "http://127.0.0.1:18882/v1/chat/completions/input_tokens"
         self.assertEqual(good, probe.require_loopback_native_url(good))
@@ -174,7 +195,7 @@ class ProbeTests(unittest.TestCase):
             url = f"http://127.0.0.1:{native.server_address[1]}{probe.NATIVE_PATH}"
             self.assertEqual("pinned-native", probe.resolve_single_native_model(url))
             sample = self.sample()
-            self.assertEqual(6300, probe.count_native_tokens(
+            self.assertEqual(11300, probe.count_native_tokens(
                 url, probe.native_token_projection(sample, "native")
             ))
             self.assertEqual(5300, probe.count_native_tokens(
@@ -237,7 +258,7 @@ class ProbeTests(unittest.TestCase):
         native = ThreadingHTTPServer(("127.0.0.1", 0), TokenBackendHandler)
         backend_thread = threading.Thread(target=native.serve_forever, daemon=True)
         backend_thread.start()
-        capture = probe.CaptureServer(probe.AGENTS["tsumgi-qwen"])
+        capture = probe.CaptureServer(probe.AGENTS["tsumgi-short"])
         capture.native_url = (
             f"http://127.0.0.1:{native.server_address[1]}{probe.NATIVE_PATH}"
         )
@@ -246,15 +267,16 @@ class ProbeTests(unittest.TestCase):
         thread = threading.Thread(target=capture.serve_forever, daemon=True)
         thread.start()
         try:
-            packet = self.sample()
+            packet = {**self.sample(), "model": probe.AGENTS["tsumgi-short"]}
             send_local(capture.server_address[1], {**packet, "tools": []})
             send_local(capture.server_address[1], packet)
             self.assertIsNone(capture.native_error_type)
             counts = capture.native_token_counts
             self.assertIsNotNone(counts)
-            self.assertEqual(counts["full_input_tokens"], 6300)
+            self.assertEqual(counts["full_input_tokens"], 11300)
             self.assertEqual(counts["counterfactual_without_tools"], 5300)
-            self.assertEqual(counts["tool_overhead_delta"], 1000)
+            self.assertEqual(counts["tool_overhead_delta"], 6000)
+            self.assertEqual(counts["input_token_budget"], 10240)
             self.assertTrue(counts["exceeds_input_budget"])
             self.assertEqual(len(TokenBackendHandler.seen), 2)
             self.assertTrue(all(
@@ -271,7 +293,7 @@ class ProbeTests(unittest.TestCase):
 
     def test_native_mode_must_acknowledge_target(self):
         args = type("Args", (), {
-            "agent": "tsumgi-qwen",
+            "agent": "tsumgi-qwen", "model": None,
             "native_token_url": (
                 "http://127.0.0.1:18882/v1/chat/completions/input_tokens"
             ),
@@ -305,13 +327,14 @@ class ProbeTests(unittest.TestCase):
             return subprocess.CompletedProcess(argv, 0)
 
         args = type("Args", (), {
-            "agent": "tsumgi-qwen", "native_token_url": None,
+            "agent": "tsumgi-qwen", "model": None, "native_token_url": None,
             "acknowledge_native_target": False,
             "ablate_tools": False,
         })()
         with mock.patch.object(probe.shutil, "which", return_value="/bin/opencode"), \
              mock.patch.object(probe.subprocess, "run", side_effect=fake_subprocess):
             outcome = probe.run_probe(args)
+        self.assertEqual(outcome["input_token_budget"], 63488)
         self.assertEqual(outcome["fake_receiver_forwarded_requests"], 0)
         self.assertFalse(outcome["child_network_egress_restricted"])
         self.assertEqual(outcome["main_request"]["tool_count"], 3)

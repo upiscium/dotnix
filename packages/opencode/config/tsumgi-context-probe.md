@@ -28,17 +28,29 @@ trusted operator host.
 From a dotnix checkout with the existing OpenCode config installed:
 
     python3 tools/tsumgi-context-probe.py --agent plan
+    python3 tools/tsumgi-context-probe.py --agent tsumgi-short
     python3 tools/tsumgi-context-probe.py --agent tsumgi-qwen
-    python3 tools/tsumgi-context-probe.py --agent tsumgi-bonsai
+    python3 tools/tsumgi-context-probe.py --agent tsumgi-fast
 
-The plan choice is *ephemerally* tested against TSUMGI Qwen; the canonical
-OpenAI plan model assignment is never modified. The two dedicated Agents
-retain their respective Qwen/Bonsai selections. The same harmless fixed
+The probe reads each dedicated `tsumgi-*` Agent's model from
+`agents/*.md` and each model's limits from the `tsumgi` provider in
+`opencode.json`, so it follows the checked-out config. The input budget
+is `limit.context` minus `limit.output`:
+
+| Model | Agent | Input budget |
+| --- | --- | ---: |
+| `qwen3.6-35b-a3b-short` | `tsumgi-short` | 10,240 |
+| `qwen3.6-35b-a3b` | `tsumgi-qwen` | 63,488 |
+| `qwen3.6-35b-a3b-fast` | `tsumgi-fast` | 194,560 |
+
+The plan choice is *ephemerally* tested against the 12K Short profile by
+default; pass `--model` to try another TSUMGI model. The canonical OpenAI
+plan model assignment is never modified. The same harmless fixed
 instruction is used throughout.
 
 When no native tokenizer is available the result explicitly shows
 native_token_measurement: null, **not zero**. Byte sizes and Tool counts
-are not tokenizer counts and cannot prove a 6,144 input-token overflow.
+are not tokenizer counts and cannot prove an input-budget overflow.
 The OpenCode exit code is reported rather than hidden.
 
 ## Optional exact native tokenizer counting — requires authorized access
@@ -75,7 +87,7 @@ OpenCode main request onto the native token-relevant fields:
 messages, tools, tool_choice, max_tokens, temperature, stream and the
 automatically resolved native model alias. The public model alias, stream_options and
 inert reasoning_effort are omitted. Full input token counts are compared
-to the published 6,144-token input limit. Optional --ablate-tools
+to the selected model's input budget. Optional --ablate-tools
 requests a *second*, counterfactual tokenizer count without both
 `tools` and `tool_choice`, to estimate their combined token overhead.
 This is not the real Agent execution contract; instructions may still
@@ -86,68 +98,14 @@ model's tokenizer can substantiate token counts. Matching historical
 failed Job shapes remains correlation, not proof of which Agent sent
 a past request.
 
-## Qwen native tokenizer evidence (2026-11-05 JST)
+## Earlier measurements on retired models
 
-After authorized Sirius RDC access returned, a separate transient
-in-memory probe recreated the same synthetic OpenCode 1.18.35 main
-requests on Adam, then counted them on the **already-running pinned
-Qwen Runtime**, using its actual local
-`/v1/chat/completions/input_tokens` API. The native model identity
-was retrieved privately from `/v1/models`. The payload was projected
-onto the same token-relevant fields as the tool above. No actual
-inference, Gateway Chat/Job, Worker restart, package/config alteration
-or model download occurred. This was a **separate one-shot diagnostic**,
-not a claim that the present CLI was deployed onto the GPU host.
-
-| Synthetic Qwen main request | Full input tokens | Without `tools` and `tool_choice` | Combined tool-related delta |
-| --- | ---: | ---: | ---: |
-| OpenAI-oriented `plan` overridden to Qwen | **7,841** | 4,967 | **2,874** |
-| Dedicated `tsumgi-qwen` | **1,504** | 253 | 1,251 |
-
-The effective input limit is **6,144 tokens**. Therefore, the
-synthetic `plan` request is **1,697 tokens over the limit**, while
-the dedicated Qwen request fits with **4,640 tokens of headroom**.
-Removing **both** `tools` and `tool_choice` moves the synthetic
-`plan` request below the limit. Their **combined** token contribution
-is sufficient to trigger rejection **for this synthetic request**;
-this does not isolate each field's contribution, identify the Agent
-behind historical failed Jobs, or show that Tool removal preserves
-the original `plan` workflow.
-
-## Bonsai native tokenizer evidence (2026-11-05 JST)
-
-After an operator-authorized physical Proxmox host reboot restored CUDA,
-both Deneb and Spica were independently READY and their existing native
-Bonsai Runtime returned expected short synthetic completions. A separate
-one-shot, in-memory probe then recreated OpenCode 1.18.35 synthetic
-`plan`-override and dedicated `tsumgi-bonsai` main requests on Adam,
-and counted those requests using **each recovered model's own native
-`/v1/chat/completions/input_tokens` endpoint**, without generating
-text during token counting. The native model alias was selected from
-the single existing `/v1/models` record privately.
-
-| Synthetic Bonsai main request | Deneb input tokens | Spica input tokens | Without `tools` and `tool_choice` | Combined tool-related delta |
-| --- | ---: | ---: | ---: | ---: |
-| OpenAI-oriented `plan` overridden to Bonsai | **7,843** | **7,843** | 4,969 | **2,874** |
-| Dedicated `tsumgi-bonsai` | **1,504** | **1,504** | 253 | 1,251 |
-
-Both native backends agree. The **6,144-token input cap** rejects the
-synthetic `plan` request by **1,699 tokens**, while dedicated Bonsai
-fits with **4,640-token headroom**. As above, the counterfactual
-removed **both `tools` and `tool_choice`**, and the combined
-contribution cannot be attributed to either field separately.
-
-These measurements apply to fixed, harmless synthetic inputs;
-requests were explicitly projected onto the native token-relevant
-fields. They do **not** attribute historical failed Jobs to a client,
-qualify multi-step Agent quality or prove that changing production
-`plan` routing is appropriate. They were produced by a **separate
-transient one-shot diagnostic**, not by deploying this PR's CLI to
-the Worker. A VRAM-gated 12K context canary is tracked separately:
-[TSUMGI Qwen #230](https://github.com/upiscium/TSUMGI/issues/230)
-and [TSUMGI Bonsai #232](https://github.com/upiscium/TSUMGI/issues/232).
-Keep the native measurement path and any service-impacting context
-change independently qualified.
+The 2026-11-05 native counts for Qwen3.8 and Bonsai 2 (6,144-token input
+cap) are recorded in dotnix Issue #68. TSUMGI has since retired both
+models, so they do not describe the Qwen3.6 profiles above. For that
+synthetic request, OpenCode's `plan` main request counted about 7,840
+tokens and a dedicated read-only Agent about 1,500. The request shape has
+grown since then, so re-measure against the current profiles.
 
 ## Acceptance and safety constraints
 
@@ -163,4 +121,4 @@ change independently qualified.
 - Unit tests exercise a fake local SSE server and fake native tokenizer;
   this does not qualify a real GPU endpoint.
 
-References: dotnix Issue #68 and documentation-only Draft PR #69.
+References: dotnix Issue #68 and PR #79.

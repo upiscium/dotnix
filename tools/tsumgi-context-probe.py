@@ -23,13 +23,36 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 MARKER = "TSUMGI_SYNTHETIC_CHECK"
 PROMPT = f"Reply with exactly {MARKER}. Do not read or modify files."
 NATIVE_PATH = "/v1/chat/completions/input_tokens"
-INPUT_TOKEN_BUDGET = 6144
-AGENTS = {
-    "plan": "qwen3.8-27b",  # Ephemeral override; never edit canonical Agent config.
-    "tsumgi-qwen": "qwen3.8-27b",
-    "tsumgi-bonsai": "bonsai2-27b",
-}
+CONFIG_DIR = Path(__file__).resolve().parents[1] / "packages/opencode/config"
+# Ephemeral override target for plan; never edit canonical Agent config.
+PLAN_DEFAULT_MODEL = "qwen3.6-35b-a3b-short"
 MAX_BODY_BYTES = 131_072
+
+
+def load_input_budgets(config_dir: Path = CONFIG_DIR) -> dict[str, int]:
+    """Map each TSUMGI model to its input budget: context minus reserved output."""
+    config = json.loads((config_dir / "opencode.json").read_text())
+    models = config["provider"]["tsumgi"]["models"]
+    return {
+        name: model["limit"]["context"] - model["limit"]["output"]
+        for name, model in models.items()
+    }
+
+
+def load_tsumgi_agents(config_dir: Path = CONFIG_DIR) -> dict[str, str]:
+    """Map each dedicated tsumgi-* Agent to the TSUMGI model in its frontmatter."""
+    agents = {}
+    for path in sorted((config_dir / "agents").glob("tsumgi-*.md")):
+        for line in path.read_text().splitlines()[1:]:
+            if line == "---":
+                break
+            if line.startswith("model: tsumgi/"):
+                agents[path.stem] = line.removeprefix("model: tsumgi/")
+    return agents
+
+
+INPUT_BUDGETS = load_input_budgets()
+AGENTS = {"plan": PLAN_DEFAULT_MODEL, **load_tsumgi_agents()}
 
 
 def compact_bytes(value: object) -> int:
@@ -168,6 +191,7 @@ class CaptureServer(HTTPServer):
 
     def __init__(self, model: str):
         self.model = model
+        self.input_budget = INPUT_BUDGETS[model]
         self.auxiliary_requests = 0
         self.main_metrics: dict | None = None
         self.native_token_counts: dict | None = None
@@ -204,7 +228,8 @@ class CaptureHandler(BaseHTTPRequestHandler):
                             server.native_url, native_token_projection(packet, server.native_model)
                         )
                         result = {"full_input_tokens": count,
-                                  "exceeds_input_budget": count > INPUT_TOKEN_BUDGET}
+                                  "input_token_budget": server.input_budget,
+                                  "exceeds_input_budget": count > server.input_budget}
                         if server.ablate_tools:
                             alternative = count_native_tokens(
                                 server.native_url,
@@ -233,7 +258,9 @@ class CaptureHandler(BaseHTTPRequestHandler):
 
 
 def run_probe(args: argparse.Namespace) -> dict:
-    expected_model = AGENTS[args.agent]
+    expected_model = args.model or AGENTS[args.agent]
+    if expected_model not in INPUT_BUDGETS:
+        raise ValueError("model is not a configured TSUMGI provider model")
     native_model = None
     if args.native_token_url is not None:
         require_loopback_native_url(args.native_token_url)
@@ -299,6 +326,7 @@ def run_probe(args: argparse.Namespace) -> dict:
     result = {
         "agent": args.agent,
         "logical_model": expected_model,
+        "input_token_budget": INPUT_BUDGETS[expected_model],
         "fixed_synthetic_input": True,
         "fake_receiver_forwarded_requests": 0,
         "child_network_egress_restricted": False,
@@ -315,6 +343,9 @@ def run_probe(args: argparse.Namespace) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--agent", choices=sorted(AGENTS), required=True)
+    parser.add_argument("--model", choices=sorted(INPUT_BUDGETS), default=None,
+                        help="TSUMGI model to request (default: the Agent's own; plan uses "
+                             + PLAN_DEFAULT_MODEL + ")")
     parser.add_argument("--native-token-url", default=None,
                         help="Optional explicitly approved loopback native token-count URL")
     parser.add_argument("--acknowledge-native-target", action="store_true",
