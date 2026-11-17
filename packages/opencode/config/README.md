@@ -54,7 +54,7 @@ Because dotnix's OpenCode launcher restores package-owned global configuration o
 
 Choose `--agent tsumgi-fast`, `--agent tsumgi-qwen` or `--agent tsumgi-short` for manual TSUMGI sessions. These primary agents are read-only and omit `reasoningEffort`, because passing an OpenAI-tuned primary agent's `reasoningEffort: high` option to a TSUMGI model was observed to yield HTTP 400 (`unsupported_field`). Do not switch the existing OpenAI `build` or `plan` Agent to a TSUMGI model without separately resolving this mismatch. The canonical OpenAI Agent assignments remain unchanged.
 
-No API key was needed for the verified requests from Adam; consequently the `tsumgi` provider has no embedded token. Verify gateway ingress restrictions independently before treating this as safe for arbitrary network clients. If TSUMGI client authentication is enabled in the future, supply a client token via a protected environment variable (for example `{env:TSUMGI_CLIENT_TOKEN}`), not a committed secret.
+No API key was needed for the verified requests from Balthazar; consequently the `tsumgi` provider has no embedded token. Verify gateway ingress restrictions independently before treating this as safe for arbitrary network clients. If TSUMGI client authentication is enabled in the future, supply a client token via a protected environment variable (for example `{env:TSUMGI_CLIENT_TOKEN}`), not a committed secret.
 
 
 ## Authority boundary
