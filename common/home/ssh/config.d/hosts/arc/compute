@@ -10,7 +10,7 @@ Host melchior
   User upiscium
   PasswordAuthentication no
 
-Host casper
+Host caspar
   HostName 10.12.0.3
   Port 20000
   User upiscium
