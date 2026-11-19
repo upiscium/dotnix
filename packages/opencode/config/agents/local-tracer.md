@@ -2,7 +2,7 @@
 description: Hidden local read-only execution tracer for explicit manual advisory dispatch
 mode: subagent
 hidden: true
-model: tsumgi/bonsai2-27b
+model: tsumgi/qwen3.6-35b-a3b
 permission:
   "*": deny
   read: allow

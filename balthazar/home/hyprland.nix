@@ -26,8 +26,8 @@ let
     '';
   };
 
-  adamHyprlandSessionReady = pkgs.writeShellApplication {
-    name = "adam-hyprland-session-ready";
+  balthazarHyprlandSessionReady = pkgs.writeShellApplication {
+    name = "balthazar-hyprland-session-ready";
     runtimeInputs = [
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
       pkgs.uwsm
@@ -49,7 +49,7 @@ in
   imports = [ ../../module/home/hyprland.nix ];
 
   home.file.".config/uwsm/env".text = lib.mkAfter ''
-    export AQ_DRM_DEVICES=/dev/dri/adam-nvidia
+    export AQ_DRM_DEVICES=/dev/dri/balthazar-nvidia
   '';
 
   # Keep the session helper and tools used by the shared screenshot/recording bindings.
@@ -58,6 +58,6 @@ in
     slurp
     gpu-screen-recorder
     gpu-screen-recorder-gtk
-    adamHyprlandSessionReady
+    balthazarHyprlandSessionReady
   ];
 }

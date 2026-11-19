@@ -2,7 +2,7 @@
 description: Hidden local background reader for explicit manual advisory dispatch
 mode: subagent
 hidden: true
-model: tsumgi/bonsai2-27b
+model: tsumgi/qwen3.6-35b-a3b-short
 permission:
   "*": deny
   read: allow

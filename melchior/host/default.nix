@@ -7,6 +7,7 @@
 {
   imports =
     [
+      ./claude-remote-control.nix
       ./firewall.nix
       ./hardware.nix
       ./ipfix.nix

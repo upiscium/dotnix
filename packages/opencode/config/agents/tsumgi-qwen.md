@@ -1,7 +1,7 @@
 ---
-description: Manual TSUMGI Qwen3.8 27B primary agent for bounded read-only chat and investigation
+description: Manual TSUMGI Qwen3.6 35B-A3B (64K, spica) primary agent for bounded read-only chat and investigation
 mode: primary
-model: tsumgi/qwen3.8-27b
+model: tsumgi/qwen3.6-35b-a3b
 permission:
   "*": deny
   read: allow

@@ -8,8 +8,8 @@ let
   };
   displayName = "SUNSHINE";
   uinputAccess = pkgs.writeTextFile {
-    name = "adam-sunshine-uinput-access";
-    destination = "/lib/udev/rules.d/70-adam-sunshine-uinput.rules";
+    name = "balthazar-sunshine-uinput-access";
+    destination = "/lib/udev/rules.d/70-balthazar-sunshine-uinput.rules";
     # Run before systemd's 73-seat-late.rules so its uaccess builtin grants
     # the active local session access. Do not grant world write or membership
     # of the broader physical-input group.
@@ -18,7 +18,7 @@ let
     '';
   };
   displayReady = pkgs.writeShellApplication {
-    name = "adam-sunshine-display-ready";
+    name = "balthazar-sunshine-display-ready";
     runtimeInputs = [ config.programs.hyprland.package pkgs.coreutils pkgs.grim pkgs.jq ];
     text = ''
       if ! test -w /dev/uinput; then
@@ -60,7 +60,7 @@ in
   # The PCI identity is verified on this VM. A colon-free link is required for
   # Aquamarine's colon-separated device list; do not rely on card1 numbering.
   services.udev.extraRules = ''
-    SUBSYSTEM=="drm", ENV{DEVTYPE}=="drm_minor", KERNEL=="card[0-9]*", KERNELS=="0000:01:00.0", ATTRS{vendor}=="0x10de", SYMLINK+="dri/adam-nvidia"
+    SUBSYSTEM=="drm", ENV{DEVTYPE}=="drm_minor", KERNEL=="card[0-9]*", KERNELS=="0000:01:00.0", ATTRS{vendor}=="0x10de", SYMLINK+="dri/balthazar-nvidia"
   '';
   services.udev.packages = [ uinputAccess ];
 
@@ -76,7 +76,7 @@ in
     capSysAdmin = false;
     openFirewall = false;
     settings = {
-      sunshine_name = "adam";
+      sunshine_name = "balthazar";
       address_family = "ipv4";
       bind_address = "10.255.255.61";
       port = 47989;
@@ -107,7 +107,7 @@ in
   assertions = [
     {
       assertion = config.networking.firewall.enable && config.networking.firewall.backend == "iptables";
-      message = "Adam's Sunshine VPN restriction requires the enabled iptables firewall; adapt the Sunshine rules before changing backends.";
+      message = "Balthazar's Sunshine VPN restriction requires the enabled iptables firewall; adapt the Sunshine rules before changing backends.";
     }
   ];
 

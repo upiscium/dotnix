@@ -101,9 +101,10 @@
 
       # Claude account routing is interactive-shell convenience only.
       # KAGARI and other noninteractive executors do not use these functions.
-      # The default Claude configuration is the existing company Team login.
-      # Explicitly setting CLAUDE_CONFIG_DIR to ~/.claude is NOT equivalent
-      # to leaving it unset, so preserve the native default for company use.
+      # The default Claude configuration (~/.claude + ~/.claude.json) is the
+      # personal login. Explicitly setting CLAUDE_CONFIG_DIR to ~/.claude is
+      # NOT equivalent to leaving it unset, so personal use leaves it unset and
+      # only the company Team login uses ~/.claude-work.
       claude() {
         local work_root actual_dir
         work_root="$(realpath -e -- "$HOME/Documents/Work")" || {
@@ -115,24 +116,24 @@
           return 1
         }
         if [[ "$actual_dir" == "$work_root" || "$actual_dir" == "$work_root/"* ]]; then
+          CLAUDE_CONFIG_DIR="$HOME/.claude-work" command claude "$@"
+        else
           (
             unset CLAUDE_CONFIG_DIR
             command claude "$@"
           )
-        else
-          CLAUDE_CONFIG_DIR="$HOME/.claude-personal" command claude "$@"
         fi
       }
 
       claude-company() {
+        CLAUDE_CONFIG_DIR="$HOME/.claude-work" command claude "$@"
+      }
+
+      claude-personal() {
         (
           unset CLAUDE_CONFIG_DIR
           command claude "$@"
         )
-      }
-
-      claude-personal() {
-        CLAUDE_CONFIG_DIR="$HOME/.claude-personal" command claude "$@"
       }
     '';
   };

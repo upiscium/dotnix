@@ -1,19 +1,19 @@
-Host adam
+Host balthazar
   HostName 10.12.0.1
   Port 20000
   User upiscium
   PasswordAuthentication no
 
-Host eve
+Host melchior
   HostName 10.12.0.2
   Port 20000
   User upiscium
   PasswordAuthentication no
 
-Host sirius
+Host caspar
   HostName 10.12.0.3
-  Port 22
-  User root
+  Port 20000
+  User upiscium
   PasswordAuthentication no
 
 Host vega
@@ -39,3 +39,22 @@ Host spica
   Port 22
   User root
   PasswordAuthentication no
+
+Host canopus
+  HostName 10.12.0.8
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host sirius
+  HostName 10.12.0.9
+  Port 22
+  User root
+  PasswordAuthentication no
+
+Host polaris
+  HostName 10.12.0.10
+  Port 22
+  User root
+  PasswordAuthentication no
+

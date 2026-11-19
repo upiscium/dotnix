@@ -3,7 +3,7 @@
 ## Repository structure
 
 - The root `flake.nix` owns portable package outputs, repository-level policy validation, minimal development tooling, and CI.
-- Host directories such as `Adam/`, `Caspar/`, `Eve/`, `Michael/`, and `Ramiel/` retain authority for their NixOS and Home Manager configurations, inputs, and lockfiles.
+- Host directories such as `Balthazar/`, `Caspar/`, `Melchior/`, `Michael/`, and `Ramiel/` retain authority for their NixOS and Home Manager configurations, inputs, and lockfiles.
 - `packages/` contains self-contained configured application artifacts consumed by host-local Home Manager configurations or through the root flake.
 - `common/home/` owns shared user-level Home Manager configuration and retained user-level reference data.
 - `module/home/` and `module/host/` own reusable Home Manager and NixOS integration respectively.

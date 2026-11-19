@@ -69,7 +69,7 @@ def verdict(rules, interface, source, protocol, port):
             index += 2
         if matches:
             return action
-    # Model Adam's pre-existing broad accept for ports 2000-65535.
+    # Model Balthazar's pre-existing broad accept for ports 2000-65535.
     return "ACCEPT" if 2000 <= port <= 65535 else "DROP"
 
 
@@ -84,11 +84,11 @@ class RemoteDesktopTests(unittest.TestCase):
             load = host:
               (import (root + "/" + host + "/flake.nix")).outputs
                 (builtins.getFlake ("git+file://" + root + "?dir=" + host)).inputs;
-            server = (load "adam").nixosConfigurations.host.config;
+            server = (load "balthazar").nixosConfigurations.host.config;
             client = (load "michael").homeConfigurations.home.config;
-            serverHome = (load "adam").homeConfigurations.home.config;
+            serverHome = (load "balthazar").homeConfigurations.home.config;
             uinputRule = builtins.head (builtins.filter
-              (package: package.name == "adam-sunshine-uinput-access") server.services.udev.packages);
+              (package: package.name == "balthazar-sunshine-uinput-access") server.services.udev.packages);
           in {{
             inherit (server.services.sunshine) settings capSysAdmin applications;
             firewall = {{
@@ -135,24 +135,24 @@ class RemoteDesktopTests(unittest.TestCase):
         self.assertEqual(settings["csrf_allowed_origins"].split(","), [expected])
         self.assertEqual(settings["origin_web_ui_allowed"], "lan")
 
-    def test_adam_uses_a_stable_nvidia_card_and_a_guarded_output(self):
+    def test_balthazar_uses_a_stable_nvidia_card_and_a_guarded_output(self):
         environment = self.config["gpuEnvironment"]
         self.assertIn("export GBM_BACKEND=nvidia-drm", environment)
-        self.assertIn("export AQ_DRM_DEVICES=/dev/dri/adam-nvidia", environment)
+        self.assertIn("export AQ_DRM_DEVICES=/dev/dri/balthazar-nvidia", environment)
         self.assertNotIn("/dev/dri/card1", environment)
         self.assertNotIn("/dev/dri/renderD128", environment)
         rules = self.config["udevRules"]
         self.assertIn('KERNELS=="0000:01:00.0"', rules)
         self.assertIn('ENV{DEVTYPE}=="drm_minor"', rules)
         self.assertIn('ATTRS{vendor}=="0x10de"', rules)
-        self.assertIn('SYMLINK+="dri/adam-nvidia"', rules)
+        self.assertIn('SYMLINK+="dri/balthazar-nvidia"', rules)
         self.assertEqual(self.config["startupTimeout"], "30s")
         self.assertEqual(len(self.config["startupChecks"]), 1)
-        self.assertTrue(self.config["startupChecks"][0].endswith("/bin/adam-sunshine-display-ready"))
+        self.assertTrue(self.config["startupChecks"][0].endswith("/bin/balthazar-sunshine-display-ready"))
 
     def test_virtual_input_access_is_seat_scoped_not_a_broad_group(self):
         context = self.config["uinputRuleContext"]
-        paths = [path for path in context if path.endswith("-adam-sunshine-uinput-access.drv")]
+        paths = [path for path in context if path.endswith("-balthazar-sunshine-uinput-access.drv")]
         self.assertEqual(len(paths), 1)
         result = subprocess.run(
             ["nix", "derivation", "show", paths[0]],
@@ -162,7 +162,7 @@ class RemoteDesktopTests(unittest.TestCase):
         records = payload.get("derivations", payload)
         record = records.get(paths[0], records.get(Path(paths[0]).name))
         attributes = record.get("structuredAttrs", record["env"])
-        self.assertEqual(attributes["destination"], "/lib/udev/rules.d/70-adam-sunshine-uinput.rules")
+        self.assertEqual(attributes["destination"], "/lib/udev/rules.d/70-balthazar-sunshine-uinput.rules")
         self.assertEqual(attributes["text"].strip(),
                          'SUBSYSTEM=="misc", KERNEL=="uinput", TAG+="uaccess", OPTIONS+="static_node=uinput"')
         self.assertNotIn("input", self.config["userGroups"])
@@ -172,7 +172,7 @@ class RemoteDesktopTests(unittest.TestCase):
         self.assertIn("graphical-session.target", self.config["wantedBy"])
         self.assertIn("uwsm", self.config["sessionCommand"])
         self.assertIn("start -F -- /run/current-system/sw/bin/start-hyprland", self.config["sessionCommand"])
-        self.assertIn("moonlight-adam", self.config["clientPackages"])
+        self.assertIn("moonlight-balthazar", self.config["clientPackages"])
         self.assertTrue(any(name.startswith("moonlight-qt-") for name in self.config["clientPackages"]))
 
     def test_port_restrictions_precede_existing_broad_accepts(self):
@@ -212,7 +212,7 @@ class SunshineReadinessTests(unittest.TestCase):
         if not hasattr(RemoteDesktopTests, "config"):
             RemoteDesktopTests.setUpClass()
         context = RemoteDesktopTests.config["startupCheckContext"]
-        derivations = [path for path in context if path.endswith("-adam-sunshine-display-ready.drv")]
+        derivations = [path for path in context if path.endswith("-balthazar-sunshine-display-ready.drv")]
         if len(derivations) != 1:
             raise AssertionError(f"Unexpected readiness derivation context: {context}")
         derivation = derivations[0]

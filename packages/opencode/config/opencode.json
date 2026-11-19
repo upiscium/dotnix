@@ -270,6 +270,22 @@
       "*\n*": "deny"
     }
   },
+  "mcp": {
+    "kasane": {
+      "type": "local",
+      "command": [
+        "nix", "shell", "nixpkgs#uv", "--command",
+        "uv", "run", "--directory", "{env:HOME}/src/KASANE",
+        "kasane-mcp", "serve", "--allow-write", "--default-scope", "global"
+      ],
+      "environment": {
+        "KASANE_VAULT_PATH": "{env:HOME}/.local/state/KASANE/vault.db",
+        "KASANE_ACTOR": "opencode",
+        "KASANE_MODEL": "openai/gpt-6.1-sol,openai/gpt-6-luna"
+      },
+      "enabled": true
+    }
+  },
   "provider": {
     "tsumgi": {
       "npm": "@ai-sdk/openai-compatible",
@@ -278,14 +294,19 @@
         "baseURL": "https://tsumgi.arc.upiscium.dev/v1"
       },
       "models": {
-        "qwen3.8-27b": {
-          "name": "Qwen3.8 27B (TSUMGI)",
-          "limit": { "context": 12288, "output": 2048 },
+        "qwen3.6-35b-a3b": {
+          "name": "Qwen3.6 35B-A3B 64K (TSUMGI)",
+          "limit": { "context": 65536, "output": 2048 },
           "tool_call": true
         },
-        "bonsai2-27b": {
-          "name": "Bonsai 2 27B (TSUMGI)",
-          "limit": { "context": 8192, "output": 2048 },
+        "qwen3.6-35b-a3b-fast": {
+          "name": "Qwen3.6 35B-A3B Fast 192K (TSUMGI)",
+          "limit": { "context": 196608, "output": 2048 },
+          "tool_call": true
+        },
+        "qwen3.6-35b-a3b-short": {
+          "name": "Qwen3.6 35B-A3B Short 12K (TSUMGI)",
+          "limit": { "context": 12288, "output": 2048 },
           "tool_call": true
         }
       }
