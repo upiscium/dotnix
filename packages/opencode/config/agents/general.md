@@ -1,8 +1,7 @@
 ---
 description: Bounded implementation worker for a parent-assigned scope
 mode: subagent
-model: openai/gpt-6-luna
-reasoningEffort: medium
+model: tsumgi/qwen3.6-35b-a3b
 permission:
   edit: allow
   task: deny

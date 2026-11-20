@@ -1,8 +1,7 @@
 ---
 description: Runs project-standard tests, lint, type checks, and builds without editing code
 mode: subagent
-model: openai/gpt-6-luna
-reasoningEffort: medium
+model: tsumgi/qwen3.6-35b-a3b
 permission:
   edit: deny
   task: deny

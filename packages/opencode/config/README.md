@@ -26,11 +26,14 @@ OpenCode-generated runtime files such as `.gitignore`, `node_modules`, package m
 
 ## Models
 
-| Role | Model | Reasoning effort |
+All roles run on TSUMGI. The `openai` provider is disabled (`disabled_providers`), so OpenCode cannot fall back to it.
+
+| Role | Model | Why |
 | --- | --- | --- |
-| `build`, `plan`, `architect`, `security-reviewer` | `openai/gpt-6.1-sol` | `high` |
-| `reviewer`, `investigator` | `openai/gpt-6-luna` | `high` |
-| `general`, `explore`, `scout`, `verifier` | `openai/gpt-6-luna` | `medium` |
+| `build`, `plan`, `architect`, `security-reviewer`, `reviewer`, `investigator` | `tsumgi/qwen3.6-35b-a3b-fast` | 192K context and about 80 tok/s (sirius) for the roles that read the most code |
+| `general`, `explore`, `scout`, `verifier` | `tsumgi/qwen3.6-35b-a3b` | 64K on a different host (spica), so parallel subagents do not queue behind the primary agent |
+
+No role sets `reasoningEffort`: TSUMGI serves Qwen3.6 with thinking off, and the option has no effect there. Each TSUMGI profile serves one request at a time, so parallel subagents on the same profile run one after another.
 
 Each global role has exactly one configured model. Model substitution, fallback agents, and retrying work under an alternate model are not part of this layer. If the configured provider/model cannot execute the task, report the exact failure and return `BLOCKED`.
 
@@ -52,7 +55,7 @@ Because dotnix's OpenCode launcher restores package-owned global configuration o
 
 **Coupled rollback:** if TSUMGI moves a profile to a smaller context, lower that model's `limit.context` here in the same change window and redeploy the package on each affected host. Old running OpenCode sessions keep their previous budgets until relaunched. The Gateway's strict token admission still fails closed while clients are temporarily inconsistent.
 
-Choose `--agent tsumgi-fast`, `--agent tsumgi-qwen` or `--agent tsumgi-short` for manual TSUMGI sessions. These primary agents are read-only and omit `reasoningEffort`, because passing an OpenAI-tuned primary agent's `reasoningEffort: high` option to a TSUMGI model was observed to yield HTTP 400 (`unsupported_field`). Do not switch the existing OpenAI `build` or `plan` Agent to a TSUMGI model without separately resolving this mismatch. The canonical OpenAI Agent assignments remain unchanged.
+Choose `--agent tsumgi-fast`, `--agent tsumgi-qwen` or `--agent tsumgi-short` for manual TSUMGI sessions. These primary agents are read-only and omit `reasoningEffort`, because passing an OpenAI-tuned primary agent's `reasoningEffort: high` option to a TSUMGI model was observed to yield HTTP 400 (`unsupported_field`). The canonical roles above already run on TSUMGI without `reasoningEffort`; these three agents remain for explicit read-only sessions pinned to one profile.
 
 No API key was needed for the verified requests from Balthazar; consequently the `tsumgi` provider has no embedded token. Verify gateway ingress restrictions independently before treating this as safe for arbitrary network clients. If TSUMGI client authentication is enabled in the future, supply a client token via a protected environment variable (for example `{env:TSUMGI_CLIENT_TOKEN}`), not a committed secret.
 
@@ -104,7 +107,7 @@ Commands remain thin entry points. Agent-ready repositories may override command
 Refresh the provider model list before changing IDs:
 
 ```sh
-opencode models openai --refresh --verbose
+opencode models tsumgi --refresh --verbose
 ```
 
 Use exact provider-prefixed IDs reported by OpenCode. Model/provider choices in this Global layer are dotnix-owned environment configuration, not a cross-repository contract.
