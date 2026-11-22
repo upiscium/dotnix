@@ -104,16 +104,16 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
 
     def test_canonical_assignments_remain_immutable(self) -> None:
         canonical = {
-            "build": "openai/gpt-6.1-sol",
-            "plan": "openai/gpt-6.1-sol",
-            "architect": "openai/gpt-6.1-sol",
-            "reviewer": "openai/gpt-6-luna",
-            "investigator": "openai/gpt-6-luna",
-            "security-reviewer": "openai/gpt-6.1-sol",
-            "general": "openai/gpt-6-luna",
-            "explore": "openai/gpt-6-luna",
-            "verifier": "openai/gpt-6-luna",
-            "scout": "openai/gpt-6-luna",
+            "build": "tsumgi/qwen3.6-35b-a3b-fast",
+            "plan": "tsumgi/qwen3.6-35b-a3b-fast",
+            "architect": "tsumgi/qwen3.6-35b-a3b-fast",
+            "reviewer": "tsumgi/qwen3.6-35b-a3b-fast",
+            "investigator": "tsumgi/qwen3.6-35b-a3b-fast",
+            "security-reviewer": "tsumgi/qwen3.6-35b-a3b-fast",
+            "general": "tsumgi/qwen3.6-35b-a3b",
+            "explore": "tsumgi/qwen3.6-35b-a3b",
+            "verifier": "tsumgi/qwen3.6-35b-a3b",
+            "scout": "tsumgi/qwen3.6-35b-a3b",
         }
         for agent, model in canonical.items():
             self.assertIn(f"model: {model}", (CONFIG / "agents" / f"{agent}.md").read_text())
