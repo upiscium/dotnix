@@ -12,7 +12,7 @@
       ./ipfix.nix
       ../../common/host
       ../../module/host/proxmox.nix
-      # ../../module/NixOS/docker/rootful.nix
+      ../../module/NixOS/docker/rootful.nix
     ]
     ++ (with inputs.nixos-hardware.nixosModules; [
       common-cpu-amd
