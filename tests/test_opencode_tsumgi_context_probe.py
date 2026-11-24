@@ -117,11 +117,11 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(probe.AGENTS, {
             "plan": "qwen3.6-35b-a3b-short",
             "tsumgi-coder": "qwen3.8-flash-next-coder",
-            "tsumgi-fast": "qwen3.6-35b-a3b-fast",
+            "tsumgi-fast": "qwen3.8-flash-next-coder-fast",
             "tsumgi-short": "qwen3.6-35b-a3b-short",
         })
         self.assertEqual(probe.INPUT_BUDGETS, {
-            "qwen3.6-35b-a3b-fast": 194560,
+            "qwen3.8-flash-next-coder-fast": 188416,
             "qwen3.6-35b-a3b-short": 10240,
             "qwen3.8-flash-next-coder": 122880,
         })

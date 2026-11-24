@@ -295,9 +295,9 @@
         "baseURL": "https://tsumgi.arc.upiscium.dev/v1"
       },
       "models": {
-        "qwen3.6-35b-a3b-fast": {
-          "name": "Qwen3.6 35B-A3B Fast 192K (TSUMGI)",
-          "limit": { "context": 196608, "output": 2048 },
+        "qwen3.8-flash-next-coder-fast": {
+          "name": "Qwen3.8 Flash-Next Coder Fast 192K (TSUMGI)",
+          "limit": { "context": 196608, "output": 8192 },
           "tool_call": true
         },
         "qwen3.6-35b-a3b-short": {

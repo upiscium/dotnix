@@ -17,7 +17,7 @@ fallback = "none"
 [[workers]]
 class = "local-investigator"
 provider = "tsumgi"
-model = "qwen3.6-35b-a3b-fast"
+model = "qwen3.8-flash-next-coder-fast"
 role = "read-only advisory"
 
 [[workers]]
