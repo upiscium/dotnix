@@ -2,7 +2,7 @@
 description: Hidden local read-only execution tracer for explicit manual advisory dispatch
 mode: subagent
 hidden: true
-model: tsumgi/qwen3.6-35b-a3b
+model: tsumgi/qwen3.8-flash-next-coder
 permission:
   "*": deny
   read: allow
