@@ -31,23 +31,22 @@ All roles run on TSUMGI. The `openai` provider is disabled (`disabled_providers`
 | Role | Model | Why |
 | --- | --- | --- |
 | `build`, `plan`, `architect`, `security-reviewer`, `reviewer`, `investigator` | `tsumgi/qwen3.6-35b-a3b-fast` | 192K context and about 80 tok/s (sirius) for the roles that read the most code |
-| `general`, `explore`, `scout`, `verifier` | `tsumgi/qwen3.6-35b-a3b` | 64K on a different host (spica), so parallel subagents do not queue behind the primary agent |
+| `general`, `explore`, `scout`, `verifier` | `tsumgi/qwen3.8-flash-next-coder` | 128K on two separate 2-GPU lanes (canopus, deneb), so parallel subagents do not queue behind the primary agent |
 
-No role sets `reasoningEffort`: TSUMGI serves Qwen3.6 with thinking off, and the option has no effect there. Each TSUMGI profile serves one request at a time, so parallel subagents on the same profile run one after another.
+No role sets `reasoningEffort`: TSUMGI serves Qwen3.6 with thinking off and the Coder profile with thinking always on, and the option has no effect on either. Each TSUMGI profile serves one request at a time, so parallel subagents on the same profile run one after another.
 
 Each global role has exactly one configured model. Model substitution, fallback agents, and retrying work under an alternate model are not part of this layer. If the configured provider/model cannot execute the task, report the exact failure and return `BLOCKED`.
 
-The three hidden local workers use the shared `tsumgi` OpenAI-compatible provider, with explicitly pinned model IDs. They remain Phase 1 manual/shadow read-only advisory workers, not fallback capacity. Each worker is pinned to a different TSUMGI profile, so the three can run at the same time on different hosts: `local-investigator` uses `qwen3.6-35b-a3b-fast`, `local-tracer` uses `qwen3.6-35b-a3b`, and `local-background` uses `qwen3.6-35b-a3b-short`. TSUMGI owns deployment routing and scheduling. The original `ollama` and `local-quality` / `local-fast` / `local-background` provider definitions and `agent-runtime` services are retained temporarily for a controlled rollback, but the active local-worker manifest does not reference them. OpenCode's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
+The three hidden local workers use the shared `tsumgi` OpenAI-compatible provider, with explicitly pinned model IDs. They remain Phase 1 manual/shadow read-only advisory workers, not fallback capacity. Each worker is pinned to a different TSUMGI profile, so the three can run at the same time on different hosts: `local-investigator` uses `qwen3.6-35b-a3b-fast`, `local-tracer` uses `qwen3.8-flash-next-coder`, and `local-background` uses `qwen3.6-35b-a3b-short`. TSUMGI owns deployment routing and scheduling. The original `ollama` and `local-quality` / `local-fast` / `local-background` provider definitions and `agent-runtime` services are retained temporarily for a controlled rollback, but the active local-worker manifest does not reference them. OpenCode's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
 
 ## TSUMGI model access (Qwen3.6 profiles, TSUMGI v0.2.0-rc.1, 2026-11-16)
 
-The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. Bonsai 2 and Qwen3.8 are retired. The first three profiles serve Qwen3.6-35B-A3B with thinking off; `qwen3.8-flash-next-coder` serves the Qwen3.8 Flash-Next Coder model with thinking on:
+The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. Bonsai 2, Qwen3.8-27B and the 64K Qwen3.6 profile (`qwen3.6-35b-a3b`, retired 2026-11-24) are retired. The two Qwen3.6 profiles serve Qwen3.6-35B-A3B with thinking off; `qwen3.8-flash-next-coder` serves the Qwen3.8 Flash-Next Coder model with thinking on:
 
 | Model ID | Host and runtime | `limit.context` (total) | Output | Speed |
 | --- | --- | --- | --- | --- |
-| `qwen3.6-35b-a3b` | spica, Strata (GTX 1080 Ti) | 65,536 | 2,048 | about 15 tok/s; long prompts read slowly |
 | `qwen3.6-35b-a3b-fast` | sirius, llama.cpp (2x RTX 3060, KV q8_0) | 196,608 (input up to 194,560) | 2,048 | about 80 tok/s |
-| `qwen3.6-35b-a3b-short` | deneb, Strata | 12,288 | 2,048 | 26-34 tok/s |
+| `qwen3.6-35b-a3b-short` | spica, Strata | 12,288 | 2,048 | 26-34 tok/s |
 | `qwen3.8-flash-next-coder` | canopus and deneb, Strata (2x GTX 1080 Ti each, layer split) | 131,072 | 8,192 | about 40 tok/s; thinking always on |
 
 The OpenCode `limit.context` value is the *total* model budget the Gateway advertises in `GET /v1/models`, not the separate maximum input. Each profile runs on one host with one request at a time, so concurrent sessions on the same profile queue in the Gateway. While a long prompt is being read, the Gateway keeps streams alive with SSE comments; non-streaming requests depend on the reverse proxy's 1800 s timeout.
@@ -56,7 +55,7 @@ Because dotnix's OpenCode launcher restores package-owned global configuration o
 
 **Coupled rollback:** if TSUMGI moves a profile to a smaller context, lower that model's `limit.context` here in the same change window and redeploy the package on each affected host. Old running OpenCode sessions keep their previous budgets until relaunched. The Gateway's strict token admission still fails closed while clients are temporarily inconsistent.
 
-Choose `--agent tsumgi-fast`, `--agent tsumgi-qwen`, `--agent tsumgi-short` or `--agent tsumgi-coder` for manual TSUMGI sessions. These primary agents are read-only and omit `reasoningEffort`, because passing an OpenAI-tuned primary agent's `reasoningEffort: high` option to a TSUMGI model was observed to yield HTTP 400 (`unsupported_field`). The canonical roles above already run on TSUMGI without `reasoningEffort`; these three agents remain for explicit read-only sessions pinned to one profile.
+Choose `--agent tsumgi-fast`, `--agent tsumgi-short` or `--agent tsumgi-coder` for manual TSUMGI sessions. These primary agents are read-only and omit `reasoningEffort`, because passing an OpenAI-tuned primary agent's `reasoningEffort: high` option to a TSUMGI model was observed to yield HTTP 400 (`unsupported_field`). The canonical roles above already run on TSUMGI without `reasoningEffort`; these three agents remain for explicit read-only sessions pinned to one profile.
 
 No API key was needed for the verified requests from Balthazar; consequently the `tsumgi` provider has no embedded token. Verify gateway ingress restrictions independently before treating this as safe for arbitrary network clients. If TSUMGI client authentication is enabled in the future, supply a client token via a protected environment variable (for example `{env:TSUMGI_CLIENT_TOKEN}`), not a committed secret.
 
