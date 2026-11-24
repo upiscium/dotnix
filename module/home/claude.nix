@@ -7,4 +7,12 @@
   home.activation.claudeInputPreferences = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run ${pkgs.bash}/bin/bash ${../../common/home/claude/apply-preferences.sh} ${pkgs.jq}/bin/jq "$HOME/.claude" "$HOME/.claude-work"
   '';
+
+  # Multi-model setup (Opus plan / Sonnet implement / Haiku research): user-level
+  # subagents, skills, a read-only git hook, subagent limits in settings.json
+  # `.env`, and a marked block in CLAUDE.md. Personal profile only; the company
+  # profile (~/.claude-work) is intentionally not touched.
+  home.activation.claudeMultiModel = lib.hm.dag.entryAfter [ "claudeInputPreferences" ] ''
+    run env PATH="${lib.makeBinPath [ pkgs.coreutils pkgs.gawk pkgs.gnused pkgs.diffutils ]}:$PATH" ${pkgs.bash}/bin/bash ${../../common/home/claude/apply-multimodel.sh} ${pkgs.jq}/bin/jq "$HOME/.claude" ${../../common/home/claude/multimodel}
+  '';
 }
