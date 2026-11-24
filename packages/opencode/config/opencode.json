@@ -309,6 +309,11 @@
           "name": "Qwen3.6 35B-A3B Short 12K (TSUMGI)",
           "limit": { "context": 12288, "output": 2048 },
           "tool_call": true
+        },
+        "qwen3.8-flash-next-coder": {
+          "name": "Qwen3.8 Flash-Next Coder 128K (TSUMGI)",
+          "limit": { "context": 131072, "output": 8192 },
+          "tool_call": true
         }
       }
     },

@@ -50,6 +50,7 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             "qwen3.6-35b-a3b": {"context": 65536, "output": 2048},
             "qwen3.6-35b-a3b-fast": {"context": 196608, "output": 2048},
             "qwen3.6-35b-a3b-short": {"context": 12288, "output": 2048},
+            "qwen3.8-flash-next-coder": {"context": 131072, "output": 8192},
         }
         self.assertEqual(set(expected_limits), set(provider["models"]))
         for model, limits in expected_limits.items():
@@ -60,6 +61,7 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             ("tsumgi-qwen", "qwen3.6-35b-a3b"),
             ("tsumgi-fast", "qwen3.6-35b-a3b-fast"),
             ("tsumgi-short", "qwen3.6-35b-a3b-short"),
+            ("tsumgi-coder", "qwen3.8-flash-next-coder"),
         ):
             agent_text = (CONFIG / "agents" / f"{agent}.md").read_text()
             self.assertIn("mode: primary", agent_text)
