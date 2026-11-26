@@ -1,7 +1,7 @@
 ---
 description: Bounded implementation worker for a parent-assigned scope
 mode: subagent
-model: tsumgi/qwen3.6-35b-a3b
+model: tsumgi/qwen3.8-flash-next-coder
 permission:
   edit: allow
   task: deny

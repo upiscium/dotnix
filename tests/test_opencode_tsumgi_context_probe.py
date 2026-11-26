@@ -94,7 +94,7 @@ class ProbeTests(unittest.TestCase):
     @staticmethod
     def sample(*, tools: int = 3) -> dict:
         return {
-            "model": probe.AGENTS["tsumgi-qwen"],
+            "model": probe.AGENTS["tsumgi-coder"],
             "messages": [
                 {"role": "system", "content": "bounded synthetic fixture"},
                 {"role": "user", "content": probe.PROMPT},
@@ -116,14 +116,14 @@ class ProbeTests(unittest.TestCase):
     def test_agents_and_budgets_follow_installed_config(self):
         self.assertEqual(probe.AGENTS, {
             "plan": "qwen3.6-35b-a3b-short",
-            "tsumgi-fast": "qwen3.6-35b-a3b-fast",
-            "tsumgi-qwen": "qwen3.6-35b-a3b",
+            "tsumgi-coder": "qwen3.8-flash-next-coder",
+            "tsumgi-fast": "qwen3.8-flash-next-coder-fast",
             "tsumgi-short": "qwen3.6-35b-a3b-short",
         })
         self.assertEqual(probe.INPUT_BUDGETS, {
-            "qwen3.6-35b-a3b": 63488,
-            "qwen3.6-35b-a3b-fast": 194560,
+            "qwen3.8-flash-next-coder-fast": 188416,
             "qwen3.6-35b-a3b-short": 10240,
+            "qwen3.8-flash-next-coder": 122880,
         })
 
     def test_unknown_model_is_blocked(self):
@@ -236,7 +236,7 @@ class ProbeTests(unittest.TestCase):
             sentinel_thread.join(timeout=3)
 
     def test_capture_server_returns_fake_sse_without_logging_raw(self):
-        server = probe.CaptureServer(probe.AGENTS["tsumgi-qwen"])
+        server = probe.CaptureServer(probe.AGENTS["tsumgi-coder"])
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
@@ -293,7 +293,7 @@ class ProbeTests(unittest.TestCase):
 
     def test_native_mode_must_acknowledge_target(self):
         args = type("Args", (), {
-            "agent": "tsumgi-qwen", "model": None,
+            "agent": "tsumgi-coder", "model": None,
             "native_token_url": (
                 "http://127.0.0.1:18882/v1/chat/completions/input_tokens"
             ),
@@ -327,14 +327,14 @@ class ProbeTests(unittest.TestCase):
             return subprocess.CompletedProcess(argv, 0)
 
         args = type("Args", (), {
-            "agent": "tsumgi-qwen", "model": None, "native_token_url": None,
+            "agent": "tsumgi-coder", "model": None, "native_token_url": None,
             "acknowledge_native_target": False,
             "ablate_tools": False,
         })()
         with mock.patch.object(probe.shutil, "which", return_value="/bin/opencode"), \
              mock.patch.object(probe.subprocess, "run", side_effect=fake_subprocess):
             outcome = probe.run_probe(args)
-        self.assertEqual(outcome["input_token_budget"], 63488)
+        self.assertEqual(outcome["input_token_budget"], 122880)
         self.assertEqual(outcome["fake_receiver_forwarded_requests"], 0)
         self.assertFalse(outcome["child_network_egress_restricted"])
         self.assertEqual(outcome["main_request"]["tool_count"], 3)

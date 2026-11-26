@@ -1,7 +1,7 @@
 ---
 description: Repository reconnaissance and targeted investigation agent
 mode: subagent
-model: tsumgi/qwen3.6-35b-a3b
+model: tsumgi/qwen3.8-flash-next-coder
 permission:
   edit: deny
   task: deny

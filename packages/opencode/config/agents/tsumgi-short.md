@@ -1,5 +1,5 @@
 ---
-description: Manual TSUMGI Qwen3.6 35B-A3B Short (12K, deneb) primary agent for bounded read-only chat and investigation
+description: Manual TSUMGI Qwen3.6 35B-A3B Short (12K, spica) primary agent for bounded read-only chat and investigation
 mode: primary
 model: tsumgi/qwen3.6-35b-a3b-short
 permission:

@@ -8,8 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "packages" / "opencode" / "config"
 AGENTS = CONFIG / "agents"
-FAST = "tsumgi/qwen3.6-35b-a3b-fast"
-LONG = "tsumgi/qwen3.6-35b-a3b"
+FAST = "tsumgi/qwen3.8-flash-next-coder-fast"
+LONG = "tsumgi/qwen3.8-flash-next-coder"
 ROLE_MODELS = {
     "build": FAST,
     "plan": FAST,

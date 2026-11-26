@@ -17,7 +17,7 @@
 
       ../../common/host
       ../../module/host/desktop.nix
-      ../../module/host/ollama.nix
+      # ../../module/host/ollama.nix
       ../../module/host/proxmox.nix
       ../../module/host/docker/rootless.nix
     ]
