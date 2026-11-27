@@ -10,7 +10,7 @@
       # Include the results of the hardware scan.
       ./firewall.nix
       ./hardware.nix
-      ./wireguard.nix
+      # ./wireguard.nix
 
       ../../common/host
       ../../module/host/asusctl.nix
