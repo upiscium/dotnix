@@ -13,3 +13,8 @@ Host *
   HashKnownHosts no
   # IdentityFile ~/secrets/private-key/arc
   # ControlPath    /tmp/%r@%h:%p
+
+Host *.net.upiscium.dev
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
