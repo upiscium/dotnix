@@ -2,7 +2,7 @@
 description: Independently reviews consequential cross-module architecture and boundary changes
 mode: subagent
 hidden: true
-model: tsumgi/qwen3.8-flash-next-coder-fast
+model: tsumgi/qwen3.8-27b
 permission:
   edit: deny
   task: deny

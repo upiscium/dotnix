@@ -1,7 +1,7 @@
 ---
 description: Read-only requirements, architecture, dependency, and implementation planning agent
 mode: primary
-model: tsumgi/qwen3.8-flash-next-coder-fast
+model: tsumgi/qwen3.8-27b
 permission:
   edit: deny
   question: allow

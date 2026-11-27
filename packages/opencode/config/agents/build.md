@@ -1,7 +1,7 @@
 ---
 description: Primary implementation and integration agent
 mode: primary
-model: tsumgi/qwen3.8-flash-next-coder-fast
+model: tsumgi/qwen3.8-27b
 permission:
   edit: allow
   task: ask

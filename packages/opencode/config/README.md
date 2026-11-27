@@ -30,22 +30,22 @@ All roles run on TSUMGI. The `openai` provider is disabled (`disabled_providers`
 
 | Role | Model | Why |
 | --- | --- | --- |
-| `build`, `plan`, `architect`, `security-reviewer`, `reviewer`, `investigator` | `tsumgi/qwen3.8-flash-next-coder-fast` | 192K context on polaris (2x RTX 3060, about 1,800 tok/s prompt reading) for the roles that read the most code |
+| `build`, `plan`, `architect`, `security-reviewer`, `reviewer`, `investigator` | `tsumgi/qwen3.8-27b` | 128K context on polaris (2x RTX 3060, llama.cpp, about 28 tok/s, working prefix cache) for the roles that read the most code |
 | `general`, `explore`, `scout`, `verifier` | `tsumgi/qwen3.8-flash-next-coder` | 128K on two separate 2-GPU lanes (canopus, deneb), so parallel subagents do not queue behind the primary agent |
 
-No role sets `reasoningEffort`: TSUMGI serves the short Qwen3.6 profile with thinking off and the two Coder profiles with thinking always on, and the option has no effect on any of them. Each TSUMGI profile serves one request at a time, so parallel subagents on the same profile run one after another.
+No role sets `reasoningEffort`: TSUMGI serves the short Qwen3.6 profile and the 27B profile with thinking off and the Coder profile with thinking always on, and the option has no effect on any of them. Each TSUMGI profile serves one request at a time, so parallel subagents on the same profile run one after another.
 
 Each global role has exactly one configured model. Model substitution, fallback agents, and retrying work under an alternate model are not part of this layer. If the configured provider/model cannot execute the task, report the exact failure and return `BLOCKED`.
 
-The three hidden local workers use the shared `tsumgi` OpenAI-compatible provider, with explicitly pinned model IDs. They remain Phase 1 manual/shadow read-only advisory workers, not fallback capacity. Each worker is pinned to a different TSUMGI profile, so the three can run at the same time on different hosts: `local-investigator` uses `qwen3.8-flash-next-coder-fast`, `local-tracer` uses `qwen3.8-flash-next-coder`, and `local-background` uses `qwen3.6-35b-a3b-short`. TSUMGI owns deployment routing and scheduling. The original `ollama` and `local-quality` / `local-fast` / `local-background` provider definitions and `agent-runtime` services are retained temporarily for a controlled rollback, but the active local-worker manifest does not reference them. OpenCode's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
+The three hidden local workers use the shared `tsumgi` OpenAI-compatible provider, with explicitly pinned model IDs. They remain Phase 1 manual/shadow read-only advisory workers, not fallback capacity. Each worker is pinned to a different TSUMGI profile, so the three can run at the same time on different hosts: `local-investigator` uses `qwen3.8-27b`, `local-tracer` uses `qwen3.8-flash-next-coder`, and `local-background` uses `qwen3.6-35b-a3b-short`. TSUMGI owns deployment routing and scheduling. The original `ollama` and `local-quality` / `local-fast` / `local-background` provider definitions and `agent-runtime` services are retained temporarily for a controlled rollback, but the active local-worker manifest does not reference them. OpenCode's public API cannot enforce `toolChoice=required`, so no plugin is installed; required-tool and same-agent/same-model one-retry enforcement remains in the parent workflow.
 
 ## TSUMGI model access (Qwen3.6 profiles, TSUMGI v0.2.0-rc.1, 2026-11-16)
 
-The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. Bonsai 2, Qwen3.8-27B and the 64K Qwen3.6 profile (`qwen3.6-35b-a3b`, retired 2026-11-24) are retired. The short profile serves Qwen3.6-35B-A3B with thinking off; the two Coder profiles serve the Qwen3.8 Flash-Next Coder model with thinking on (the 192K `qwen3.6-35b-a3b-fast` profile was retired 2026-11-25):
+The TSUMGI Gateway is configured at `https://tsumgi.arc.upiscium.dev/v1`. Bonsai 2, the 64K Qwen3.6 profile (`qwen3.6-35b-a3b`, retired 2026-11-24), the 192K Qwen3.6 profile (`qwen3.6-35b-a3b-fast`, retired 2026-11-25) and the Coder fast profile (`qwen3.8-flash-next-coder-fast`, retired 2026-11-27) are retired. The short profile (Qwen3.6-35B-A3B) and the 27B profile (Qwen3.8-27B) run with thinking off; `qwen3.8-flash-next-coder` serves the Qwen3.8 Flash-Next Coder model with thinking on:
 
 | Model ID | Host and runtime | `limit.context` (total) | Output | Speed |
 | --- | --- | --- | --- | --- |
-| `qwen3.8-flash-next-coder-fast` | polaris, Strata (2x RTX 3060, layer split) | 196,608 (input up to 188,416) | 8,192 | about 35-65 tok/s; prompt reading about 1,800 tok/s; thinking always on |
+| `qwen3.8-27b` | polaris, llama.cpp (2x RTX 3060, tensor split, KV q8_0) | 131,072 (input up to 122,880) | 8,192 | about 28 tok/s (17 at 100K); prompt reading about 650 tok/s; thinking off |
 | `qwen3.6-35b-a3b-short` | spica, Strata | 12,288 | 2,048 | 26-34 tok/s |
 | `qwen3.8-flash-next-coder` | canopus and deneb, Strata (2x GTX 1080 Ti each, layer split) | 131,072 | 8,192 | about 40 tok/s; thinking always on |
 
