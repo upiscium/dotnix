@@ -41,7 +41,7 @@ is `limit.context` minus `limit.output`:
 | --- | --- | ---: |
 | `qwen3.6-35b-a3b-short` | `tsumgi-short` | 10,240 |
 | `qwen3.8-flash-next-coder` | `tsumgi-coder` | 122,880 |
-| `qwen3.8-flash-next-coder-fast` | `tsumgi-fast` | 188,416 |
+| `qwen3.8-27b` | `tsumgi-fast` | 122,880 |
 
 The plan choice is *ephemerally* tested against the 12K Short profile by
 default; pass `--model` to try another TSUMGI model. The canonical OpenAI

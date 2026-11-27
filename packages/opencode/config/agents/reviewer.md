@@ -1,7 +1,7 @@
 ---
 description: Reviews changes for correctness, contracts, maintainability, and missing tests
 mode: subagent
-model: tsumgi/qwen3.8-flash-next-coder-fast
+model: tsumgi/qwen3.8-27b
 permission:
   edit: deny
   task: deny

@@ -117,18 +117,18 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(probe.AGENTS, {
             "plan": "qwen3.6-35b-a3b-short",
             "tsumgi-coder": "qwen3.8-flash-next-coder",
-            "tsumgi-fast": "qwen3.8-flash-next-coder-fast",
+            "tsumgi-fast": "qwen3.8-27b",
             "tsumgi-short": "qwen3.6-35b-a3b-short",
         })
         self.assertEqual(probe.INPUT_BUDGETS, {
-            "qwen3.8-flash-next-coder-fast": 188416,
+            "qwen3.8-27b": 122880,
             "qwen3.6-35b-a3b-short": 10240,
             "qwen3.8-flash-next-coder": 122880,
         })
 
     def test_unknown_model_is_blocked(self):
         args = type("Args", (), {
-            "agent": "plan", "model": "qwen3.8-27b", "native_token_url": None,
+            "agent": "plan", "model": "qwen3.8-14b", "native_token_url": None,
             "acknowledge_native_target": False, "ablate_tools": False,
         })()
         with self.assertRaises(ValueError):

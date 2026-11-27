@@ -2,7 +2,7 @@
 description: Hidden local read-only investigator for explicit manual advisory dispatch
 mode: subagent
 hidden: true
-model: tsumgi/qwen3.8-flash-next-coder-fast
+model: tsumgi/qwen3.8-27b
 permission:
   "*": deny
   read: allow
