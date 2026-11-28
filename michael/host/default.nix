@@ -10,12 +10,13 @@
       # Include the results of the hardware scan.
       ./firewall.nix
       ./hardware.nix
-      ./wireguard.nix
+      # ./wireguard.nix
 
       ../../common/host
       ../../module/host/asusctl.nix
       ../../module/host/desktop.nix
       ../../module/host/docker/rootless.nix
+      ../../module/host/headscale.nix
       ../../module/host/platformio-udev.nix
       ../../module/host/steam.nix
     ]

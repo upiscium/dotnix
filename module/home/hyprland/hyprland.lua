@@ -81,6 +81,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("hyprpaper")
 	hl.exec_cmd("waybar-top")
 	hl.exec_cmd("waybar-bottom")
+	hl.exec_cmd("trayscale")
 	hl.exec_cmd("./.config/conky/start_conky.sh")
 end)
 

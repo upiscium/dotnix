@@ -1,8 +1,7 @@
 Host comp-gateway
-  HostName 10.255.255.62
+  HostName comp-gateway.net.upiscium.dev
   Port 22
-  IdentityFile ~/secrets/private-key/comp
-  User upiscium
+  User root
 
 Host s03
   HostName 10.0.2.3

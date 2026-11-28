@@ -3,7 +3,6 @@
     ./clang.nix
     ./git.nix
     # ./gpg.nix
-    ../../packages/codex/home.nix
     ../../packages/kitty/home.nix
     ../../packages/neovim/home.nix
     ../../packages/opencode/home.nix

@@ -1,8 +1,7 @@
 ---
 description: Reviews concrete security risks in code, Nix, CI, containers, and network configuration
 mode: subagent
-model: openai/gpt-6.1-sol
-reasoningEffort: high
+model: tsumgi/qwen3.8-27b
 permission:
   edit: deny
   task: deny

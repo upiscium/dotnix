@@ -1,7 +1,7 @@
 ---
-description: Manual TSUMGI Qwen3.6 35B-A3B Fast (192K, sirius) primary agent for bounded read-only chat and investigation
+description: Manual TSUMGI Qwen3.8 27B (128K, polaris, 2x RTX 3060) primary agent for bounded read-only chat and investigation
 mode: primary
-model: tsumgi/qwen3.6-35b-a3b-fast
+model: tsumgi/qwen3.8-27b
 permission:
   "*": deny
   read: allow

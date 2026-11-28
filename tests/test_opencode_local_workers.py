@@ -14,8 +14,8 @@ MODELS = {
     "local-background": ("http://10.12.2.9:8090/v1", "gemma4-12b-it-q4km-1080ti"),
 }
 WORKERS = {
-    "local-investigator": "tsumgi/qwen3.6-35b-a3b-fast",
-    "local-tracer": "tsumgi/qwen3.6-35b-a3b",
+    "local-investigator": "tsumgi/qwen3.8-27b",
+    "local-tracer": "tsumgi/qwen3.8-flash-next-coder",
     "local-background": "tsumgi/qwen3.6-35b-a3b-short",
 }
 DENIED = {"glob", "list", "lsp", "bash", "edit", "task", "question", "webfetch", "websearch", "skill", "todowrite", "external_directory", "doom_loop"}
@@ -47,9 +47,9 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
         self.assertEqual("https://tsumgi.arc.upiscium.dev/v1", provider["options"]["baseURL"])
         self.assertNotIn("apiKey", provider["options"])
         expected_limits = {
-            "qwen3.6-35b-a3b": {"context": 65536, "output": 2048},
-            "qwen3.6-35b-a3b-fast": {"context": 196608, "output": 2048},
+            "qwen3.8-27b": {"context": 131072, "output": 8192},
             "qwen3.6-35b-a3b-short": {"context": 12288, "output": 2048},
+            "qwen3.8-flash-next-coder": {"context": 131072, "output": 8192},
         }
         self.assertEqual(set(expected_limits), set(provider["models"]))
         for model, limits in expected_limits.items():
@@ -57,9 +57,9 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
             self.assertEqual(limits, configured["limit"])
             self.assertTrue(configured["tool_call"])
         for agent, model in (
-            ("tsumgi-qwen", "qwen3.6-35b-a3b"),
-            ("tsumgi-fast", "qwen3.6-35b-a3b-fast"),
+            ("tsumgi-fast", "qwen3.8-27b"),
             ("tsumgi-short", "qwen3.6-35b-a3b-short"),
+            ("tsumgi-coder", "qwen3.8-flash-next-coder"),
         ):
             agent_text = (CONFIG / "agents" / f"{agent}.md").read_text()
             self.assertIn("mode: primary", agent_text)
@@ -104,16 +104,16 @@ class OpenCodeLocalWorkersTest(unittest.TestCase):
 
     def test_canonical_assignments_remain_immutable(self) -> None:
         canonical = {
-            "build": "openai/gpt-6.1-sol",
-            "plan": "openai/gpt-6.1-sol",
-            "architect": "openai/gpt-6.1-sol",
-            "reviewer": "openai/gpt-6-luna",
-            "investigator": "openai/gpt-6-luna",
-            "security-reviewer": "openai/gpt-6.1-sol",
-            "general": "openai/gpt-6-luna",
-            "explore": "openai/gpt-6-luna",
-            "verifier": "openai/gpt-6-luna",
-            "scout": "openai/gpt-6-luna",
+            "build": "tsumgi/qwen3.8-27b",
+            "plan": "tsumgi/qwen3.8-27b",
+            "architect": "tsumgi/qwen3.8-27b",
+            "reviewer": "tsumgi/qwen3.8-27b",
+            "investigator": "tsumgi/qwen3.8-27b",
+            "security-reviewer": "tsumgi/qwen3.8-27b",
+            "general": "tsumgi/qwen3.8-flash-next-coder",
+            "explore": "tsumgi/qwen3.8-flash-next-coder",
+            "verifier": "tsumgi/qwen3.8-flash-next-coder",
+            "scout": "tsumgi/qwen3.8-flash-next-coder",
         }
         for agent, model in canonical.items():
             self.assertIn(f"model: {model}", (CONFIG / "agents" / f"{agent}.md").read_text())

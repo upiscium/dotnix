@@ -82,8 +82,6 @@ Host MacbookPro
   IdentityFile ~/secrets/private-key/arc
 
 Host MacbookSub
-  HostName 10.255.255.5
+  HostName katlab-gateway.net.upiscium.dev
   Port 22
-  User upiscium
-  PasswordAuthentication no
-  IdentityFile ~/secrets/private-key/arc
+  User root

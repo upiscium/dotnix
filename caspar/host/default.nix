@@ -7,12 +7,14 @@
 {
   imports =
     [
+      ./claude-remote-control.nix
       ./firewall.nix
       ./hardware.nix
       ./ipfix.nix
       ../../common/host
+      ../../module/host/headscale.nix
       ../../module/host/proxmox.nix
-      # ../../module/NixOS/docker/rootful.nix
+      ../../module/host/docker/rootless.nix
     ]
     ++ (with inputs.nixos-hardware.nixosModules; [
       common-cpu-amd

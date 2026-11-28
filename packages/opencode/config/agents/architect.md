@@ -2,8 +2,7 @@
 description: Independently reviews consequential cross-module architecture and boundary changes
 mode: subagent
 hidden: true
-model: openai/gpt-6.1-sol
-reasoningEffort: high
+model: tsumgi/qwen3.8-27b
 permission:
   edit: deny
   task: deny

@@ -29,7 +29,7 @@ From a dotnix checkout with the existing OpenCode config installed:
 
     python3 tools/tsumgi-context-probe.py --agent plan
     python3 tools/tsumgi-context-probe.py --agent tsumgi-short
-    python3 tools/tsumgi-context-probe.py --agent tsumgi-qwen
+    python3 tools/tsumgi-context-probe.py --agent tsumgi-coder
     python3 tools/tsumgi-context-probe.py --agent tsumgi-fast
 
 The probe reads each dedicated `tsumgi-*` Agent's model from
@@ -40,8 +40,8 @@ is `limit.context` minus `limit.output`:
 | Model | Agent | Input budget |
 | --- | --- | ---: |
 | `qwen3.6-35b-a3b-short` | `tsumgi-short` | 10,240 |
-| `qwen3.6-35b-a3b` | `tsumgi-qwen` | 63,488 |
-| `qwen3.6-35b-a3b-fast` | `tsumgi-fast` | 194,560 |
+| `qwen3.8-flash-next-coder` | `tsumgi-coder` | 122,880 |
+| `qwen3.8-27b` | `tsumgi-fast` | 122,880 |
 
 The plan choice is *ephemerally* tested against the 12K Short profile by
 default; pass `--model` to try another TSUMGI model. The canonical OpenAI
@@ -70,7 +70,7 @@ command line. Multiple models or an invalid identity cause BLOCKED.
 Do not assume the Gateway model alias equals the native alias.
 
     python3 tools/tsumgi-context-probe.py \
-      --agent tsumgi-qwen \
+      --agent tsumgi-coder \
       --native-token-url http://127.0.0.1:LOCAL_PORT/v1/chat/completions/input_tokens \
       --acknowledge-native-target \
       --ablate-tools

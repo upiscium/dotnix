@@ -1,8 +1,7 @@
 ---
 description: Researches external documentation, dependencies, and upstream implementations without editing
 mode: subagent
-model: openai/gpt-6-luna
-reasoningEffort: medium
+model: tsumgi/qwen3.8-flash-next-coder
 permission:
   edit: deny
   task: deny
