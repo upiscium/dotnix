@@ -14,6 +14,7 @@
       ./suzka.nix
 
       ../../common/host
+      ../../module/host/headscale.nix
       ../../module/host/nvidia.nix
       ../../module/host/proxmox.nix
       # ../../module/NixOS/docker/rootful.nix
