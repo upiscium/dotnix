@@ -13,10 +13,11 @@
       ./ipfix.nix
       ./opencode-discord-bridge.nix
       ./sunshine.nix
-      ./wireguard.nix
+      # ./wireguard.nix
 
       ../../common/host
       ../../module/host/desktop.nix
+      ../../module/host/headscale.nix
       # ../../module/host/ollama.nix
       ../../module/host/proxmox.nix
       ../../module/host/docker/rootless.nix
