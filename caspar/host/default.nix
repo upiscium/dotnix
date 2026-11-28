@@ -12,6 +12,7 @@
       ./hardware.nix
       ./ipfix.nix
       ../../common/host
+      ../../module/host/headscale.nix
       ../../module/host/proxmox.nix
       ../../module/host/docker/rootless.nix
     ]
